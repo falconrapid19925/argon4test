@@ -4,11 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Commonplace — Five Second-Brain Landing Page Iterations (/1 to /5)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="assets/vendor/tailwind/commonplace.css">
   <!-- Distinct, intentional font families across the five studio iterations -->
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Syne:wght@600;700;800&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/vendor/fonts/commonplace-fonts.css">
 
   <style>
     :root {
@@ -177,16 +175,20 @@
       transform: translateY(2px);
       box-shadow: 0 1px 0 #18181A;
     }
+    /* Route visibility must remain reliable while CDN styling loads. */
+    body[data-demo="commonplace"] [data-demo-page].hidden { display: none; }
   </style>
+  <link rel="stylesheet" href="assets/motion/motion.css">
+  <script src="assets/motion/motion.js" defer></script>
 </head>
-<body class="min-h-screen antialiased selection:bg-blue-900 selection:text-white">
+<body data-demo="commonplace" class="min-h-screen antialiased selection:bg-blue-900 selection:text-white">
 
   <div id="app-viewport" class="min-h-screen pb-24">
 
     <!-- ========================================================================
          ITERATION /1: ZETTELKASTEN SLIP-BOX (Archival Manila & Fountain Pen Ink)
          ======================================================================== -->
-    <main id="page-1" class="theme-1 min-h-screen hidden" aria-label="Iteration 1: Archival Slip-Box">
+    <main id="page-1" data-demo-page="1" class="theme-1 min-h-screen hidden" aria-label="Iteration 1: Archival Slip-Box">
       <!-- Top Archival Header -->
       <header class="border-b border-[#C8BFA3] px-5 sm:px-10 py-5">
         <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
@@ -210,10 +212,10 @@
           
           <!-- Left Column: Grounded Value Proposition & Index Tray -->
           <div class="lg:col-span-5 space-y-6">
-            <h1 class="text-4xl sm:text-5xl font-medium leading-[1.12] tracking-tight text-[#1E2022]">
+            <h1 data-motion class="text-4xl sm:text-5xl font-medium leading-[1.12] tracking-tight text-[#1E2022]">
               A note is only useful when it forces an argument with an older note.
             </h1>
-            <p class="text-lg sm:text-xl leading-relaxed text-[#36393C] measure-prose">
+            <p data-motion class="text-lg sm:text-xl leading-relaxed text-[#36393C] measure-prose">
               Folders bury ideas by topic before you know what they mean. Folgezettel files every thought directly behind the note it answers, growing a dense chain of reasoning over years.
             </p>
 
@@ -242,7 +244,7 @@
               <div class="hidden sm:block absolute -top-3 left-4 right-4 h-full bg-[#F5EFE0] border border-[#C8BFA3] rounded-md -z-10"></div>
               
               <!-- Active Slip Card -->
-              <article id="active-slip-card" class="slip-card slip-card-ruled rounded-md p-6 sm:p-8">
+              <article id="active-slip-card" data-motion class="slip-card slip-card-ruled rounded-md p-6 sm:p-8">
                 <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-[#19376D] pb-4 mb-6">
                   <div>
                     <span id="slip-id-badge" class="font-typewriter text-lg font-bold text-[#19376D]">14a2b</span>
@@ -349,7 +351,7 @@
     <!-- ========================================================================
          ITERATION /2: SPATIAL CYANOTYPE WORKBENCH (Drafting Slate & Ochre Tape)
          ======================================================================== -->
-    <main id="page-2" class="theme-2 min-h-screen hidden" aria-label="Iteration 2: Spatial Workbench">
+    <main id="page-2" data-demo-page="2" class="theme-2 min-h-screen hidden" aria-label="Iteration 2: Spatial Workbench">
       <header class="border-b border-[#294056] px-5 sm:px-10 py-4 bg-[#1B2A38]/90 backdrop-blur-sm">
         <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <div class="flex items-center gap-3">
@@ -372,19 +374,19 @@
       <section class="max-w-7xl mx-auto px-5 sm:px-10 pt-8 pb-14">
         <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
           <div class="measure-prose">
-            <h1 class="font-spatial text-3xl sm:text-5xl font-bold leading-[1.1] text-[#F5F7FA]">
+            <h1 data-motion class="font-spatial text-3xl sm:text-5xl font-bold leading-[1.1] text-[#F5F7FA]">
               Spread your research across a table before you force it into an outline.
             </h1>
           </div>
           <div class="lg:max-w-md text-[#C2D1E0] text-base leading-relaxed">
-            <p>
+            <p data-motion>
               Drag any card on the drafting mat below, or click two pins to string a connection thread between disparate clues.
             </p>
           </div>
         </div>
 
         <!-- Interactive Spatial Canvas Board -->
-        <div class="relative rounded-lg border-2 border-[#395570] bg-[#15222E] overflow-hidden shadow-2xl" style="min-height: 460px;">
+        <div data-motion class="relative rounded-lg border-2 border-[#395570] bg-[#15222E] overflow-hidden shadow-2xl" style="min-height: 460px;">
           <!-- Canvas Toolbar -->
           <div class="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 bg-[#1B2A38] border-b border-[#294056] text-xs text-[#9BB0C4]">
             <div class="flex items-center gap-4">
@@ -499,7 +501,7 @@
     <!-- ========================================================================
          ITERATION /3: THE CHRONOLOGICAL RIVER (Nordic Mist & Deep Fjord)
          ======================================================================== -->
-    <main id="page-3" class="theme-3 min-h-screen hidden" aria-label="Iteration 3: Chronological River">
+    <main id="page-3" data-demo-page="3" class="theme-3 min-h-screen hidden" aria-label="Iteration 3: Chronological River">
       <header class="max-w-5xl mx-auto px-5 sm:px-10 py-8 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <span class="w-2.5 h-6 rounded-full bg-[#3B6E5C]"></span>
@@ -516,10 +518,10 @@
       <!-- Hero + Stream: Single Continuous Reading & Writing Column with Quiet Margin Recall -->
       <section class="max-w-5xl mx-auto px-5 sm:px-10 pt-4 pb-20">
         <div class="mb-12 measure-prose">
-          <h1 class="font-book text-3xl sm:text-5xl font-medium text-[#132639] leading-[1.18] mb-5">
+          <h1 data-motion class="font-book text-3xl sm:text-5xl font-medium text-[#132639] leading-[1.18] mb-5">
             Stop deciding where a note goes. Just write on today's page.
           </h1>
-          <p class="text-lg text-[#384D61] leading-relaxed">
+          <p data-motion class="text-lg text-[#384D61] leading-relaxed">
             Most notes die in the five seconds it takes to pick a folder. Daybook gives you a single rolling daily journal; whenever you mention a person or topic you wrote about months ago, that memory surfaces quietly in the margin.
           </p>
         </div>
@@ -583,7 +585,7 @@
             <div class="text-xs font-medium text-[#4A6075]">
               Surfaced from earlier days in your river
             </div>
-            <div id="river-recall-card" class="bg-[#E3EFEA]/70 border border-[#BDD4C9] rounded-lg p-5 transition-colors">
+            <div id="river-recall-card" data-motion class="bg-[#E3EFEA]/70 border border-[#BDD4C9] rounded-lg p-5 transition-colors">
               <div class="flex items-center justify-between text-xs text-[#285243] mb-2">
                 <span id="recall-source-tag" class="font-semibold">@Elena Rostova</span>
                 <span id="recall-source-date">From June 19, 2026</span>
@@ -612,7 +614,7 @@
     <!-- ========================================================================
          ITERATION /4: BOTANICAL HERBARIUM & SPECIMEN PRESS (Naturalist Journal)
          ======================================================================== -->
-    <main id="page-4" class="theme-4 min-h-screen hidden" aria-label="Iteration 4: Herbarium Specimen Press">
+    <main id="page-4" data-demo-page="4" class="theme-4 min-h-screen hidden" aria-label="Iteration 4: Herbarium Specimen Press">
       <header class="border-b border-[#C5D1C8] px-5 sm:px-10 py-6">
         <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <div class="flex items-center gap-3">
@@ -630,10 +632,10 @@
       <!-- Hero: Primary Source Clipping to Permanent Specimen Sheet -->
       <section class="max-w-6xl mx-auto px-5 sm:px-10 py-12 lg:py-16">
         <div class="max-w-3xl mb-10">
-          <h1 class="font-specimen text-3xl sm:text-5xl font-medium text-[#142E24] leading-[1.14] mb-4">
+          <h1 data-motion class="font-specimen text-3xl sm:text-5xl font-medium text-[#142E24] leading-[1.14] mb-4">
             Press what you read into permanent specimens with full provenance.
           </h1>
-          <p class="text-lg text-[#243B31] leading-relaxed measure-prose">
+          <p data-motion class="text-lg text-[#243B31] leading-relaxed measure-prose">
             Naturalists never threw loose leaves into a bag without recording the altitude, date, and soil. Click any passage in the field reading on the left to press it onto your permanent specimen sheet on the right.
           </p>
         </div>
@@ -699,7 +701,7 @@
               </div>
 
               <!-- Pressed Excerpt Mount -->
-              <blockquote id="pressed-quote-display" class="font-specimen text-xl sm:text-2xl text-[#142E24] leading-snug bg-[#FAFDFB] border border-[#C5D1C8] p-5 rounded mb-6">
+              <blockquote id="pressed-quote-display" data-motion class="font-specimen text-xl sm:text-2xl text-[#142E24] leading-snug bg-[#FAFDFB] border border-[#C5D1C8] p-5 rounded mb-6">
                 "The alpine lichens gathered at 14,000 feet in the Andes mirror the exact crustose forms I cataloged inside the basalt mines of Freiberg six years prior."
               </blockquote>
 
@@ -737,7 +739,7 @@
     <!-- ========================================================================
          ITERATION /5: INDUSTRIAL KEYBOARD COMMAND PALETTE (Putty & Signal Yellow)
          ======================================================================== -->
-    <main id="page-5" class="theme-5 min-h-screen hidden" aria-label="Iteration 5: High-Velocity Command Palette">
+    <main id="page-5" data-demo-page="5" class="theme-5 min-h-screen hidden" aria-label="Iteration 5: High-Velocity Command Palette">
       <header class="border-b-2 border-[#18181A] px-5 sm:px-10 py-4 bg-[#D1D0CA]">
         <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <div class="flex items-center gap-3">
@@ -760,10 +762,10 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
           <div class="lg:col-span-5 space-y-6">
-            <h1 class="font-industrial text-3xl sm:text-5xl font-extrabold leading-[1.08] text-[#18181A]">
+            <h1 data-motion class="font-industrial text-3xl sm:text-5xl font-extrabold leading-[1.08] text-[#18181A]">
               Capture a thought in 400 milliseconds before your short-term memory drops it.
             </h1>
-            <p class="text-sm sm:text-base leading-relaxed text-[#2C2C30]">
+            <p data-motion class="text-sm sm:text-base leading-relaxed text-[#2C2C30]">
               If your note app takes four seconds to load a cloud spinner, you have already forgotten why you opened it. Reflex lives in RAM and indexes 10,000 plain-text notes on every keystroke.
             </p>
 
@@ -812,7 +814,7 @@
               </div>
 
               <!-- Filtered Results List -->
-              <div id="reflex-results-list" class="divide-y divide-[#18181A]/20 max-h-80 overflow-y-auto" role="region" aria-label="Filtered notes">
+              <div id="reflex-results-list" data-motion class="divide-y divide-[#18181A]/20 max-h-80 overflow-y-auto" role="region" aria-label="Filtered notes">
                 <!-- Populated by JS -->
               </div>
 
@@ -875,6 +877,8 @@
     role="dialog"
     aria-modal="true"
     aria-labelledby="modal-heading"
+    aria-describedby="modal-description"
+    tabindex="-1"
   >
     <div class="bg-[#16181D] text-white border border-white/20 rounded-xl max-w-md w-full p-6 shadow-2xl">
       <h2 id="modal-heading" class="text-xl font-semibold mb-2">Start your local notebook</h2>
@@ -971,6 +975,8 @@
       <button
         onclick="toggleCritiqueDrawer()"
         id="critique-toggle-btn"
+        aria-expanded="false"
+        aria-controls="studio-critique-drawer"
         class="text-xs bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/30 px-3 py-1.5 rounded-full font-medium transition-colors shrink-0"
       >
         Design brief
@@ -1187,7 +1193,7 @@
       if (!slipsData[id]) return;
       currentSlipId = id;
       const slip = slipsData[id];
-      document.getElementById("slip-id-badge").textContent = slip.id;
+      window.DemoMotion.text("#slip-id-badge", slip.id);
       document.getElementById("slip-date-badge").textContent = slip.date;
       document.getElementById("slip-parent-btn").textContent = slip.parent;
       document.getElementById("slip-parent-btn").setAttribute("onclick", `selectSlip('${slip.parent in slipsData ? slip.parent : "14a"}')`);
@@ -1196,6 +1202,7 @@
       document.getElementById("slip-wordcount").textContent = slip.words;
       document.getElementById("branch-target-id").textContent = slip.id;
       renderZkTray();
+      window.DemoMotion.reveal("#active-slip-card", { distance: 10, duration: 280 });
     }
 
     function focusNewSlipInput() {
@@ -1234,6 +1241,7 @@
       selectSlip(nextId);
       feedback.textContent = `Filed new slip ${nextId} directly behind ${slipsData[nextId].parent}.`;
       feedback.classList.remove("hidden");
+      window.DemoMotion.reveal(feedback, { distance: 4 });
     }
 
 
@@ -1294,11 +1302,11 @@
     function getNodeCenter(id) {
       const el = document.getElementById(id);
       if (!el) return { x: 100, y: 100 };
-      const x = parseFloat(el.getAttribute("data-x")) || 0;
-      const y = parseFloat(el.getAttribute("data-y")) || 0;
+      const rect = el.getBoundingClientRect();
+      const layer = document.getElementById("spatial-svg-layer").getBoundingClientRect();
       return {
-        x: x + (el.offsetWidth || 250) / 2,
-        y: y + (el.offsetHeight || 110) / 2 + 36 // offset for toolbar height
+        x: rect.left - layer.left + rect.width / 2,
+        y: rect.top - layer.top + rect.height / 2
       };
     }
 
@@ -1342,18 +1350,35 @@
       applySpatialPositions(positions);
     }
 
+    let spatialMotionFrame = 0;
+    let spatialMotionTimer = 0;
     function applySpatialPositions(posMap) {
+      cancelAnimationFrame(spatialMotionFrame);
+      clearTimeout(spatialMotionTimer);
+      const duration = window.DemoMotion.reduced() ? 0 : 350;
       Object.keys(posMap).forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
         const { x, y } = posMap[id];
         el.setAttribute("data-x", x);
         el.setAttribute("data-y", y);
-        el.style.transition = "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)";
+        el.style.transition = duration ? "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)" : "none";
         el.style.transform = `translate(${x}px, ${y}px)`;
-        setTimeout(() => { el.style.transition = ""; updateSpatialLines(); }, 360);
       });
-      setTimeout(updateSpatialLines, 50);
+      // Follow the rendered node positions throughout the cluster/scatter move.
+      const end = performance.now() + duration;
+      const follow = () => {
+        updateSpatialLines();
+        if (performance.now() < end) spatialMotionFrame = requestAnimationFrame(follow);
+      };
+      follow();
+      spatialMotionTimer = setTimeout(() => {
+        Object.keys(posMap).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.style.transition = "";
+        });
+        updateSpatialLines();
+      }, duration);
     }
 
     function toggleVoiceTranscript(e) {
@@ -1387,12 +1412,15 @@
       }
     };
 
+    let activeRiverRecall = "elena";
     function triggerRiverRecall(key) {
       const mem = riverMemories[key];
-      if (!mem) return;
-      document.getElementById("recall-source-tag").textContent = mem.tag;
-      document.getElementById("recall-source-date").textContent = mem.date;
+      if (!mem || key === activeRiverRecall) return;
+      activeRiverRecall = key;
+      window.DemoMotion.text("#recall-source-tag", mem.tag);
+      window.DemoMotion.text("#recall-source-date", mem.date);
       document.getElementById("recall-source-body").textContent = mem.body;
+      window.DemoMotion.reveal("#river-recall-card", { distance: 8, duration: 300 });
     }
 
     function insertRiverTrigger(phrase) {
@@ -1439,7 +1467,9 @@
       if (!item) return;
       document.getElementById("pressed-quote-display").textContent = item.quote;
       document.getElementById("pressed-synthesis-display").textContent = item.synthesis;
-      document.getElementById("specimen-taxonomy").textContent = item.taxonomy;
+      window.DemoMotion.text("#specimen-taxonomy", item.taxonomy);
+      window.DemoMotion.reveal("#pressed-quote-display", { distance: 8, duration: 300 });
+      window.DemoMotion.reveal("#pressed-synthesis-display", { distance: 5, duration: 320 });
 
       [0, 1, 2].forEach(i => {
         const btn = document.getElementById(`specimen-quote-${i}`);
@@ -1529,8 +1559,9 @@
       }
 
       if (countEl) {
-        countEl.textContent = `Showing ${matched.length} of 1,420 local notes`;
+        window.DemoMotion.text(countEl, `Showing ${matched.length} of 1,420 local notes`);
       }
+      window.DemoMotion.reveal(listEl, { distance: 4, duration: 160 });
     }
 
     function captureReflexNoteFromInput() {
@@ -1581,17 +1612,11 @@
       const plan = studioDesignPlans[target];
       const badgeEl = document.getElementById("current-route-badge");
       const nameEl = document.getElementById("current-route-name");
-      if (badgeEl) badgeEl.textContent = `/${target}`;
-      if (nameEl && plan) nameEl.textContent = plan.name.split("—")[0].trim();
+      if (badgeEl) window.DemoMotion.text(badgeEl, `/${target}`);
+      if (nameEl && plan) window.DemoMotion.text(nameEl, plan.name.split("—")[0].trim());
 
-      // Update URL path (/1, /2, /3, /4, /5) with graceful fallback in sandboxed iframes
-      if (updateHistory) {
-        try {
-          window.history.pushState({ iteration: target }, "", `/${target}`);
-        } catch (_) {
-          window.location.hash = `/${target}`;
-        }
-      }
+      window.DemoMotion.route("commonplace", target, updateHistory);
+      window.DemoMotion.enter(document.getElementById(`page-${target}`), target);
 
       // Refresh SVG connection lines if entering /2
       if (target === 2) {
@@ -1654,10 +1679,33 @@
       `;
     }
 
+    let critiqueReturnFocus = null;
+    let modalReturnFocus = null;
+    const modalBackgroundState = new Map();
+    const modalFocusable = () => Array.from(document.querySelectorAll(
+      '#action-modal button, #action-modal [href], #action-modal input, #action-modal textarea, #action-modal select, #action-modal [tabindex]:not([tabindex="-1"])'
+    )).filter(el => !el.disabled && !el.closest("[inert]") && el.getClientRects().length);
+
+    function restoreOverlayFocus(element) {
+      if (element && element.isConnected && !element.closest("[inert], .hidden")) {
+        element.focus({ preventScroll: true });
+      }
+    }
+
     function toggleCritiqueDrawer() {
       const drawer = document.getElementById("studio-critique-drawer");
+      const toggle = document.getElementById("critique-toggle-btn");
       if (!drawer) return;
-      drawer.classList.toggle("hidden");
+      const opening = drawer.classList.contains("hidden");
+      if (opening) critiqueReturnFocus = document.activeElement;
+      drawer.classList.toggle("hidden", !opening);
+      if (toggle) toggle.setAttribute("aria-expanded", String(opening));
+      if (opening) {
+        window.DemoMotion.reveal(drawer.firstElementChild, { distance: 8, duration: 220 });
+        drawer.querySelector("button")?.focus({ preventScroll: true });
+      } else {
+        restoreOverlayFocus(critiqueReturnFocus);
+      }
     }
 
     function openDownloadModal(editionName) {
@@ -1666,41 +1714,89 @@
       if (heading && editionName) {
         heading.textContent = `Start your notebook with ${editionName}`;
       }
-      if (modal) modal.classList.remove("hidden");
+      if (modal && modal.classList.contains("hidden")) {
+        modalReturnFocus = document.activeElement;
+        // Inert body siblings without touching the page-level state managed by DemoMotion.
+        for (const sibling of document.body.children) {
+          if (sibling === modal || ["SCRIPT", "STYLE", "LINK"].includes(sibling.tagName)) continue;
+          modalBackgroundState.set(sibling, sibling.inert);
+          sibling.inert = true;
+        }
+        modal.classList.remove("hidden");
+        window.DemoMotion.reveal(modal.firstElementChild, { distance: 10, duration: 240 });
+        (modalFocusable()[0] || modal).focus({ preventScroll: true });
+      }
     }
 
     function closeDownloadModal(statusMessage) {
       const modal = document.getElementById("action-modal");
       if (modal) modal.classList.add("hidden");
+      for (const [element, wasInert] of modalBackgroundState) element.inert = wasInert;
+      modalBackgroundState.clear();
       if (statusMessage) {
         const badge = document.getElementById("current-route-name");
-        if (badge) badge.textContent = statusMessage;
+        if (badge) window.DemoMotion.text(badge, statusMessage);
       }
+      restoreOverlayFocus(modalReturnFocus);
     }
 
-    // Handle initial URL pathname (/1, /2, /3, /4, /5) or hash (#/1) on boot
-    function resolveInitialIteration() {
-      const pathMatch = window.location.pathname.match(/\/([1-5])\/?$/);
-      if (pathMatch) return parseInt(pathMatch[1], 10);
-      const hashMatch = window.location.hash.match(/\/?([1-5])$/);
-      if (hashMatch) return parseInt(hashMatch[1], 10);
-      return 1;
-    }
-
-    window.addEventListener("popstate", (e) => {
-      if (e.state && e.state.iteration) {
-        navigateToIteration(e.state.iteration, false);
-      } else {
-        navigateToIteration(resolveInitialIteration(), false);
+    document.addEventListener("focusin", (event) => {
+      const modal = document.getElementById("action-modal");
+      if (modal && !modal.classList.contains("hidden") && !modal.contains(event.target)) {
+        (modalFocusable()[0] || modal).focus({ preventScroll: true });
       }
     });
 
-    // Keyboard shortcuts 1-5 when not focused inside an input/textarea
+    // Handle initial URL pathname (/1, /2, /3, /4, /5) or hash (#/1) on boot
+    function resolveInitialIteration() {
+      return window.DemoMotion.initial();
+    }
+
+    const syncIterationFromLocation = () => {
+      navigateToIteration(resolveInitialIteration(), false);
+    };
+    window.addEventListener("popstate", syncIterationFromLocation);
+    window.addEventListener("hashchange", () => {
+      if (!location.hash || /^#\/(?:pages\/)?[1-5]\/?$/.test(location.hash)) {
+        syncIterationFromLocation();
+      }
+    });
+
+    // Keyboard iteration shortcuts never interrupt editing or an open overlay.
     window.addEventListener("keydown", (e) => {
-      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
-      if (tag === "input" || tag === "textarea") return;
-      if (["1", "2", "3", "4", "5"].includes(e.key) && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      const modal = document.getElementById("action-modal");
+      if (modal && !modal.classList.contains("hidden")) {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          closeDownloadModal();
+        } else if (e.key === "Tab") {
+          const controls = modalFocusable();
+          const first = controls[0] || modal;
+          const last = controls[controls.length - 1] || modal;
+          if (!controls.length || (e.shiftKey && document.activeElement === first)) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+        return;
+      }
+      const drawer = document.getElementById("studio-critique-drawer");
+      if (e.key === "Escape" && drawer && !drawer.classList.contains("hidden")) {
+        e.preventDefault();
+        toggleCritiqueDrawer();
+        return;
+      }
+      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey || e.shiftKey || e.isComposing) return;
+      if (e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;
+      if (["1", "2", "3", "4", "5"].includes(e.key)) {
+        e.preventDefault();
         navigateToIteration(parseInt(e.key, 10));
+      } else if (e.key === "[" || e.key === "]") {
+        e.preventDefault();
+        navigateToIteration(((currentIteration - 1 + (e.key === "]" ? 1 : -1) + 5) % 5) + 1);
       }
     });
 
