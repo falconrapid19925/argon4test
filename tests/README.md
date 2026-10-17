@@ -3,3 +3,5 @@ Run `node tests/motion-smoke.cjs` from the repository. It requires Node, Playwri
 Optional environment variables: `BASE_URL`, `CHROMIUM_PATH`, `SCREENSHOT_DIR`, and `TEST_FILTER` (a case-insensitive regular expression matching check names, for focused reruns). Required asset/network failures and JavaScript errors fail the checks; external Google Fonts failures are reported separately. TLS verification stays enabled.
 
 GitHub Actions runs this suite on pull requests with Node 22 and Playwright 1.62.1. To install the same test dependency locally without changing the application, run `npm install --prefix /tmp/argon-motion-tests --no-package-lock playwright@1.62.1`, then `NODE_PATH=/tmp/argon-motion-tests/node_modules node tests/motion-smoke.cjs` with Chromium installed.
+
+Regression cases also cover rejected History API writes, legacy short hashes, visible CSS reveal transitions alongside Tailwind, in-page anchor offsets, and prompt failure/cleanup when the browser executable is missing.

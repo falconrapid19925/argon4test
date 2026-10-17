@@ -51,10 +51,16 @@
     for (const key of ['page', 'iter', 'v']) url.searchParams.delete(key);
     // In-page anchors belong to the document, not the iteration router.
     if (!updateHistory && location.hash && !/^#\/(?:pages\/)?[1-5]\/?$/.test(location.hash)) return;
-    if (url.href !== location.href) {
-      history[updateHistory ? 'pushState' : 'replaceState']({iteration: n}, '', url);
-    } else if (!history.state || history.state.iteration !== n) {
-      history.replaceState({iteration: n}, '', url);
+    try {
+      if (url.href !== location.href) {
+        history[updateHistory ? 'pushState' : 'replaceState']({iteration: n}, '', url);
+      } else if (!history.state || history.state.iteration !== n) {
+        history.replaceState({iteration: n}, '', url);
+      }
+    } catch {
+      // Opaque-origin / restricted embeds may reject History API writes.
+      // Updating only the fragment keeps the selected iteration reloadable.
+      if (location.hash !== url.hash) location.hash = url.hash;
     }
     updateNavigation();
   }
@@ -150,8 +156,13 @@
         el.classList.add('t-stagger-line');
         el.style.transitionDelay = reduced() ? '0ms' : `${Math.min(index, 5) * token(page, '--duration-stagger', 40)}ms`;
       });
+      // Reset without tweening backwards; otherwise the immediate show cancels
+      // a newly-created 1 -> 0 transition before the entrance can begin.
+      const restingTransitions = [...items].map(el => el.style.transition);
+      items.forEach(el => { el.style.transition = 'none'; });
       page.classList.remove('is-shown', 'is-hiding');
-      void page.offsetHeight;
+      items.forEach(el => { void getComputedStyle(el).opacity; });
+      items.forEach((el, index) => { el.style.transition = restingTransitions[index]; });
       page.classList.add('is-shown');
       page.dataset.motionEntries = String(Number(page.dataset.motionEntries || 0) + 1);
       // Fade only the page shell: fixed children and canvas geometry retain their coordinates.

@@ -210,9 +210,10 @@ async function main() {
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const base = process.env.BASE_URL || `http://127.0.0.1:${server.address().port}`;
-  const browser = await chromium.launch({executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium',
-    headless: true, args: ['--no-sandbox']});
+  let browser;
   try {
+    browser = await chromium.launch({executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium',
+      headless: true, args: ['--no-sandbox']});
     const context = await browser.newContext({viewport: {width: 1440, height: 1000}});
     const page = await context.newPage(); watch(page);
     for (const [demo, file] of Object.entries(demos)) {
@@ -257,6 +258,66 @@ async function main() {
       await frame.locator(iteration('noema', 4)).waitFor();
       await page.waitForFunction(() => document.querySelector('#pageFrame').contentWindow.location.hash === '#/pages/4');
     });
+    await check('Restricted History API keeps iteration navigation functional', async () => {
+      const restrictedContext = await browser.newContext();
+      await restrictedContext.addInitScript(() => {
+        for (const method of ['pushState', 'replaceState']) {
+          History.prototype[method] = () => { throw new DOMException('Restricted embed', 'SecurityError'); };
+        }
+      });
+      const restricted = await restrictedContext.newPage(); watch(restricted);
+      try {
+        for (const [demo, file] of Object.entries(demos)) {
+          await restricted.goto(`${base}/${file}#/pages/1`, {waitUntil: 'networkidle'});
+          await restricted.locator(iteration(demo, 3)).click();
+          await state(restricted, demo, 3);
+          await restricted.reload({waitUntil: 'networkidle'});
+          await state(restricted, demo, 3);
+        }
+      } finally { await restrictedContext.close(); }
+    });
+    await check('Legacy short hash switches Cairn without changing document', async () => {
+      await page.goto(`${base}/${demos.cairn}#/pages/1`, {waitUntil: 'networkidle'});
+      await page.evaluate(() => {
+        history.replaceState(null, '', '#/3');
+        dispatchEvent(new HashChangeEvent('hashchange'));
+      });
+      await state(page, 'cairn', 3);
+    });
+    await check('Tailwind utilities preserve recall card reveal animation', async () => {
+      await page.goto(`${base}/${demos.commonplace}#/pages/1`, {waitUntil: 'networkidle'});
+      await page.locator(iteration('commonplace', 3)).click();
+      await page.waitForFunction(() => {
+        const card = document.querySelector('#river-recall-card');
+        return card.getAnimations().some(animation => animation.transitionProperty === 'opacity');
+      });
+      await state(page, 'commonplace', 3); await settle(page); await visibleMotion(page, 3);
+    });
+    await check('In-page links keep headings below the collection bar', async () => {
+      await page.goto(`${base}/${demos.commonplace}#/pages/1`, {waitUntil: 'networkidle'});
+      await page.locator('a[href="#slip-permanence"]').click();
+      await page.waitForFunction(() => {
+        const target = document.querySelector('#slip-permanence').getBoundingClientRect();
+        const navigation = document.querySelector('.motion-navigation').getBoundingClientRect();
+        return scrollY > 100 && target.top >= navigation.bottom + 8 && target.top < innerHeight;
+      });
+      assert.equal(new URL(page.url()).hash, '#slip-permanence');
+      assert.ok(await page.locator('#slip-permanence').isVisible());
+    });
+    await check('Missing Chromium exits with failure instead of hanging server', async () => {
+      const {execFile} = require('node:child_process');
+      const {promisify} = require('node:util');
+      let failure;
+      try {
+        await promisify(execFile)(process.execPath, [__filename], {
+          env: {...process.env, CHROMIUM_PATH: path.join(screenshots, 'missing-chromium')}, timeout: 8000
+        });
+      } catch (error) { failure = error; }
+      assert.ok(failure, 'Runner must fail with a missing browser');
+      assert.equal(failure.code, 1, 'Runner must exit normally with a failure code before timeout');
+      assert.equal(failure.killed, false, 'Runner must close its server, not require termination');
+      assert.match(failure.stderr, /executable.*exist/i);
+    });
     const mobilePage = await context.newPage(); watch(mobilePage);
     await mobilePage.setViewportSize({width: 390, height: 844});
     for (const demo of Object.keys(demos)) await check(`${demo}: 390px navigation`, () => mobile(mobilePage, base, demo));
@@ -290,7 +351,8 @@ async function main() {
     if (fontFailures.size) console.log(`External font failures (separate):\n${[...fontFailures].join('\n')}`);
     if (failures.length) process.exitCode = 1;
   } finally {
-    await browser.close(); await new Promise(resolve => server.close(resolve));
+    try { if (browser) await browser.close(); }
+    finally { await new Promise(resolve => server.close(resolve)); }
   }
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });
