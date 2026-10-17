@@ -3,33 +3,150 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Argon4Test - Page Switcher</title>
+  <title>Argon4Test - UI Switcher</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 2rem; }
-    h1 { margin-bottom: 0.5rem; }
-    nav { display: flex; gap: 0.75rem; margin: 1rem 0; }
-    button { padding: 0.5rem 1rem; cursor: pointer; }
-    iframe { width: 100%; min-height: 70vh; border: 1px solid #ccc; border-radius: 6px; }
+    :root {
+      --bg: #0b1020;
+      --panel: #131a2e;
+      --text: #eef2ff;
+      --muted: #9aa5c2;
+      --accent: #6ea8fe;
+      --accent-2: #8b5cf6;
+      --border: #27304b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, #172041 0%, transparent 40%),
+        radial-gradient(circle at 100% 0%, #22174b 0%, transparent 45%),
+        var(--bg);
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      background: color-mix(in oklab, var(--panel) 92%, black);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .header {
+      padding: 22px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0 22px 22px;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      background: #1a2340;
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+    }
+
+    button.active {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+      border-color: transparent;
+      color: #fff;
+    }
+
+    .viewer {
+      padding: 12px;
+    }
+
+    iframe {
+      width: 100%;
+      min-height: 74vh;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .toolbar {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .toolbar a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
-  <h1>Argon4Test Pages</h1>
-  <p>Use the switcher to view each HTML page.</p>
+  <main class="container">
+    <section class="card">
+      <header class="header">
+        <h1>Argon4Test UI Showcase</h1>
+        <p class="subtitle">Switch between the 3 uploaded HTML files.</p>
+      </header>
+      <nav>
+        <button type="button" class="active" data-page="cairn_second_brain_iterations.html">Cairn Iterations</button>
+        <button type="button" data-page="second_brain_landing_pages.html">Landing Pages</button>
+        <button type="button" data-page="second_brain_five_landing_page_iterations.html">Five Page Iterations</button>
+      </nav>
+    </section>
 
-  <nav>
-    <button type="button" data-page="page1.html">Page 1</button>
-    <button type="button" data-page="page2.html">Page 2</button>
-    <button type="button" data-page="page3.html">Page 3</button>
-  </nav>
-
-  <iframe id="pageFrame" src="page1.html" title="Selected page"></iframe>
+    <section class="card viewer">
+      <iframe id="pageFrame" src="cairn_second_brain_iterations.html" title="Selected page"></iframe>
+      <div class="toolbar">
+        <a id="openCurrent" href="cairn_second_brain_iterations.html" target="_blank" rel="noopener noreferrer">Open current page in new tab ↗</a>
+      </div>
+    </section>
+  </main>
 
   <script>
     const frame = document.getElementById('pageFrame');
-    document.querySelectorAll('button[data-page]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        frame.src = btn.dataset.page;
-      });
+    const link = document.getElementById('openCurrent');
+    const buttons = Array.from(document.querySelectorAll('button[data-page]'));
+
+    function activate(btn) {
+      buttons.forEach((item) => item.classList.toggle('active', item === btn));
+      const page = btn.dataset.page;
+      frame.src = page;
+      link.href = page;
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => activate(btn));
     });
   </script>
 </body>
