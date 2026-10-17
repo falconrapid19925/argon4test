@@ -16,9 +16,6 @@ jobs:
     name: Browser smoke (15 iterations)
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    env:
-      NODE_PATH: ${{ runner.temp }}/motion-tests/node_modules
-      SCREENSHOT_DIR: ${{ runner.temp }}/motion-screenshots
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -27,9 +24,14 @@ jobs:
         with:
           node-version: '22'
       - name: Install pinned browser test tools
+        env:
+          NODE_PATH: ${{ runner.temp }}/motion-tests/node_modules
         run: |
           npm install --prefix "$RUNNER_TEMP/motion-tests" --no-package-lock --no-audit --no-fund playwright@1.62.1
           node "$RUNNER_TEMP/motion-tests/node_modules/playwright/cli.js" install --with-deps chromium
           printf 'CHROMIUM_PATH=%s\n' "$(node -p "require('playwright').chromium.executablePath()")" >> "$GITHUB_ENV"
       - name: Check all designs and navigation
+        env:
+          NODE_PATH: ${{ runner.temp }}/motion-tests/node_modules
+          SCREENSHOT_DIR: ${{ runner.temp }}/motion-screenshots
         run: node tests/motion-smoke.cjs
