@@ -1,0 +1,48 @@
+{
+  "name": "argon-design-studies",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fifteen interactive second-brain design studies in Noema, Cairn, and Commonplace.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/falconrapid19925/argon4test.git"
+  },
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "start": "node tools/serve.mjs",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "build:styles": "tailwindcss -i tools/commonplace-tailwind.css -o assets/vendor/tailwind/commonplace.css --minify",
+    "build": "node tools/build.mjs",
+    "check:build": "node tools/check-build.mjs",
+    "test:unit": "node --test tests/server.test.mjs",
+    "test:e2e": "playwright test",
+    "test:dry-run": "playwright test --list && node tools/build.mjs --dry-run",
+    "test:coverage": "node tools/run-coverage.mjs",
+    "test": "npm run test:unit && npm run test:e2e",
+    "check": "npm run lint && npm run format:check && npm run check:build && npm run test:unit",
+    "check:workflows": "bash tools/check-workflows.sh",
+    "docs:preview": "node tools/capture-preview.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.64.1",
+    "@tailwindcss/cli": "4.3.3",
+    "eslint": "10.13.0",
+    "eslint-plugin-html": "8.2.1",
+    "globals": "17.13.0",
+    "istanbul-lib-coverage": "3.2.2",
+    "istanbul-lib-report": "3.0.1",
+    "istanbul-reports": "3.2.0",
+    "prettier": "3.9.10",
+    "tailwindcss": "4.3.3",
+    "v8-to-istanbul": "9.3.0"
+  },
+  "overrides": {
+    "@parcel/watcher": "2.6.0"
+  }
+}

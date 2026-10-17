@@ -1,0 +1,206 @@
+/* Integrated Transitions.dev recipes: tabs sliding and texts reveal.
+   Copyright 2026 Jakub Antalik. See TRANSITIONS-LICENSE.txt. */
+@import url("../vendor/slot-text/style.css");
+
+@layer motion-recipes {
+
+:root {
+  --tabs-dur: 250ms;
+  --tabs-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --tabs-text-muted: rgba(15, 15, 15, 0.8);
+  --tabs-text-active: #0f0f0f;
+  --tabs-bar-bg: #f1f1f1;
+  --tabs-pill-bg: #ffffff;
+}
+
+/* The bar is just a flex container with padding for the pill
+   to sit inside. Tabs sit on z-index: 1, the pill on z-index: 0,
+   so labels read above the pill background. */
+.t-tabs {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px;
+  border-radius: 48px;
+  background: var(--tabs-bar-bg);
+}
+.t-tab {
+  position: relative;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  height: 30px;
+  padding: 4px 12px;
+  color: var(--tabs-text-muted);
+  cursor: pointer;
+  border-radius: 48px;
+  z-index: 1;
+  transition: color var(--tabs-dur) var(--tabs-ease);
+}
+.t-tab:not([aria-selected="true"]):hover,
+.t-tab[aria-selected="true"] {
+  color: var(--tabs-text-active);
+}
+
+/* The pill: width + transform are written inline by JS so
+   the transition tweens between the previous and next
+   measured positions. */
+.t-tabs-pill {
+  position: absolute;
+  top: 3px;
+  left: 0;
+  height: 30px;
+  width: 0;
+  background: var(--tabs-pill-bg);
+  border-radius: 48px;
+  transform: translateX(0);
+  transition:
+    transform var(--tabs-dur) var(--tabs-ease),
+    width     var(--tabs-dur) var(--tabs-ease);
+  will-change: transform, width;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-tabs-pill, .t-tab { transition: none !important; }
+}
+
+:root {
+  --stagger-dur: 500ms;
+  --stagger-distance: 12px;
+  --stagger-stagger: 40ms;
+  --stagger-blur: 3px;
+  --stagger-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Lines start translated down + blurred + invisible; .is-shown
+   on the parent flips them to their resting state. The second
+   line's transition-delay holds it back by --stagger-stagger
+   so the eye lands on the headline first. */
+.t-stagger-line {
+  display: block;
+  opacity: 0;
+  transform: translateY(var(--stagger-distance));
+  filter: blur(var(--stagger-blur));
+  transition:
+    opacity   var(--stagger-dur) var(--stagger-ease),
+    transform var(--stagger-dur) var(--stagger-ease),
+    filter    var(--stagger-dur) var(--stagger-ease);
+  will-change: transform, opacity, filter;
+}
+.t-stagger-line--2 { transition-delay: var(--stagger-stagger); }
+
+.t-stagger.is-shown .t-stagger-line {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+/* Exit decouples from the stagger: same fade for every line,
+   no Y return, no blur — so the disappearance reads as a
+   single quiet fade instead of a reverse reveal. */
+.t-stagger.is-hiding .t-stagger-line {
+  opacity: 0;
+  transform: translateY(0);
+  filter: blur(0);
+  transition:
+    opacity 200ms ease,
+    transform 0s linear,
+    filter 0s linear;
+  transition-delay: 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-stagger-line { transition: none !important; }
+}
+
+}
+
+:root {
+  --duration-stagger: 40ms;
+  --duration-quick: 150ms;
+  --duration-fast: 250ms;
+  --duration-slow: 400ms;
+  --duration-very-slow: 500ms;
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --distance-base: 8px;
+  --page-slide-dur: 250ms;
+  --page-slide-ease: var(--ease-smooth-out);
+}
+/* Entry hooks enhance an already readable page; motion never owns routing. */
+[data-demo-page] { scroll-margin-top: 76px; }
+[data-demo-page][inert] { pointer-events: none; }
+body[data-demo="noema"] .iteration-page { animation: none; }
+body[data-demo="commonplace"] [data-demo-page].hidden { display: none !important; }
+body[data-demo] { padding-top: 76px; padding-bottom: 100px; }
+.motion-navigation {
+  position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+  z-index: 100000; display: flex; align-items: center; gap: 14px;
+  max-width: calc(100vw - 24px); padding: 7px 10px 7px 18px;
+  background: #17232cf2; color: #edf2f4; border: 1px solid #ffffff24;
+  border-radius: 40px; box-shadow: 0 6px 24px #0d1b2420;
+  font: 12px/1.3 system-ui, sans-serif; backdrop-filter: blur(16px);
+}
+.motion-navigation .motion-brand { white-space: nowrap; font-weight: 600; letter-spacing: .02em; }
+.motion-navigation .t-tabs { padding: 3px; gap: 3px; --tabs-bar-bg: #ffffff0d; --tabs-pill-bg: #f4efe4;
+  --tabs-text-active: #17232c; --tabs-text-muted: #d5dfe5; }
+.motion-navigation .t-tab { display: inline-flex; align-items: center; text-decoration: none;
+  white-space: nowrap; padding: 4px 12px; height: 30px; font: 600 12px/1 system-ui, sans-serif; }
+.motion-navigation .t-tab[aria-current="page"] { color: var(--tabs-text-active); }
+.motion-position { min-width: 34px; color: #bfcdd4; white-space: nowrap; }
+.motion-sr-only { position: absolute !important; width: 1px !important; height: 1px !important;
+  padding: 0 !important; margin: -1px !important; overflow: hidden !important;
+  clip-path: inset(50%) !important; white-space: nowrap !important; border: 0 !important; }
+.motion-text-visual { vertical-align: baseline; max-width: 100%; }
+.motion-navigation a:focus-visible, body[data-demo] button:focus-visible {
+  outline: 2px solid #73b9dc; outline-offset: 3px;
+}
+/* Existing iteration controls keep their styling and gain a stable active marker. */
+.motion-iteration-track { position: relative; isolation: isolate; }
+.motion-iteration-track > button { position: relative; z-index: 1; }
+.motion-iteration-track > .motion-iteration-pill {
+  position: absolute; left: 0; top: 0; height: 100%; pointer-events: none; z-index: 0;
+  background: #8eb5bf22; border: 1px solid #a1cbd766; border-radius: 7px;
+  transition: transform var(--duration-fast) var(--ease-smooth-out), width var(--duration-fast) var(--ease-smooth-out);
+}
+@media (max-width: 700px) {
+  .motion-navigation { gap: 6px; padding: 6px; top: 8px; }
+  .motion-brand { display: none; }
+  .motion-navigation .t-tab { padding-inline: 10px; font-size: 11px; }
+  .motion-position { font-size: 10px; min-width: 28px; }
+  body[data-demo="cairn"] .iteration-switcher {
+    left: 8px; right: 8px; bottom: 8px; flex-wrap: wrap; justify-content: center;
+    max-width: calc(100vw - 16px); white-space: normal;
+  }
+  body[data-demo="cairn"] .switcher-tabs { flex-wrap: wrap; justify-content: center; }
+  body[data-demo="noema"] .iteration-switcher-root { left: 8px; right: 8px; bottom: 8px; }
+  body[data-demo="noema"] .switcher-bar { width: 100%; max-width: 100%; gap: 3px; }
+  body[data-demo="noema"] .switcher-toggle-btn { min-width: 0; flex: 1; }
+  body[data-demo="noema"] #currentIterationLabel { display: none; }
+  body[data-demo="noema"] .switcher-drawer { width: 100%; max-width: 100%; max-height: 65vh; overflow-y: auto; }
+  body[data-demo="commonplace"] nav[aria-label="Switch between the five landing page iterations"] > div {
+    border-radius: 16px; flex-wrap: wrap; justify-content: center; overflow: visible;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html, body { scroll-behavior: auto !important; }
+  body[data-demo] *, body[data-demo] *::before, body[data-demo] *::after,
+  [data-demo-page], [data-motion], .motion-iteration-pill,
+  .motion-text-visual *, .motion-navigation * { animation: none !important; transition: none !important; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+
+/* Font-loaded headings and indented slips must stay within their content column. */
+body[data-demo] [data-demo-page] h1 { overflow-wrap: anywhere; }
+body[data-demo="commonplace"] #zk-tray > .ml-6 { width: calc(100% - 1.5rem); }
+body[data-demo="commonplace"] #zk-tray > .ml-3 { width: calc(100% - .75rem); }
+@media (max-width: 680px) {
+  body[data-demo="noema"] #page-5 .p5-prompt-row { flex-direction: column; align-items: stretch; }
+  body[data-demo="noema"] #page-5 .p5-input { min-width: 0; }
+  body[data-demo="noema"] #page-1 .p1-table { display: block; max-width: 100%; overflow-x: auto; }
+  body[data-demo="cairn"] .iter-3-header > div { flex-wrap: wrap; }
+}
+@media (min-width: 1024px) {
+  body[data-demo="commonplace"] #page-5 h1 { font-size: clamp(1.875rem, 2.7vw, 2.375rem); }
+}

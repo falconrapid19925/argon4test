@@ -1,0 +1,13 @@
+assets/vendor/
+assets/motion/
+# Preserve the layout of the original hand-authored design studies.
+*.html
+ANIMATION_PLAN.md
+docs/preview.png
+package-lock.json
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+work/

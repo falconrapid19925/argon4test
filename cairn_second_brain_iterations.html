@@ -1537,14 +1537,35 @@
         justify-content: center;
       }
     }
+    .iter-4-ledger-scroll {
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    @media (max-width: 600px) {
+      .iter-1-nav,
+      .iter-1-nav-links,
+      .iter-1-brand {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      .iter-1-nav-links {
+        width: 100%;
+      }
+      .iter-4-table {
+        min-width: 520px;
+      }
+    }
   </style>
+  <link rel="stylesheet" href="assets/motion/motion.css" />
+  <script src="assets/motion/motion.js"></script>
 </head>
-<body>
+<body data-demo="cairn">
 
   <!-- ========================================================================
        ITERATION /1 : LUHMANN'S WOODEN SLIP-BOX (ARCHIVAL INDEX & MANILA LEDGER)
        ======================================================================== -->
-  <main id="view-1" class="iteration-view iter-1 is-active" data-iteration="1" aria-label="Iteration 1: Archival Slip-Box">
+  <main id="view-1" class="iteration-view iter-1 is-active" data-iteration="1" data-demo-page="1" aria-label="Iteration 1: Archival Slip-Box">
     <div class="iter-1-shell">
       <header class="iter-1-nav">
         <div class="iter-1-brand">
@@ -1558,7 +1579,7 @@
         </nav>
       </header>
 
-      <section class="iter-1-hero-intro">
+      <section class="iter-1-hero-intro" data-motion>
         <div>
           <h1 class="iter-1-headline">Your notes are only useful if they surprise you six months later.</h1>
         </div>
@@ -1574,7 +1595,7 @@
         </div>
       </section>
 
-      <section class="iter-1-workbench" aria-label="Interactive slip-box drawer and manuscript">
+      <section class="iter-1-workbench" data-motion aria-label="Interactive slip-box drawer and manuscript">
         <div>
           <div class="iter-1-tray-header">
             <span class="iter-1-tray-title">Drawer II : Urban Infrastructure &amp; Memory</span>
@@ -1647,7 +1668,7 @@
         </aside>
       </section>
 
-      <section class="iter-1-sequence-section">
+      <section class="iter-1-sequence-section" data-motion>
         <div>
           <h2 class="iter-1-sequence-heading">How a slip-box compounds over ten years</h2>
           <p class="iter-1-sequence-desc">
@@ -1684,7 +1705,7 @@
   <!-- ========================================================================
        ITERATION /2 : THE RENAISSANCE GLOSSATOR (CONCENTRIC MARGIN COMMENTARY)
        ======================================================================== -->
-  <main id="view-2" class="iteration-view iter-2" data-iteration="2" aria-label="Iteration 2: Scholarly Margin Glossator">
+  <main id="view-2" class="iteration-view iter-2" data-iteration="2" data-demo-page="2" aria-label="Iteration 2: Scholarly Margin Glossator">
     <div class="iter-2-shell">
       <header class="iter-2-topbar">
         <div>
@@ -1698,7 +1719,7 @@
       </header>
 
       <section class="iter-2-hero-header">
-        <h1 class="iter-2-display">Read with a sharp pencil in the margin across every book you own.</h1>
+        <h1 class="iter-2-display" data-motion>Read with a sharp pencil in the margin across every book you own.</h1>
         <p class="iter-2-deck">
           Most note apps exile your highlights into an isolated database. Cairn keeps your primary reading in the center well and surrounds it with layers of dated commentary from months apart.
         </p>
@@ -1709,7 +1730,7 @@
 
       <section class="iter-2-folio" aria-label="Interactive concentric gloss folio">
         <!-- Left Margin: Earlier Provenance & Parallels -->
-        <aside class="iter-2-margin-col" aria-label="Earlier source parallels">
+        <aside class="iter-2-margin-col" data-motion aria-label="Earlier source parallels">
           <h2 class="iter-2-margin-heading">Left Margin : Earlier Parallels</h2>
 
           <div class="iter-2-gloss-note is-active" data-gloss="1" onclick="selectGloss(1)">
@@ -1735,7 +1756,7 @@
         </aside>
 
         <!-- Center Reading Well -->
-        <article class="iter-2-center-well">
+        <article class="iter-2-center-well" data-motion>
           <p class="iter-2-well-source">Chapter 4 of Primary Essay in Progress: The Architecture of Recall</p>
           <h2 class="iter-2-well-title">Why rigid hierarchies fail the working scholar</h2>
           <p class="iter-2-well-paragraph">
@@ -1763,7 +1784,7 @@
         </article>
 
         <!-- Right Margin: Later Rebuttals & Revisions -->
-        <aside class="iter-2-margin-col" aria-label="Later revisions and counter-arguments">
+        <aside class="iter-2-margin-col" data-motion aria-label="Later revisions and counter-arguments">
           <h2 class="iter-2-margin-heading">Right Margin : Later Doubts &amp; Revisions</h2>
 
           <div class="iter-2-gloss-note is-active" data-gloss="1" onclick="selectGloss(1)">
@@ -1809,7 +1830,7 @@
   <!-- ========================================================================
        ITERATION /3 : THE DARKROOM LIGHT TABLE (SPATIAL MICROFICHE WORKBENCH)
        ======================================================================== -->
-  <main id="view-3" class="iteration-view iter-3" data-iteration="3" aria-label="Iteration 3: Darkroom Spatial Light Table">
+  <main id="view-3" class="iteration-view iter-3" data-iteration="3" data-demo-page="3" aria-label="Iteration 3: Darkroom Spatial Light Table">
     <div class="iter-3-shell">
       <header class="iter-3-header">
         <div class="iter-3-brand">
@@ -1824,7 +1845,7 @@
 
       <section class="iter-3-hero-bar">
         <div>
-          <h1 class="iter-3-headline">See the shape of what you know before you write the first line.</h1>
+          <h1 class="iter-3-headline" data-motion>See the shape of what you know before you write the first line.</h1>
         </div>
         <div>
           <p class="iter-3-lead">
@@ -1892,7 +1913,7 @@
           </div>
         </div>
 
-        <aside class="iter-3-inspector-pane" aria-live="polite">
+        <aside class="iter-3-inspector-pane" data-motion aria-live="polite">
           <div>
             <div class="iter-3-inspector-header">
               <p class="iter-3-inspector-cluster" id="iter3-insp-cluster">Marine Climatology Archive</p>
@@ -1934,7 +1955,7 @@
   <!-- ========================================================================
        ITERATION /4 : THE BOTANICAL HERBARIUM (FIELD NATURALIST LEDGER)
        ======================================================================== -->
-  <main id="view-4" class="iteration-view iter-4" data-iteration="4" aria-label="Iteration 4: Botanical Herbarium and Field Ledger">
+  <main id="view-4" class="iteration-view iter-4" data-iteration="4" data-demo-page="4" aria-label="Iteration 4: Botanical Herbarium and Field Ledger">
     <div class="iter-4-shell">
       <div class="iter-4-sheet">
         <header class="iter-4-topbar">
@@ -1944,7 +1965,7 @@
 
         <section class="iter-4-hero-grid">
           <div>
-            <h1 class="iter-4-headline">Collect raw observations in the wild. Classify them when they take root.</h1>
+            <h1 class="iter-4-headline" data-motion>Collect raw observations in the wild. Classify them when they take root.</h1>
             <p class="iter-4-lead">
               Field naturalists never wait for a finished theory to press a leaf. Cairn lets you pin voice transcripts, sketches, and book excerpts onto durable specimen sheets that cross-pollinate across projects.
             </p>
@@ -1985,7 +2006,7 @@
 
         <section aria-label="Interactive Specimen Taxonomy Ledger">
           <div class="iter-4-ledger-controls">
-            <h2 class="iter-4-ledger-title">Specimen &amp; Reading Index</h2>
+            <h2 class="iter-4-ledger-title" data-motion>Specimen &amp; Reading Index</h2>
             <div class="iter-4-filter-group" role="group" aria-label="Filter specimen habitat">
               <button type="button" class="iter-4-filter-btn is-active" onclick="filterSpecimens('all', this)">All Specimens (4)</button>
               <button type="button" class="iter-4-filter-btn" onclick="filterSpecimens('Ecology', this)">Ecology (2)</button>
@@ -1994,6 +2015,7 @@
             </div>
           </div>
 
+          <div class="iter-4-ledger-scroll" role="region" aria-label="Scrollable specimen taxonomy ledger" tabindex="0">
           <table class="iter-4-table">
             <thead>
               <tr>
@@ -2058,6 +2080,7 @@
               </tr>
             </tbody>
           </table>
+          </div>
         </section>
       </div>
     </div>
@@ -2066,7 +2089,7 @@
   <!-- ========================================================================
        ITERATION /5 : THE CHRONOLOGICAL EPHEMERIS (1974 WHOLE EARTH STREAM)
        ======================================================================== -->
-  <main id="view-5" class="iteration-view iter-5" data-iteration="5" aria-label="Iteration 5: Chronological Ephemeris Stream">
+  <main id="view-5" class="iteration-view iter-5" data-iteration="5" data-demo-page="5" aria-label="Iteration 5: Chronological Ephemeris Stream">
     <div class="iter-5-shell">
       <header class="iter-5-masthead">
         <span class="iter-5-title">Cairn Ephemeris</span>
@@ -2074,13 +2097,13 @@
       </header>
 
       <section class="iter-5-hero">
-        <h1 class="iter-5-headline">Stop organizing folders. Just write the next line.</h1>
+        <h1 class="iter-5-headline" data-motion>Stop organizing folders. Just write the next line.</h1>
         <p class="iter-5-sub">
           Every minute you spend designing a folder hierarchy is a minute stolen from thinking. Type a raw note into the stream below using <strong>[[double brackets]]</strong> around any concept—Cairn links it automatically to everything you have written before.
         </p>
 
         <!-- Working Interactive Composer -->
-        <div class="iter-5-composer">
+        <div class="iter-5-composer" data-motion>
           <label class="iter-5-composer-label" for="iter5-input">Append a live note to your chronological stream</label>
           <textarea id="iter5-input" class="iter-5-textarea" placeholder="Write an observation using [[brackets]] around key concepts...">Street trees with continuous [[urban canopy]] reduce asphalt surface temperatures by 11°C during peak afternoon heatwaves, lowering neighborhood [[grid demand]] without mechanical chillers.</textarea>
           <div class="iter-5-composer-bar">
@@ -2097,7 +2120,7 @@
       </section>
 
       <section aria-label="Chronological Note Stream">
-        <div class="iter-5-river-header">
+        <div class="iter-5-river-header" data-motion>
           <h2 class="iter-5-river-title">Chronological Log &amp; Automatic Backlinks</h2>
           <span id="iter5-count" style="font-family:'TeX Gyre Adventor',sans-serif; font-size:0.85rem;">Showing 4 entries in local stream</span>
         </div>
@@ -2166,7 +2189,7 @@
   <!-- ========================================================================
        STUDIO DESIGN NOTES & TOKEN INSPECTOR DRAWER
        ======================================================================== -->
-  <aside id="studio-drawer" class="studio-drawer" aria-label="Studio Design Plan and Self-Critique Inspector">
+  <aside id="studio-drawer" class="studio-drawer" inert aria-label="Studio Design Plan and Self-Critique Inspector">
     <div class="studio-drawer-header">
       <span class="studio-drawer-title" id="drawer-title">Iteration /1 Design Plan &amp; Pass-2 Critique</span>
       <button type="button" class="studio-drawer-close" onclick="toggleStudioDrawer()">Close inspector</button>
@@ -2303,22 +2326,14 @@
 
       const routePathEl = document.getElementById('route-path');
       if (routePathEl) {
-        routePathEl.textContent = '/pages/' + target;
+        DemoMotion.text(routePathEl, '/pages/' + target);
       }
 
       updateStudioDrawer(target);
 
-      if (updateHistory) {
-        try {
-          const url = new URL(window.location.href);
-          url.hash = '#/pages/' + target;
-          window.history.replaceState({ iteration: target }, '', url.toString());
-        } catch (e) {
-          window.location.hash = '/pages/' + target;
-        }
-      }
-
-      window.scrollTo({ top: 0, behavior: 'auto' });
+      DemoMotion.route('cairn', target, updateHistory);
+      DemoMotion.enter(document.getElementById('view-' + target), target);
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
     function stepIteration(delta) {
@@ -2333,6 +2348,13 @@
       const btn = document.getElementById('studio-spec-btn');
       const isOpen = drawer.classList.toggle('is-open');
       btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      drawer.inert = !isOpen;
+      if (isOpen) {
+        DemoMotion.reveal(drawer, { distance: 12, duration: 280 });
+        drawer.querySelector('.studio-drawer-close').focus({ preventScroll: true });
+      } else {
+        btn.focus({ preventScroll: true });
+      }
     }
 
     function updateStudioDrawer(num) {
@@ -2407,7 +2429,8 @@
         `Transcluded from slip ${item.id} (recorded ${item.date})`;
       document.getElementById('iter1-transclusion-text').textContent = item.quote;
       document.getElementById('iter1-manuscript-followup').textContent = item.followup;
-      document.getElementById('iter1-link-stat').textContent = item.links;
+      DemoMotion.text('#iter1-link-stat', item.links);
+      DemoMotion.reveal('#iter1-transclusion-box', { distance: 8, duration: 260 });
     }
 
     function cycleSlip() {
@@ -2440,6 +2463,7 @@
           <div class="iter-1-slip-branch">Filed just now behind 21/3d1a</div>
         `;
         deck.appendChild(newBtn);
+        DemoMotion.reveal(newBtn, { distance: 16, duration: 340 });
         deck.style.gridTemplateColumns = 'repeat(5, 1fr)';
         selectSlip(4);
         toast.textContent = "Filed slip 21/3d1b in Drawer II and updated manuscript transclusion.";
@@ -2476,8 +2500,9 @@
       });
       const thread = GLOSS_THREADS[num];
       if (thread) {
-        document.getElementById('iter2-synthesis-label').textContent = thread.label;
+        DemoMotion.text('#iter2-synthesis-label', thread.label);
         document.getElementById('iter2-synthesis-text').textContent = thread.text;
+        DemoMotion.reveal('#iter2-synthesis-text', { distance: 6, duration: 260 });
       }
     }
 
@@ -2567,13 +2592,15 @@
         }
       }
 
-      document.getElementById('iter3-insp-cluster').textContent = node.cluster;
+      DemoMotion.text('#iter3-insp-cluster', node.cluster);
       document.getElementById('iter3-insp-title').textContent = node.title;
       document.getElementById('iter3-insp-body').textContent = node.body;
       document.getElementById('iter3-coords').textContent = node.coords;
       document.getElementById('iter3-backlinks-list').innerHTML = node.backlinks
         .map(b => `<div class="iter-3-backlink-item">${b}</div>`)
         .join('');
+      DemoMotion.reveal('#iter3-insp-title', { distance: 8, duration: 260 });
+      DemoMotion.reveal('#iter3-backlinks-list', { distance: 6, duration: 320 });
     }
 
     /* ==========================================================================
@@ -2586,7 +2613,9 @@
         const isOpen = detail.classList.toggle('is-open');
         if (rows[idx]) {
           rows[idx].classList.toggle('is-expanded', isOpen);
+          rows[idx].setAttribute('aria-expanded', String(isOpen));
         }
+        if (isOpen) DemoMotion.reveal(detail.firstElementChild, { distance: 6, duration: 280 });
       }
     }
 
@@ -2599,9 +2628,11 @@
         const detail = document.getElementById('iter4-detail-' + idx);
         const show = (domain === 'all' || rowDomain === domain);
         row.style.display = show ? 'table-row' : 'none';
+        if (show) DemoMotion.reveal(row, { distance: 0, duration: 240 });
         if (detail && !show) {
           detail.classList.remove('is-open');
           row.classList.remove('is-expanded');
+          row.setAttribute('aria-expanded', 'false');
         }
       });
     }
@@ -2659,8 +2690,9 @@
       `;
 
       list.prepend(article);
+      DemoMotion.reveal(article, { distance: 16, duration: 360 });
       const count = list.querySelectorAll('.iter-5-entry').length;
-      document.getElementById('iter5-count').textContent = `Showing ${count} entries in local stream`;
+      DemoMotion.text('#iter5-count', `Showing ${count} entries in local stream`);
       feedback.textContent = `Appended to stream (${matches.length} linked concept${matches.length === 1 ? '' : 's'} indexed).`;
       input.value = '';
     }
@@ -2669,31 +2701,45 @@
        INITIALIZE ROUTING FROM URL PATH, QUERY, OR HASH + KEYBOARD SHORTCUTS
        ========================================================================== */
     function detectInitialIteration() {
-      const hash = window.location.hash || '';
-      const path = window.location.pathname || '';
-      const search = window.location.search || '';
-
-      const hashMatch = hash.match(/([1-5])/);
-      if (hashMatch) return parseInt(hashMatch[1], 10);
-
-      const queryMatch = search.match(/(?:page|iter|v)=([1-5])/i);
-      if (queryMatch) return parseInt(queryMatch[1], 10);
-
-      const pathMatch = path.match(/\/(?:pages\/)?([1-5])(?:\/|\.html)?$/);
-      if (pathMatch) return parseInt(pathMatch[1], 10);
-
-      return 1;
+      return DemoMotion.initial();
     }
 
-    window.addEventListener('hashchange', () => {
+    function restoreIteration() {
       const target = detectInitialIteration();
-      if (target !== currentIteration) {
-        switchIteration(target, false);
-      }
+      if (target !== currentIteration) switchIteration(target, false);
+    }
+    window.addEventListener('hashchange', () => {
+      if (/^#\/pages\/[1-5]\/?$/.test(window.location.hash)) restoreIteration();
+    });
+    window.addEventListener('popstate', restoreIteration);
+
+    // Give the existing non-native interactive surfaces equivalent keyboard controls.
+    document.querySelectorAll('.iter-2-gloss-note, .iter-3-node-group, .iter-4-row-clickable').forEach((el) => {
+      el.setAttribute('tabindex', '0');
+      if (!el.matches('tr')) el.setAttribute('role', 'button');
+      if (el.matches('tr')) el.setAttribute('aria-expanded', String(el.classList.contains('is-expanded')));
+      el.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      });
+    });
+    document.querySelectorAll('.iter-2-annotated-span').forEach((el) => {
+      el.onkeydown = (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        el.click();
+      };
     });
 
     window.addEventListener('keydown', (e) => {
-      if (['INPUT', 'TEXTAREA'].includes((e.target && e.target.tagName) || '')) return;
+      if (e.key === 'Escape' && document.getElementById('studio-drawer').classList.contains('is-open')) {
+        e.preventDefault();
+        toggleStudioDrawer();
+        return;
+      }
+      if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey ||
+          e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;
       if (e.key >= '1' && e.key <= '5') {
         switchIteration(parseInt(e.key, 10));
       } else if (e.key === '[') {

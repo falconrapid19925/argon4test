@@ -1,0 +1,11 @@
+name: Improvement
+description: Suggest a focused design or developer-experience improvement
+title: 'enhancement: '
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Problem and proposed behavior
+      description: Explain who this helps and the collection/iteration affected.
+    validations:
+      required: true
