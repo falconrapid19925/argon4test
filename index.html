@@ -138,12 +138,24 @@
     const link = document.getElementById('openCurrent');
     const buttons = Array.from(document.querySelectorAll('button[data-page]'));
 
-    function activate(btn) {
+    function syncControls(page) {
+      const btn = buttons.find((item) => item.dataset.page === page);
+      if (!btn) return;
+
       buttons.forEach((item) => item.classList.toggle('active', item === btn));
-      const page = btn.dataset.page;
-      frame.src = page;
       link.href = page;
     }
+
+    function activate(btn) {
+      const page = btn.dataset.page;
+      syncControls(page);
+      frame.src = page;
+    }
+
+    frame.addEventListener('load', () => {
+      const page = decodeURIComponent(frame.contentWindow.location.pathname.split('/').pop());
+      syncControls(page);
+    });
 
     buttons.forEach((btn) => {
       btn.addEventListener('click', () => activate(btn));
