@@ -41,3 +41,9 @@ Animation assertions observe actual calls to the browser's Web Animations API an
 | Branches   | 80%     |
 
 Reports: `coverage/index.html`, `coverage/lcov.info`, `coverage/coverage-summary.json`, `playwright-report/index.html`, and `test-results/junit.xml`. Failure traces, screenshots, and videos live under `test-results/`. CI retains these artifacts for 14 days, including on failure. Generated reports and dependencies stay out of git.
+
+## Standalone regression runner
+
+`node tests/motion-smoke.cjs` retains the 33 Chromium regression checks from the animation PR, including blocked History API writes, legacy short hashes, Tailwind reveal precedence, anchor offsets, browser-launch cleanup, and modal state across Back/Forward. Use the same locked dependencies from `npm ci`. Set `CHROMIUM_PATH` to an installed Chromium binary (the default is `/usr/bin/chromium`); the dedicated smoke workflow selects Playwright's managed executable.
+
+Optional runner variables are `BASE_URL`, `CHROMIUM_PATH`, `SCREENSHOT_DIR`, and `TEST_FILTER` (a case-insensitive check-name regular expression). The runner starts and cleans up its own temporary static server. Screenshots default to `/tmp/argon-motion-screenshots`. Required asset and JavaScript failures fail the run.

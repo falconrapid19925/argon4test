@@ -2709,7 +2709,7 @@
       if (target !== currentIteration) switchIteration(target, false);
     }
     window.addEventListener('hashchange', () => {
-      if (/^#\/pages\/[1-5]\/?$/.test(window.location.hash)) restoreIteration();
+      if (!location.hash || /^#\/(?:pages\/)?[1-5]\/?$/.test(location.hash)) restoreIteration();
     });
     window.addEventListener('popstate', restoreIteration);
 

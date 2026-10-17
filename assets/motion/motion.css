@@ -204,3 +204,16 @@ body[data-demo="commonplace"] #zk-tray > .ml-3 { width: calc(100% - .75rem); }
 @media (min-width: 1024px) {
   body[data-demo="commonplace"] #page-5 h1 { font-size: clamp(1.875rem, 2.7vw, 2.375rem); }
 }
+
+/* Keep recipe layout layered, but let reveal properties beat utility transitions. */
+.t-stagger-line[data-motion] {
+  transition:
+    opacity var(--stagger-dur) var(--stagger-ease),
+    transform var(--stagger-dur) var(--stagger-ease),
+    filter var(--stagger-dur) var(--stagger-ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .t-stagger-line[data-motion] { transition: none !important; }
+}
+/* Fragment links must land below the persistent collection navigation. */
+body[data-demo] [data-demo-page] [id] { scroll-margin-top: 76px; }

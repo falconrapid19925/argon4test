@@ -1,0 +1,34 @@
+name: Motion smoke tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: motion-smoke-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser:
+    name: Browser smoke (15 iterations)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: Install pinned browser test tools
+        run: |
+          npm ci
+          npx --no-install playwright install --with-deps chromium
+          printf 'CHROMIUM_PATH=%s\n' "$(node -p "require('playwright').chromium.executablePath()")" >> "$GITHUB_ENV"
+      - name: Check all designs and navigation
+        env:
+          SCREENSHOT_DIR: ${{ runner.temp }}/motion-screenshots
+        run: node tests/motion-smoke.cjs
