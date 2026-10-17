@@ -31,7 +31,6 @@
       display: none;
       min-height: 100vh;
       width: 100%;
-      animation: pageFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .iteration-page.active {
@@ -1329,14 +1328,52 @@
         grid-template-columns: 1fr;
       }
     }
+    @media (max-width: 680px) {
+      #page-1 .p1-topbar,
+      #page-1 .p1-nav,
+      #page-1 .p1-brand,
+      #page-1 .p1-nav-links,
+      #page-2 .p2-nav,
+      #page-2 .p2-nav > div,
+      #page-3 .p3-nav-cell,
+      #page-4 .p4-nav-pill,
+      #page-5 .p5-nav,
+      #page-5 .p5-nav > div {
+        flex-wrap: wrap;
+        gap: 12px;
+        min-width: 0;
+        max-width: 100%;
+      }
+      #page-1 .p1-topbar > *,
+      #page-1 .p1-nav > *,
+      #page-2 .p2-nav > *,
+      #page-3 .p3-nav-cell > *,
+      #page-4 .p4-nav-pill > *,
+      #page-5 .p5-nav > * {
+        min-width: 0;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+      }
+      #page-1 .p1-nav-links,
+      #page-2 .p2-nav > div:last-child,
+      #page-5 .p5-nav > div:last-child {
+        flex-basis: 100%;
+      }
+      #page-4 .p4-nav-pill {
+        justify-content: center;
+        border-radius: 24px;
+      }
+    }
   </style>
+  <link rel="stylesheet" href="assets/motion/motion.css">
+  <script src="assets/motion/motion.js"></script>
 </head>
-<body>
+<body data-demo="noema">
 
   <!-- ========================================================================
        ITERATION /1 — EDITORIAL MONOGRAPH (Zettelkasten & Literary Slip-Box)
        ======================================================================== -->
-  <main id="page-1" class="iteration-page active" data-route="/pages/1" data-short-route="/1">
+  <main data-demo-page="1" id="page-1" class="iteration-page active" data-route="/pages/1" data-short-route="/1">
     <div class="p1-container">
       <div class="p1-topbar p1-mono">
         <span>EDITION IV // ARCHIVAL SECOND BRAIN ARCHITECTURE</span>
@@ -1359,7 +1396,7 @@
       <section class="p1-hero">
         <div>
           <span class="p1-kicker p1-mono">ITERATION 01 // LITERARY ZETTELKASTEN</span>
-          <h1 class="p1-h1 p1-serif">A quiet library where every fleeting note compounds into permanent insight.</h1>
+          <h1 class="p1-h1 p1-serif" data-motion>A quiet library where every fleeting note compounds into permanent insight.</h1>
           <p class="p1-lead">
             Most note apps are digital attics where ideas go to be forgotten. Noema is built on Niklas Luhmann’s bi-directional slip-box: every highlight, margin note, and argument links organically to the thoughts you wrote years ago.
           </p>
@@ -1394,7 +1431,7 @@
             <span id="p1-active-id">[ZK-104.2a]</span>
           </div>
           <div class="p1-slipbox-grid">
-            <div class="p1-main-card">
+            <div class="p1-main-card" data-motion>
               <div class="p1-card-index p1-mono">
                 <span id="p1-card-code">PERMANENT NOTE // ZK-104.2a</span>
                 <span id="p1-card-date">LINKED TO 3 CARDS</span>
@@ -1448,7 +1485,7 @@
           <div class="p1-kicker p1-mono">METHODOLOGY // THREE STAGES OF MEMORY</div>
           <h2 class="p1-h2 p1-serif">Designed for thinkers who write to understand, not just to store.</h2>
         </div>
-        <div class="p1-pillar-grid">
+        <div class="p1-pillar-grid" data-motion>
           <div class="p1-pillar-card">
             <div class="p1-mono" style="font-size: 12px; color: var(--p1-accent); font-weight: 700; margin-bottom: 10px;">01 // FLEETING CAPTURE</div>
             <h3 class="p1-serif" style="font-size: 22px; margin-bottom: 10px;">Frictionless Margin Inbox</h3>
@@ -1511,7 +1548,7 @@
   <!-- ========================================================================
        ITERATION /2 — NEURAL CONSTELLATION (Obsidian Dark & Force Graph)
        ======================================================================== -->
-  <main id="page-2" class="iteration-page" data-route="/pages/2" data-short-route="/2">
+  <main data-demo-page="2" id="page-2" class="iteration-page" data-route="/pages/2" data-short-route="/2">
     <div class="p2-container">
       <nav class="p2-nav">
         <div class="p2-logo">
@@ -1536,8 +1573,8 @@
           <span>•</span>
           <span>SUB-10MS VECTOR RECALL</span>
         </div>
-        <h1 class="p2-h1">See the hidden architecture of everything you know.</h1>
-        <p class="p2-sub">
+        <h1 class="p2-h1" data-motion>See the hidden architecture of everything you know.</h1>
+        <p class="p2-sub" data-motion>
           Your thoughts aren’t linear lists—they’re a living neural constellation. Noema maps every note, PDF highlight, and code snippet into a real-time force-directed graph with instant semantic recall.
         </p>
         <div style="display: flex; justify-content: center; gap: 14px; margin-bottom: 36px; flex-wrap: wrap;">
@@ -1559,7 +1596,7 @@
             </div>
           </div>
 
-          <div class="p2-workbench-grid">
+          <div class="p2-workbench-grid" data-motion>
             <div class="p2-canvas-wrap">
               <canvas id="neuralCanvas" width="720" height="410"></canvas>
               <div class="p2-canvas-controls">
@@ -1644,7 +1681,7 @@
   <!-- ========================================================================
        ITERATION /3 — SWISS BRUTALIST GRID (Engineer's AST & Query Brain)
        ======================================================================== -->
-  <main id="page-3" class="iteration-page" data-route="/pages/3" data-short-route="/3">
+  <main data-demo-page="3" id="page-3" class="iteration-page" data-route="/pages/3" data-short-route="/3">
     <div class="p3-wrapper">
       <div class="p3-ticker">
         <span>NOEMA // SPEC-03 // PROGRAMMABLE KNOWLEDGE ENGINE</span>
@@ -1668,7 +1705,7 @@
       </nav>
 
       <section class="p3-hero-grid">
-        <div class="p3-hero-left">
+        <div class="p3-hero-left" data-motion>
           <div>
             <div class="p3-coord">GRID CELL [A1:B4] // ITERATION 03 // SWISS BRUTALIST</div>
             <h1 class="p3-h1 p3-sans">Treat your notes like a queryable database.</h1>
@@ -1688,7 +1725,7 @@
           </div>
         </div>
 
-        <div class="p3-hero-right">
+        <div class="p3-hero-right" data-motion>
           <div>
             <div style="display: flex; justify-content: space-between; font-size: 11px; color: #A3A096; margin-bottom: 12px;">
               <span>INTERACTIVE SLASH &amp; QUERY COMPILER</span>
@@ -1750,7 +1787,7 @@ automatically into SQLite virtual tables without schema migrations.
   <!-- ========================================================================
        ITERATION /4 — SPATIAL CANVAS & INFINITE DESK (Visual Thinker's Studio)
        ======================================================================== -->
-  <main id="page-4" class="iteration-page" data-route="/pages/4" data-short-route="/4">
+  <main data-demo-page="4" id="page-4" class="iteration-page" data-route="/pages/4" data-short-route="/4">
     <div class="p4-container">
       <div class="p4-floating-nav">
         <div class="p4-nav-pill">
@@ -1768,19 +1805,19 @@ automatically into SQLite virtual tables without schema migrations.
         <div style="display: inline-block; font-size: 12px; font-weight: 700; color: var(--p4-blue); background: rgba(37,99,235,0.1); padding: 5px 14px; border-radius: 999px; margin-bottom: 16px;">
           ITERATION 04 // SPATIAL STUDIO &amp; MULTIMODAL PINBOARD
         </div>
-        <h1 class="p4-h1">Think across an infinite desk, not inside a narrow column.</h1>
+        <h1 class="p4-h1" data-motion>Think across an infinite desk, not inside a narrow column.</h1>
         <p style="font-size: 17px; color: var(--p4-muted); max-width: 650px; margin: 0 auto 26px; line-height: 1.6;">
           Spread out PDFs, voice memos, web clippings, and sticky syntheses side by side. Arrange ideas spatially like a physical studio table—then snap them into structured briefs with one click.
         </p>
 
-        <div class="p4-board-controls">
+        <div class="p4-board-controls" data-motion>
           <button class="p4-lens-btn active" id="p4-lens-product" onclick="window.switchP4Canvas('product')">🎨 Product Architecture Desk</button>
           <button class="p4-lens-btn" id="p4-lens-research" onclick="window.switchP4Canvas('research')">📚 Literature Synthesis</button>
           <button class="p4-lens-btn" id="p4-lens-cluster" onclick="window.toggleP4Tidy()">✨ Auto-Align &amp; Cluster Cards</button>
         </div>
 
         <!-- Interactive Spatial Canvas Desk -->
-        <div id="p4-desk" class="p4-spatial-desk" style="text-align: left;">
+        <div id="p4-desk" class="p4-spatial-desk" data-motion style="text-align: left;">
           <div class="p4-spatial-card" id="p4-card-1" style="transform: rotate(-1.5deg);">
             <span class="p4-tag" style="background: rgba(37,99,235,0.12); color: var(--p4-blue);" id="p4-c1-tag">📎 WEB CLIPPING // HIGHLIGHT</span>
             <h3 style="font-size: 18px; margin-bottom: 8px;" id="p4-c1-title">“Spatial Memory &amp; Object Permanence in UI”</h3>
@@ -1843,7 +1880,7 @@ automatically into SQLite virtual tables without schema migrations.
   <!-- ========================================================================
        ITERATION /5 — AMBIENT AI SYNTHESIZER (Calm Zero-Filing Second Brain)
        ======================================================================== -->
-  <main id="page-5" class="iteration-page" data-route="/pages/5" data-short-route="/5">
+  <main data-demo-page="5" id="page-5" class="iteration-page" data-route="/pages/5" data-short-route="/5">
     <div class="p5-container">
       <nav class="p5-nav">
         <div style="display: flex; align-items: center; gap: 10px;">
@@ -1864,13 +1901,13 @@ automatically into SQLite virtual tables without schema migrations.
         <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--p5-mint); font-weight: 700; margin-bottom: 14px;">
           ITERATION 05 // CALM ZERO-TAXONOMY SECOND BRAIN
         </div>
-        <h1 class="p5-h1">Stop organizing your notes. Start having conversations with your memory.</h1>
+        <h1 class="p5-h1" data-motion>Stop organizing your notes. Start having conversations with your memory.</h1>
         <p style="font-size: 17px; color: var(--p5-muted); max-width: 620px; margin: 0 auto; line-height: 1.65;">
           You shouldn’t need a part-time job maintaining tags and folders. Drop fleeting thoughts into a single calm stream—Noema silently links entities, resurfaces past context, and answers questions across years of your thinking.
         </p>
 
         <!-- Interactive Ambient Stream & Auto-Recall Simulator -->
-        <div class="p5-ambient-box">
+        <div class="p5-ambient-box" data-motion>
           <div style="font-size: 12px; color: var(--p5-muted); margin-bottom: 10px; display: flex; justify-content: space-between;">
             <span>AMBIENT CAPTURE STREAM // TYPE ANY RAW THOUGHT OR CLICK A PRESET</span>
             <span style="color: var(--p5-mint); font-weight: 600;">● ZERO FOLDERS REQUIRED</span>
@@ -1930,7 +1967,7 @@ automatically into SQLite virtual tables without schema migrations.
        PERSISTENT FLOATING ITERATION SWITCHER (/1 .. /5 & /pages/1 .. /pages/5)
        ======================================================================== -->
   <div id="iterationSwitcher" class="iteration-switcher-root">
-    <div class="switcher-drawer">
+    <div id="noema-switcher-drawer" class="switcher-drawer" inert>
       <div class="switcher-drawer-header">
         <span class="switcher-drawer-title">Pages Directory Switcher</span>
         <form class="switcher-route-form" onsubmit="event.preventDefault(); window.navigateByPathInput();">
@@ -2012,7 +2049,7 @@ automatically into SQLite virtual tables without schema migrations.
         <button class="switcher-num-btn" data-num="5" onclick="window.switchIteration(5)">5</button>
       </div>
       <button class="switcher-step-btn" title="Next Iteration" onclick="window.stepIteration(1)">›</button>
-      <button class="switcher-toggle-btn" onclick="window.toggleSwitcherDrawer()">
+      <button class="switcher-toggle-btn" aria-expanded="false" aria-controls="noema-switcher-drawer" onclick="window.toggleSwitcherDrawer()">
         <span id="currentRouteBadge" class="switcher-route-badge">/1</span>
         <span id="currentIterationLabel">Switch Design</span>
         <span>▴</span>
@@ -2036,7 +2073,10 @@ automatically into SQLite virtual tables without schema migrations.
 
     window.toggleSwitcherDrawer = function() {
       const root = document.getElementById("iterationSwitcher");
-      root.classList.toggle("open");
+      const open = root.classList.toggle("open");
+      root.querySelector(".switcher-toggle-btn").setAttribute("aria-expanded", String(open));
+      root.querySelector(".switcher-drawer").inert = !open;
+      if (open) DemoMotion.reveal(root.querySelector(".switcher-list"), { distance: 6, duration: 240 });
     };
 
     window.switchIteration = function(num, updateHistory = true) {
@@ -2060,21 +2100,15 @@ automatically into SQLite virtual tables without schema migrations.
 
       // Update route indicators
       const meta = ITERATION_META[n];
-      document.getElementById("currentRouteBadge").textContent = meta.shortRoute;
-      document.getElementById("currentIterationLabel").textContent = meta.name;
+      DemoMotion.text("#currentRouteBadge", meta.shortRoute);
+      DemoMotion.text("#currentIterationLabel", meta.name);
       document.getElementById("routePathInput").value = meta.pagesRoute;
       document.title = `Noema (${meta.shortRoute}) — ${meta.name}`;
 
-      // Update browser URL (/1 .. /5 or #/pages/1 fallback in sandboxed frames)
-      if (updateHistory) {
-        try {
-          window.history.pushState({ iteration: n }, "", meta.shortRoute);
-        } catch (err) {
-          window.location.hash = "#" + meta.shortRoute;
-        }
-      }
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      // Keep each demo's filename when navigating between its five designs.
+      DemoMotion.route("noema", n, updateHistory);
+      DemoMotion.enter(document.getElementById("page-" + n), n);
+      window.scrollTo({ top: 0, behavior: DemoMotion.reduced() ? "instant" : "smooth" });
       if (n === 2) {
         requestAnimationFrame(drawP2Graph);
       }
@@ -2089,35 +2123,36 @@ automatically into SQLite virtual tables without schema migrations.
 
     window.navigateByPathInput = function() {
       const raw = (document.getElementById("routePathInput").value || "").trim();
-      const match = raw.match(/([1-5])/);
+      const match = raw.match(/^#?\/?(?:pages\/)?([1-5])\/?$/);
       if (match) {
         window.switchIteration(parseInt(match[1], 10));
       }
     };
 
-    // Parse initial URL path (/1, /pages/2, #/3, ?page=4)
+    // Shared routing supports portable filename + hash URLs and legacy links.
     function resolveInitialRoute() {
-      const combined = window.location.pathname + " " + window.location.hash + " " + window.location.search;
-      const match = combined.match(/(?:\/pages\/|\/|page=)#?([1-5])\b/);
-      if (match) {
-        window.switchIteration(parseInt(match[1], 10), false);
-      }
+      window.switchIteration(DemoMotion.initial(), false);
     }
 
-    window.addEventListener("popstate", (e) => {
-      if (e.state && e.state.iteration) {
-        window.switchIteration(e.state.iteration, false);
-      } else {
-        resolveInitialRoute();
-      }
-    });
+    window.addEventListener("popstate", resolveInitialRoute);
 
-    window.addEventListener("hashchange", resolveInitialRoute);
+    window.addEventListener("hashchange", () => {
+      if (!location.hash || /^#\/(?:pages\/)?[1-5]\/?$/.test(location.hash)) resolveInitialRoute();
+    });
 
     // Keyboard shortcuts: 1-5 when not typing in an input
     window.addEventListener("keydown", (e) => {
       const tag = (e.target && e.target.tagName) || "";
-      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      if (e.key === "Escape") {
+        document.getElementById("iterationSwitcher").classList.remove("open");
+        const drawer = document.getElementById("noema-switcher-drawer");
+        if (drawer.contains(document.activeElement)) document.querySelector(".switcher-toggle-btn").focus();
+        drawer.inert = true;
+        document.querySelector(".switcher-toggle-btn").setAttribute("aria-expanded", "false");
+        const modal = document.getElementById("p2-cmd-modal");
+        if (modal.style.display !== "none") modal.style.display = "none";
+      }
+      if (["INPUT", "TEXTAREA", "SELECT"].includes(tag) || e.target?.isContentEditable) return;
       if (e.key >= "1" && e.key <= "5" && !e.metaKey && !e.ctrlKey) {
         window.switchIteration(parseInt(e.key, 10));
       } else if (e.key === "[") {
@@ -2156,9 +2191,9 @@ automatically into SQLite virtual tables without schema migrations.
     window.selectP1Card = function(idx) {
       p1Index = idx;
       const item = P1_CARDS[idx];
-      document.getElementById("p1-active-id").textContent = item.id;
-      document.getElementById("p1-card-code").textContent = item.code;
-      document.getElementById("p1-card-heading").textContent = item.heading;
+      DemoMotion.text("#p1-active-id", item.id);
+      DemoMotion.text("#p1-card-code", item.code);
+      DemoMotion.text("#p1-card-heading", item.heading);
       document.querySelectorAll("#page-1 .p1-mini-card").forEach((el, i) => {
         el.classList.toggle("highlighted", i === idx);
       });
@@ -2172,7 +2207,7 @@ automatically into SQLite virtual tables without schema migrations.
     };
 
     window.distillP1Note = function() {
-      document.getElementById("p1-card-date").textContent = "DISTILLED JUST NOW • +1 LINK";
+      DemoMotion.text("#p1-card-date", "DISTILLED JUST NOW • +1 LINK");
       window.cycleP1Note();
     };
 
@@ -2243,9 +2278,11 @@ automatically into SQLite virtual tables without schema migrations.
     function selectP2Node(node) {
       selectedP2Node = node;
       document.getElementById("p2-node-cluster").textContent = `ACTIVE NODE // #${node.cluster.toUpperCase()}`;
-      document.getElementById("p2-node-title").textContent = node.label;
+      DemoMotion.text("#p2-node-title", node.label);
       document.getElementById("p2-node-body").textContent = node.desc;
       document.getElementById("p2-node-links").innerHTML = node.links.map(l => `<span>→ [[${l}]]</span>`).join("");
+      DemoMotion.reveal("#p2-node-body", { distance: 5, duration: 240 });
+      DemoMotion.reveal("#p2-node-links", { distance: 5, duration: 280 });
       drawP2Graph();
     }
 
@@ -2253,8 +2290,8 @@ automatically into SQLite virtual tables without schema migrations.
       activeP2Cluster = cluster;
       document.querySelectorAll("#page-2 .p2-chip-btn").forEach(b => b.classList.remove("active"));
       if (btn) btn.classList.add("active");
-      document.getElementById("p2-graph-telemetry").textContent =
-        `NODES: ${p2Nodes.length} // EDGES: ${p2Edges.length} // CLUSTER: ${cluster.toUpperCase()}`;
+      DemoMotion.text("#p2-graph-telemetry",
+        `NODES: ${p2Nodes.length} // EDGES: ${p2Edges.length} // CLUSTER: ${cluster.toUpperCase()}`);
       drawP2Graph();
     };
 
@@ -2274,13 +2311,15 @@ automatically into SQLite virtual tables without schema migrations.
       p2Nodes.push(newNode);
       p2Edges.push([id, 0], [id, 6]);
       selectP2Node(newNode);
-      document.getElementById("p2-graph-telemetry").textContent =
-        `NODES: ${p2Nodes.length} // EDGES: ${p2Edges.length} // CLUSTER: LIVE`;
+      DemoMotion.text("#p2-graph-telemetry",
+        `NODES: ${p2Nodes.length} // EDGES: ${p2Edges.length} // CLUSTER: LIVE`);
     };
 
     window.toggleP2SearchModal = function() {
       const modal = document.getElementById("p2-cmd-modal");
-      modal.style.display = modal.style.display === "none" ? "block" : "none";
+      const open = modal.style.display === "none";
+      modal.style.display = open ? "block" : "none";
+      if (open) DemoMotion.reveal(modal, { distance: 8, duration: 240 });
     };
 
     window.updateP2CmdResults = function(q) {
@@ -2357,6 +2396,7 @@ NEXT REVIEW INTERVALS:
 
     window.runP3Compiler = function(mode) {
       document.getElementById("p3-compiler-output").textContent = P3_OUTPUTS[mode] || P3_OUTPUTS.markdown;
+      DemoMotion.reveal("#p3-compiler-output", { distance: 5, duration: 220 });
       ["markdown", "query", "ast", "flash"].forEach((m) => {
         const btn = document.getElementById("p3-tab-" + m);
         if (btn) btn.classList.toggle("active", m === mode);
@@ -2373,26 +2413,27 @@ NEXT REVIEW INTERVALS:
       document.getElementById("p4-lens-research").classList.toggle("active", lens === "research");
 
       if (lens === "research") {
-        document.getElementById("p4-c1-tag").textContent = "📄 JOURNAL EXCERPT // MIT PRESS";
-        document.getElementById("p4-c1-title").textContent = "Extended Mind Thesis (Clark & Chalmers)";
+        DemoMotion.text("#p4-c1-tag", "📄 JOURNAL EXCERPT // MIT PRESS");
+        DemoMotion.text("#p4-c1-title", "Extended Mind Thesis (Clark & Chalmers)");
         document.getElementById("p4-c1-body").textContent = "External notebooks function as literal extensions of biological working memory when retrieval is reliable and immediate.";
-        document.getElementById("p4-c2-tag").textContent = "🎙️ SEMINAR AUDIO NOTE (1:15)";
-        document.getElementById("p4-c2-title").textContent = "Cognitive Offloading in Visual Workspaces";
+        DemoMotion.text("#p4-c2-tag", "🎙️ SEMINAR AUDIO NOTE (1:15)");
+        DemoMotion.text("#p4-c2-title", "Cognitive Offloading in Visual Workspaces");
         document.getElementById("p4-c2-body").textContent = "Arranging literature cards on a 2D plane reduces working-memory load by 41% during comparative synthesis.";
-        document.getElementById("p4-c3-title").textContent = "Thesis Chapter 2: Spatial Epistemology";
+        DemoMotion.text("#p4-c3-title", "Thesis Chapter 2: Spatial Epistemology");
       } else {
-        document.getElementById("p4-c1-tag").textContent = "📎 WEB CLIPPING // HIGHLIGHT";
-        document.getElementById("p4-c1-title").textContent = "“Spatial Memory & Object Permanence in UI”";
+        DemoMotion.text("#p4-c1-tag", "📎 WEB CLIPPING // HIGHLIGHT");
+        DemoMotion.text("#p4-c1-title", "“Spatial Memory & Object Permanence in UI”");
         document.getElementById("p4-c1-body").textContent = "Humans remember where an idea was placed on a desk long before they remember what file name they gave it.";
-        document.getElementById("p4-c2-tag").textContent = "🎙️ VOICE MEMO TRANSCRIPT (0:42)";
-        document.getElementById("p4-c2-title").textContent = "Walking Note: Onboarding Flow";
+        DemoMotion.text("#p4-c2-tag", "🎙️ VOICE MEMO TRANSCRIPT (0:42)");
+        DemoMotion.text("#p4-c2-title", "Walking Note: Onboarding Flow");
         document.getElementById("p4-c2-body").textContent = "“Don’t force new users into an empty blank page—let them drop three bookmarks or voice notes onto a canvas.”";
-        document.getElementById("p4-c3-title").textContent = "Q4 Spatial Canvas Specification";
+        DemoMotion.text("#p4-c3-title", "Q4 Spatial Canvas Specification");
       }
     };
 
     window.toggleP4Tidy = function() {
       p4Tidied = !p4Tidied;
+      DemoMotion.text("#p4-lens-cluster", p4Tidied ? "↺ Restore Natural Card Layout" : "✨ Auto-Align & Cluster Cards");
       const cards = document.querySelectorAll("#page-4 .p4-spatial-card");
       cards.forEach((card, i) => {
         if (p4Tidied) {
@@ -2435,6 +2476,9 @@ NEXT REVIEW INTERVALS:
         p.entities.map(e => `<span class="p5-sample-pill">${e}</span>`).join("");
       document.getElementById("p5-summary-out").innerHTML = p.summary;
       document.getElementById("p5-recall-out").innerHTML = p.recall;
+      DemoMotion.reveal("#p5-entities-out", { distance: 6, duration: 260 });
+      DemoMotion.reveal("#p5-summary-out", { distance: 6, duration: 300 });
+      DemoMotion.reveal("#p5-recall-out", { distance: 6, duration: 340 });
     };
 
     window.synthesizeP5Thought = function() {
@@ -2447,6 +2491,8 @@ NEXT REVIEW INTERVALS:
           .map(t => `<span class="p5-sample-pill">${t}</span>`).join("");
       document.getElementById("p5-summary-out").innerHTML =
         `Captured "${val.slice(0, 68)}${val.length > 68 ? '...' : ''}" and linked to <strong>3 semantically related notes</strong> in your Second Brain.`;
+      DemoMotion.reveal("#p5-entities-out", { distance: 6, duration: 260 });
+      DemoMotion.reveal("#p5-summary-out", { distance: 6, duration: 300 });
     };
   </script>
 </body>
