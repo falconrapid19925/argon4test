@@ -17,21 +17,18 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '22'
+          node-version-file: .nvmrc
       - name: Install pinned browser test tools
-        env:
-          NODE_PATH: ${{ runner.temp }}/motion-tests/node_modules
         run: |
-          npm install --prefix "$RUNNER_TEMP/motion-tests" --no-package-lock --no-audit --no-fund playwright@1.62.1
-          node "$RUNNER_TEMP/motion-tests/node_modules/playwright/cli.js" install --with-deps chromium
+          npm ci
+          npx --no-install playwright install --with-deps chromium
           printf 'CHROMIUM_PATH=%s\n' "$(node -p "require('playwright').chromium.executablePath()")" >> "$GITHUB_ENV"
       - name: Check all designs and navigation
         env:
-          NODE_PATH: ${{ runner.temp }}/motion-tests/node_modules
           SCREENSHOT_DIR: ${{ runner.temp }}/motion-screenshots
         run: node tests/motion-smoke.cjs

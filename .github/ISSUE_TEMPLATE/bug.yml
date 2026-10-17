@@ -1,0 +1,24 @@
+name: Bug report
+description: Report an interaction, layout, or tooling regression
+title: 'bug: '
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Collection and iteration
+      placeholder: Cairn, iteration 3 (or tooling)
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps and expected result
+      description: Include the URL/hash, actual result, and a screenshot if useful.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser, OS, viewport, and release/commit
+    validations:
+      required: true

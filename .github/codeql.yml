@@ -1,0 +1,6 @@
+name: First-party JavaScript
+paths-ignore:
+  - assets/vendor
+  - dist
+  - coverage
+  - node_modules

@@ -1,3 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import './commonplace-base.css';
+@import 'tailwindcss/theme.css';
+@import 'tailwindcss/utilities.css' source(none);
+@source '../second_brain_five_landing_page_iterations.html';
+
+/* Keep the original small shadow and default sans face. */
+@theme {
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --font-sans:
+    ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+}

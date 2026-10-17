@@ -1511,9 +1511,9 @@
       const trimmed = query.trim();
 
       // Check for simple inline arithmetic expression
-      if (/^[\d\s\+\-\*\/\(\)\.]+$/.test(trimmed) && /\d/.test(trimmed) && /[\+\-\*\/]/.test(trimmed)) {
+      if (/^[\d\s+*/().-]+$/.test(trimmed) && /\d/.test(trimmed) && /[+\-*/]/.test(trimmed)) {
         try {
-          const sanitized = trimmed.replace(/[^0-9\+\-\*\/\(\)\.]/g, "");
+          const sanitized = trimmed.replace(/[^0-9+*/().-]/g, "");
           const val = Function(`"use strict"; return (${sanitized})`)();
           if (typeof val === "number" && isFinite(val)) {
             calcBanner.classList.remove("hidden");
