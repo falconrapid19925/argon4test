@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- Wait for the actual reveal visibility state in browser assertions, preventing false failures when WebKit frames run slowly.
+
 ## 1.0.0
 
 - Three second-brain collections with five interactive iterations each.

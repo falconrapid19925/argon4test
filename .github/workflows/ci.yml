@@ -33,11 +33,16 @@ jobs:
         with:
           name: site-dist
           path: dist
-      - name: Use Actions as the Pages build source
+      - name: Check Pages uses Actions as the build source
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run: gh api --method PUT "repos/$GH_REPO/pages" -f build_type=workflow
+        run: |
+          source_type="$(gh api "repos/$GH_REPO/pages" --jq .build_type)"
+          if [[ "$source_type" != workflow ]]; then
+            echo '::error::Set Settings > Pages > Build and deployment > Source to GitHub Actions. This repository still uses legacy branch publishing; changing that setting requires repository administration permission.'
+            exit 1
+          fi
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:

@@ -64,7 +64,7 @@ Coverage measures **`assets/motion/motion.js`** using Chromium's V8 engine. Mini
 
 ## Automation and releases
 
-Pull requests run the same quality checks and three-browser matrix as `main`. Only a passing `main` build deploys to GitHub Pages. Every release reruns verification and publishes a static archive plus SHA-256 checksum. Manual release runs default to **dry run** and retain an archive without publishing.
+Pull requests run the same quality checks and three-browser matrix as `main`. With the Pages build source set to **GitHub Actions**, only a passing `main` build deploys to GitHub Pages. The deployment job checks this one-time repository setting. Every release reruns verification and publishes a static archive plus SHA-256 checksum. Manual release runs default to **dry run** and retain an archive without publishing.
 
 GitHub Actions are pinned to immutable commit hashes, annotated with verified stable versions. Dependabot checks npm and Actions weekly; CodeQL runs on pull requests, `main`, and a weekly schedule. See [the maintenance guide](docs/MAINTAINING.md) for versions, Pages setup, release commands, and branch rules.
 
