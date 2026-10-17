@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Argon4Test - Page Switcher</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+    h1 { margin-bottom: 0.5rem; }
+    nav { display: flex; gap: 0.75rem; margin: 1rem 0; }
+    button { padding: 0.5rem 1rem; cursor: pointer; }
+    iframe { width: 100%; min-height: 70vh; border: 1px solid #ccc; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>Argon4Test Pages</h1>
+  <p>Use the switcher to view each HTML page.</p>
+
+  <nav>
+    <button type="button" data-page="page1.html">Page 1</button>
+    <button type="button" data-page="page2.html">Page 2</button>
+    <button type="button" data-page="page3.html">Page 3</button>
+  </nav>
+
+  <iframe id="pageFrame" src="page1.html" title="Selected page"></iframe>
+
+  <script>
+    const frame = document.getElementById('pageFrame');
+    document.querySelectorAll('button[data-page]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        frame.src = btn.dataset.page;
+      });
+    });
+  </script>
+</body>
+</html>
