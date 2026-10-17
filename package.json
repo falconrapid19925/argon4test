@@ -26,7 +26,9 @@
     "test": "npm run test:unit && npm run test:e2e",
     "check": "npm run lint && npm run format:check && npm run check:build && npm run test:unit",
     "check:workflows": "bash tools/check-workflows.sh",
-    "docs:preview": "node tools/capture-preview.mjs"
+    "docs:preview": "node tools/capture-preview.mjs",
+    "repo:dry-run": "node tools/configure-repo.mjs --dry-run",
+    "repo:configure": "node tools/configure-repo.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

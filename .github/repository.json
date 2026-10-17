@@ -1,0 +1,18 @@
+{
+  "repository": "falconrapid19925/argon4test",
+  "description": "Fifteen interactive second-brain design studies with local assets, accessible motion, and cross-browser quality gates.",
+  "homepage": "https://falconrapid19925.github.io/argon4test/",
+  "topics": [
+    "html",
+    "css",
+    "javascript",
+    "second-brain",
+    "animation",
+    "playwright",
+    "github-actions",
+    "github-pages",
+    "open-source"
+  ],
+  "pages_build_type": "workflow",
+  "private_vulnerability_reporting": true
+}

@@ -54,3 +54,9 @@ To verify an archive, place it beside `SHA256SUMS` and run `sha256sum -c SHA256S
 Run `npm run docs:preview` after UI changes. It captures the real first iteration of each collection in Chromium, then renders the README contact sheet to `docs/preview.png`. Motion is reduced so captures are deterministic. Optional `CHROMIUM_PATH` selects an installed Chromium; normally the managed browser is used.
 
 Prettier covers tooling and documentation, while original hand-authored HTML, the shared motion assets, generated styles, and vendored sources retain their current formatting. ESLint still checks first-party JavaScript and inline HTML scripts. Reports, `work/`, `dist/`, and dependencies are ignored by git.
+
+## Repository administration
+
+`.github/repository.json` records the intended description, homepage, topics, Pages workflow source, and private vulnerability reporting. Preview requests with `npm run repo:dry-run`; apply them with `npm run repo:configure` using a GitHub credential that has the required repository administration, Pages, and security permissions. This script is intentionally separate from CI because normal pull-request tokens must not have administration privileges.
+
+The initial connected integration rejected metadata and private-reporting updates with HTTP 403 (`Resource not accessible by integration`). These require a credential with the corresponding scopes even when the authenticated user is a repository admin. Code and workflow commits do not grant additional token permissions.

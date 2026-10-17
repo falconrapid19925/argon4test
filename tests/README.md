@@ -27,7 +27,7 @@ Playwright starts and cleans up a local server automatically. Set `CHROMIUM_PATH
 - The existing iframe showcase keeps outer controls aligned with collection links and browser history.
 - A separate Node test checks the static server's site allowlist, encoded traversal, malformed URLs, HTTP methods, and MIME headers.
 
-Animation assertions observe actual calls to the browser's Web Animations API, avoiding a race where a short animation finishes before the assertion. State and visibility assertions still check the resulting UI. Runtime errors, error-level console messages, failed requests, and HTTP errors fail each browser case. Navigation-cancelled requests are ignored because navigating away can cancel in-flight assets.
+Animation assertions observe actual calls to the browser's Web Animations API and CSS transition/animation start events, avoiding a race where a short animation finishes before the assertion. State and visibility assertions still check the resulting UI. Runtime errors, error-level console messages, failed requests, and HTTP errors fail each browser case. Navigation-cancelled requests are ignored because navigating away can cancel in-flight assets.
 
 ## Measured code coverage
 
