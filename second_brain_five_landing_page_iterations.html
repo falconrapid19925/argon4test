@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Commonplace — Five Second-Brain Landing Page Iterations (/1 to /5)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Distinct, intentional font families across the five studio iterations -->
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Syne:wght@600;700;800&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --switcher-bg: #16181d;
+      --switcher-fg: #f4f5f7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* High-visibility accessible keyboard focus */
+    :focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 3px;
+    }
+
+    /* Measure constraint: default to line lengths under 80 characters */
+    .measure-prose {
+      max-width: 66ch;
+    }
+    .measure-narrow {
+      max-width: 54ch;
+    }
+
+    /* ==========================================================================
+       ITERATION /1 — Luhmann's Archival Slip-Box (Manila, Cobalt Ink, Buckram)
+       ========================================================================== */
+    .theme-1 {
+      --bg-manila: #EFE9D6;
+      --bg-card: #FAF6EA;
+      --ink-cobalt: #19376D;
+      --ink-buckram: #264E36;
+      --ink-carbon: #1E2022;
+      --accent-amber: #D49B35;
+      --rule-manila: #D5CCB4;
+      background-color: var(--bg-manila);
+      color: var(--ink-carbon);
+      font-family: 'Newsreader', Georgia, serif;
+    }
+    .theme-1 .font-typewriter {
+      font-family: 'Courier Prime', monospace;
+    }
+    .theme-1 .slip-card {
+      background-color: var(--bg-card);
+      border: 1px solid #C8BFA3;
+      box-shadow: 0 3px 0 #D5CCB4;
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
+    }
+    .theme-1 .slip-card-ruled {
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 27px,
+        rgba(25, 55, 109, 0.12) 28px
+      );
+    }
+
+    /* ==========================================================================
+       ITERATION /2 — Spatial Cyanotype Workbench (Indigo Mat, Chalk, Ochre Tape)
+       ========================================================================== */
+    .theme-2 {
+      --mat-slate: #1B2A38;
+      --grid-cyan: #294056;
+      --chalk-white: #F5F7FA;
+      --tape-ochre: #E8B84B;
+      --coral-mark: #F26B5B;
+      background-color: var(--mat-slate);
+      color: var(--chalk-white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-image:
+        linear-gradient(to right, rgba(245, 247, 250, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(245, 247, 250, 0.05) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .theme-2 .font-spatial {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .theme-2 .canvas-node {
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+    }
+    .theme-2 .canvas-node:active {
+      cursor: grabbing;
+    }
+
+    /* ==========================================================================
+       ITERATION /3 — The Chronological River (Nordic Mist, Deep Fjord, Lichen)
+       ========================================================================== */
+    .theme-3 {
+      --mist-bg: #F3F6F8;
+      --stone-border: #DCE4EC;
+      --fjord-ink: #132639;
+      --lichen-moss: #3B6E5C;
+      --seaglass-surface: #E3EFEA;
+      background-color: var(--mist-bg);
+      color: var(--fjord-ink);
+      font-family: 'Work Sans', sans-serif;
+    }
+    .theme-3 .font-book {
+      font-family: 'Literata', Georgia, serif;
+      line-height: 1.72;
+    }
+
+    /* ==========================================================================
+       ITERATION /4 — The Naturalist's Herbarium (Pressed Sage, Chlorophyll, Marigold)
+       ========================================================================== */
+    .theme-4 {
+      --sage-paper: #E4EBE5;
+      --chlorophyll: #142E24;
+      --marigold: #C87D20;
+      --botanical-ink: #243B31;
+      --specimen-mount: #FAFDFB;
+      background-color: var(--sage-paper);
+      color: var(--botanical-ink);
+      font-family: 'DM Sans', sans-serif;
+    }
+    .theme-4 .font-specimen {
+      font-family: 'Fraunces', Georgia, serif;
+    }
+    .theme-4 .herbarium-tape {
+      background-color: #DFD8C8;
+      border: 1px solid #C6BEAB;
+    }
+
+    /* ==========================================================================
+       ITERATION /5 — Industrial Keyboard Utility (Putty, Signal Yellow, Asphalt)
+       ========================================================================== */
+    .theme-5 {
+      --putty-bg: #E6E5E0;
+      --signal-yellow: #F5C518;
+      --asphalt-ink: #18181A;
+      --alu-surface: #D1D0CA;
+      --cobalt-led: #1E40AF;
+      background-color: var(--putty-bg);
+      color: var(--asphalt-ink);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .theme-5 .font-industrial {
+      font-family: 'Syne', sans-serif;
+    }
+    .theme-5 .hardware-key {
+      background: #F4F3EF;
+      border: 1px solid #18181A;
+      box-shadow: 0 3px 0 #18181A;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+    .theme-5 .hardware-key:active,
+    .theme-5 .hardware-key.key-pressed {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #18181A;
+    }
+  </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-blue-900 selection:text-white">
+
+  <div id="app-viewport" class="min-h-screen pb-24">
+
+    <!-- ========================================================================
+         ITERATION /1: ZETTELKASTEN SLIP-BOX (Archival Manila & Fountain Pen Ink)
+         ======================================================================== -->
+    <main id="page-1" class="theme-1 min-h-screen hidden" aria-label="Iteration 1: Archival Slip-Box">
+      <!-- Top Archival Header -->
+      <header class="border-b border-[#C8BFA3] px-5 sm:px-10 py-5">
+        <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <span class="font-typewriter text-sm px-2.5 py-1 bg-[#19376D] text-[#FAF6EA] rounded">ZK.14a</span>
+            <span class="text-xl font-semibold tracking-tight text-[#1E2022]">Folgezettel</span>
+          </div>
+          <nav class="flex items-center gap-6 text-base" aria-label="Slip-box navigation">
+            <a href="#slip-method" class="hover:text-[#19376D] underline decoration-[#C8BFA3] underline-offset-4">Branching index</a>
+            <a href="#slip-permanence" class="hover:text-[#19376D] underline decoration-[#C8BFA3] underline-offset-4">Local files</a>
+            <button onclick="openDownloadModal('Folgezettel (/1)')" class="font-typewriter text-sm bg-[#264E36] text-[#FAF6EA] px-4 py-2 rounded hover:bg-[#1d3d2a] transition-colors">
+              Start your slip-box
+            </button>
+          </nav>
+        </div>
+      </header>
+
+      <!-- Hero: Interactive Branching Slip-Box -->
+      <section class="max-w-6xl mx-auto px-5 sm:px-10 pt-10 pb-16 lg:py-20">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+          
+          <!-- Left Column: Grounded Value Proposition & Index Tray -->
+          <div class="lg:col-span-5 space-y-6">
+            <h1 class="text-4xl sm:text-5xl font-medium leading-[1.12] tracking-tight text-[#1E2022]">
+              A note is only useful when it forces an argument with an older note.
+            </h1>
+            <p class="text-lg sm:text-xl leading-relaxed text-[#36393C] measure-prose">
+              Folders bury ideas by topic before you know what they mean. Folgezettel files every thought directly behind the note it answers, growing a dense chain of reasoning over years.
+            </p>
+
+            <!-- Interactive Index Tray -->
+            <div class="pt-2">
+              <p class="font-typewriter text-xs text-[#19376D] mb-2.5">Select an index address in tray 14 to pull its slip:</p>
+              <div id="zk-tray" class="space-y-1.5" role="tablist" aria-label="Slip-box index cards">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <div class="pt-4 flex flex-wrap items-center gap-3">
+              <button onclick="openDownloadModal('Folgezettel (/1)')" class="bg-[#19376D] text-[#FAF6EA] px-5 py-3 rounded font-medium text-base hover:bg-[#122851] transition-colors">
+                Create your first slip
+              </button>
+              <button onclick="focusNewSlipInput()" class="border border-[#19376D] text-[#19376D] px-4 py-3 rounded font-medium text-base hover:bg-[#19376D]/5 transition-colors">
+                Branch active slip (14a2b)
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive Physical Slip Card Stack -->
+          <div class="lg:col-span-7">
+            <div class="relative">
+              <!-- Background stacked cards for tactile depth -->
+              <div class="hidden sm:block absolute -top-3 left-4 right-4 h-full bg-[#F5EFE0] border border-[#C8BFA3] rounded-md -z-10"></div>
+              
+              <!-- Active Slip Card -->
+              <article id="active-slip-card" class="slip-card slip-card-ruled rounded-md p-6 sm:p-8">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-[#19376D] pb-4 mb-6">
+                  <div>
+                    <span id="slip-id-badge" class="font-typewriter text-lg font-bold text-[#19376D]">14a2b</span>
+                    <span id="slip-date-badge" class="font-typewriter text-xs text-[#5A5D60] ml-3">Filed 14 Oct 2026</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-typewriter text-xs bg-[#EFE9D6] border border-[#C8BFA3] px-2.5 py-1 rounded text-[#264E36]">
+                      Branches from <button id="slip-parent-btn" onclick="selectSlip('14a2')" class="underline font-bold">14a2</button>
+                    </span>
+                  </div>
+                </div>
+
+                <h2 id="slip-title" class="text-2xl sm:text-3xl font-medium text-[#1E2022] mb-4">
+                  Why collector's fallacy happens when saving bookmarks
+                </h2>
+
+                <div id="slip-body" class="text-lg leading-[1.65] text-[#282B2E] space-y-4 measure-prose">
+                  <p>
+                    Saving a link or highlighting a PDF feels identical to learning, so the brain releases the tension of curiosity before any synthesis occurs.
+                  </p>
+                  <p>
+                    To enter the slip-box, a passage must be rewritten in your own words on a single index card and placed next to an existing card (`14a2`) where it either supports, contradicts, or extends the chain.
+                  </p>
+                </div>
+
+                <!-- Linked Cross-References Footer on the Card -->
+                <div class="mt-8 pt-4 border-t border-[#D5CCB4] flex flex-wrap items-center justify-between gap-4">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="font-typewriter text-xs text-[#5A5D60]">Cross-references:</span>
+                    <button onclick="selectSlip('14a')" class="font-typewriter text-xs text-[#19376D] bg-[#19376D]/10 px-2 py-1 rounded hover:bg-[#19376D]/20">
+                      14a: Compounding recall
+                    </button>
+                    <button onclick="selectSlip('21b')" class="font-typewriter text-xs text-[#264E36] bg-[#264E36]/10 px-2 py-1 rounded hover:bg-[#264E36]/20">
+                      21b: Writing from the box
+                    </button>
+                  </div>
+                  <span id="slip-wordcount" class="font-typewriter text-xs text-[#5A5D60]">64 words on card</span>
+                </div>
+
+                <!-- Interactive "Write a branching slip" drawer inside card -->
+                <div class="mt-6 pt-5 border-t border-dashed border-[#C8BFA3] bg-[#EFE9D6]/60 -mx-6 -mb-6 sm:-mx-8 sm:-mb-8 p-5 sm:p-6 rounded-b-md">
+                  <label for="new-slip-input" class="block font-typewriter text-xs text-[#19376D] mb-2">
+                    Attach a new branching slip directly after <span id="branch-target-id" class="font-bold">14a2b</span>:
+                  </label>
+                  <div class="flex flex-col sm:flex-row gap-2.5">
+                    <input
+                      id="new-slip-input"
+                      type="text"
+                      placeholder="Write one atomic thought in your own words..."
+                      class="flex-1 bg-[#FAF6EA] border border-[#C8BFA3] rounded px-3.5 py-2 text-base text-[#1E2022] placeholder-[#7A7567] focus:border-[#19376D]"
+                    />
+                    <button
+                      onclick="addBranchingSlip()"
+                      class="font-typewriter text-sm bg-[#264E36] text-[#FAF6EA] px-4 py-2.5 rounded hover:bg-[#1c3b28] transition-colors shrink-0"
+                    >
+                      File slip into tray
+                    </button>
+                  </div>
+                  <p id="slip-feedback" class="font-typewriter text-xs text-[#264E36] mt-2 hidden" role="status"></p>
+                </div>
+              </article>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section id="slip-method" class="border-t border-[#C8BFA3] py-16 px-5 sm:px-10 bg-[#E6DFC8]/60">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="text-2xl sm:text-3xl font-medium text-[#1E2022] mb-10 measure-prose">
+            Three physical rules that kept Niklas Luhmann's 90,000 cards usable for forty years
+          </h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="border-t-2 border-[#19376D] pt-4">
+              <div class="font-typewriter text-sm text-[#19376D] font-bold mb-2">Rule 1 — Atomic size</div>
+              <h3 class="text-xl font-medium mb-2">One card holds one argument</h3>
+              <p class="text-base text-[#36393C] leading-relaxed">
+                When a note stays small enough to read at a glance, you can rearrange an entire book outline by reordering ten cards on your desk without cutting and pasting paragraphs.
+              </p>
+            </div>
+
+            <div class="border-t-2 border-[#264E36] pt-4">
+              <div class="font-typewriter text-sm text-[#264E36] font-bold mb-2">Rule 2 — Neighbour placement</div>
+              <h3 class="text-xl font-medium mb-2">File by context, not category</h3>
+              <p class="text-base text-[#36393C] leading-relaxed">
+                Instead of asking which folder a note belongs in, ask which existing note you want to see when you stumble across this one again in two years.
+              </p>
+            </div>
+
+            <div class="border-t-2 border-[#D49B35] pt-4">
+              <div class="font-typewriter text-sm text-[#8C6218] font-bold mb-2">Rule 3 — Permanent plain text</div>
+              <h3 class="text-xl font-medium mb-2" id="slip-permanence">Every card is a standard `.md` file</h3>
+              <p class="text-base text-[#36393C] leading-relaxed">
+                Your slip-box lives in a normal folder on your drive. Even if you stop using Folgezettel in 2056, your alphanumeric filenames and links remain intact in any text editor.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+
+    <!-- ========================================================================
+         ITERATION /2: SPATIAL CYANOTYPE WORKBENCH (Drafting Slate & Ochre Tape)
+         ======================================================================== -->
+    <main id="page-2" class="theme-2 min-h-screen hidden" aria-label="Iteration 2: Spatial Workbench">
+      <header class="border-b border-[#294056] px-5 sm:px-10 py-4 bg-[#1B2A38]/90 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-3.5 h-3.5 rounded-sm bg-[#E8B84B]"></div>
+            <span class="font-spatial text-lg font-bold tracking-tight">Cartograph</span>
+            <span class="text-xs text-[#9BB0C4] bg-[#294056] px-2 py-0.5 rounded">Canvas v2.4</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <button onclick="clusterSpatialNodes()" class="text-sm bg-[#294056] hover:bg-[#35516B] text-[#F5F7FA] px-3.5 py-2 rounded transition-colors">
+              Auto-cluster desk
+            </button>
+            <button onclick="openDownloadModal('Cartograph (/2)')" class="text-sm font-medium bg-[#E8B84B] text-[#1B2A38] px-4 py-2 rounded hover:bg-[#f0c562] transition-colors">
+              Open a blank table
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Hero: Full-Width Interactive Spatial Drafting Table -->
+      <section class="max-w-7xl mx-auto px-5 sm:px-10 pt-8 pb-14">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+          <div class="measure-prose">
+            <h1 class="font-spatial text-3xl sm:text-5xl font-bold leading-[1.1] text-[#F5F7FA]">
+              Spread your research across a table before you force it into an outline.
+            </h1>
+          </div>
+          <div class="lg:max-w-md text-[#C2D1E0] text-base leading-relaxed">
+            <p>
+              Drag any card on the drafting mat below, or click two pins to string a connection thread between disparate clues.
+            </p>
+          </div>
+        </div>
+
+        <!-- Interactive Spatial Canvas Board -->
+        <div class="relative rounded-lg border-2 border-[#395570] bg-[#15222E] overflow-hidden shadow-2xl" style="min-height: 460px;">
+          <!-- Canvas Toolbar -->
+          <div class="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 bg-[#1B2A38] border-b border-[#294056] text-xs text-[#9BB0C4]">
+            <div class="flex items-center gap-4">
+              <span>Table coordinates: <strong id="canvas-coord-readout" class="text-[#E8B84B] font-mono">X: 240, Y: 118</strong></span>
+              <span class="hidden sm:inline">4 items pinned to mat</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="scatterSpatialNodes()" class="px-2.5 py-1 rounded bg-[#294056] text-[#F5F7FA] hover:bg-[#395570]">
+                Messy capture layout
+              </button>
+              <button onclick="clusterSpatialNodes()" class="px-2.5 py-1 rounded bg-[#E8B84B] text-[#1B2A38] font-semibold hover:bg-[#f2c864]">
+                Align by synthesis
+              </button>
+            </div>
+          </div>
+
+          <!-- SVG Connection Lines Layer -->
+          <svg id="spatial-svg-layer" class="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
+            <line id="line-ab" x1="180" y1="140" x2="520" y2="120" stroke="#E8B84B" stroke-width="2" stroke-dasharray="6 4" />
+            <line id="line-bc" x1="520" y1="120" x2="480" y2="310" stroke="#F26B5B" stroke-width="2" />
+            <line id="line-ad" x1="180" y1="140" x2="210" y2="320" stroke="#6495ED" stroke-width="2" stroke-dasharray="4 4" />
+          </svg>
+
+          <!-- Interactive Draggable Nodes Container -->
+          <div id="spatial-board" class="relative w-full h-[420px] overflow-hidden">
+            
+            <!-- Node A: Interview Clipping -->
+            <div id="node-a" data-x="36" data-y="36" class="canvas-node absolute w-64 sm:w-72 bg-[#213344] border border-[#456482] rounded p-4 shadow-lg" style="transform: translate(36px, 36px);">
+              <div class="flex items-center justify-between text-xs text-[#E8B84B] mb-1.5 font-mono">
+                <span> Field interview #04</span>
+                <span>Pin A</span>
+              </div>
+              <p class="text-sm text-[#F5F7FA] leading-snug">
+                "Architects rarely lose finished blueprints. They lose the back-of-napkin calculation explaining why the beam moved."
+              </p>
+            </div>
+
+            <!-- Node B: PDF Excerpt -->
+            <div id="node-b" data-x="390" data-y="32" class="canvas-node absolute w-64 sm:w-72 bg-[#FAFBFD] text-[#1B2A38] border-t-4 border-[#E8B84B] rounded p-4 shadow-lg" style="transform: translate(390px, 32px);">
+              <div class="flex items-center justify-between text-xs text-[#546A7E] mb-1.5 font-mono">
+                <span>Paper: Spatial Memory (1998)</span>
+                <span>Pin B</span>
+              </div>
+              <p class="text-sm font-medium leading-snug">
+                People remember where an idea sat on a physical desk ("top right corner near the coffee") long after forgetting its filename.
+              </p>
+            </div>
+
+            <!-- Node C: Synthesis Draft -->
+            <div id="node-c" data-x="370" data-y="225" class="canvas-node absolute w-64 sm:w-80 bg-[#263C50] border-2 border-[#F26B5B] rounded p-4 shadow-lg" style="transform: translate(370px, 225px);">
+              <div class="flex items-center justify-between text-xs text-[#F26B5B] mb-1.5 font-mono">
+                <span>Synthesis Thesis</span>
+                <span>Linked to A + B</span>
+              </div>
+              <p class="text-sm text-[#F5F7FA] leading-snug">
+                Design software should preserve spatial messiness during early research instead of forcing premature folder hierarchies.
+              </p>
+            </div>
+
+            <!-- Node D: Audio Voice Note -->
+            <div id="node-d" data-x="55" data-y="230" class="canvas-node absolute w-60 sm:w-64 bg-[#1E3142] border border-[#456482] rounded p-3.5 shadow-lg" style="transform: translate(55px, 230px);">
+              <div class="flex items-center justify-between text-xs text-[#9BB0C4] mb-2 font-mono">
+                <span>Voice memo (0:42)</span>
+                <button onclick="toggleVoiceTranscript(event)" class="text-[#E8B84B] underline">Expand</button>
+              </div>
+              <div class="flex items-center gap-1.5 h-5 mb-2" aria-hidden="true">
+                <span class="w-1 h-3 bg-[#E8B84B] rounded"></span>
+                <span class="w-1 h-5 bg-[#E8B84B] rounded"></span>
+                <span class="w-1 h-2 bg-[#E8B84B] rounded"></span>
+                <span class="w-1 h-4 bg-[#E8B84B] rounded"></span>
+                <span class="w-1 h-5 bg-[#F26B5B] rounded"></span>
+                <span class="w-1 h-3 bg-[#9BB0C4] rounded"></span>
+                <span class="w-1 h-2 bg-[#9BB0C4] rounded"></span>
+              </div>
+              <p id="voice-transcript-text" class="text-xs text-[#C2D1E0] leading-normal">
+                "Check how museum curators lay out photographs on light tables before writing the exhibition catalog..."
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Asymmetric Two-Column Workbench Details -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pt-14">
+          <div class="md:col-span-5 border-l-2 border-[#E8B84B] pl-5">
+            <h2 class="font-spatial text-2xl font-bold text-[#F5F7FA] mb-2">
+              Keep source files and rough notes on the same plane
+            </h2>
+            <p class="text-[#C2D1E0] text-base leading-relaxed measure-prose">
+              Drop a 60-page PDF, three screenshots, and a voice memo onto one table. Draw threads from specific paragraphs straight into the margin of your draft.
+            </p>
+          </div>
+          <div class="md:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="bg-[#213344] border border-[#294056] p-5 rounded">
+              <h3 class="font-spatial text-lg font-semibold text-[#E8B84B] mb-1.5">Semantic zoom</h3>
+              <p class="text-sm text-[#C2D1E0] leading-relaxed">
+                Pinch out to see thirty project tables like neighborhoods on a map; zoom in to edit a single sentence without opening a modal window.
+              </p>
+            </div>
+            <div class="bg-[#213344] border border-[#294056] p-5 rounded">
+              <h3 class="font-spatial text-lg font-semibold text-[#F26B5B] mb-1.5">Split table to document</h3>
+              <p class="text-sm text-[#C2D1E0] leading-relaxed">
+                Select any cluster of connected cards on the mat and export them in reading order as a clean markdown manuscript.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+
+    <!-- ========================================================================
+         ITERATION /3: THE CHRONOLOGICAL RIVER (Nordic Mist & Deep Fjord)
+         ======================================================================== -->
+    <main id="page-3" class="theme-3 min-h-screen hidden" aria-label="Iteration 3: Chronological River">
+      <header class="max-w-5xl mx-auto px-5 sm:px-10 py-8 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="w-2.5 h-6 rounded-full bg-[#3B6E5C]"></span>
+          <span class="text-xl font-semibold tracking-tight text-[#132639]">Daybook</span>
+        </div>
+        <div class="flex items-center gap-5 text-sm">
+          <span class="text-[#4A6075] hidden sm:inline">Today is Wednesday, Oct 14</span>
+          <button onclick="openDownloadModal('Daybook (/3)')" class="bg-[#132639] text-[#F3F6F8] px-4 py-2 rounded-md font-medium hover:bg-[#1e3954] transition-colors">
+            Open today's page
+          </button>
+        </div>
+      </header>
+
+      <!-- Hero + Stream: Single Continuous Reading & Writing Column with Quiet Margin Recall -->
+      <section class="max-w-5xl mx-auto px-5 sm:px-10 pt-4 pb-20">
+        <div class="mb-12 measure-prose">
+          <h1 class="font-book text-3xl sm:text-5xl font-medium text-[#132639] leading-[1.18] mb-5">
+            Stop deciding where a note goes. Just write on today's page.
+          </h1>
+          <p class="text-lg text-[#384D61] leading-relaxed">
+            Most notes die in the five seconds it takes to pick a folder. Daybook gives you a single rolling daily journal; whenever you mention a person or topic you wrote about months ago, that memory surfaces quietly in the margin.
+          </p>
+        </div>
+
+        <!-- Interactive Live Daily Stream Demo -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Left Spine: Quiet Date River -->
+          <aside class="lg:col-span-2 flex lg:flex-col gap-3 text-sm border-b lg:border-b-0 lg:border-r border-[#DCE4EC] pb-3 lg:pb-0 lg:pr-4">
+            <div class="font-semibold text-[#3B6E5C]">Oct 14 — Today</div>
+            <div class="text-[#5C7287]">Oct 11</div>
+            <div class="text-[#5C7287]">Sep 29</div>
+            <div class="text-[#5C7287]">Aug 04</div>
+          </aside>
+
+          <!-- Center Column: Today's Live Journal Page -->
+          <div class="lg:col-span-6 bg-white border border-[#DCE4EC] rounded-lg p-6 sm:p-8 shadow-sm">
+            <div class="flex items-center justify-between border-b border-[#DCE4EC] pb-3 mb-5">
+              <h2 class="font-book text-xl font-medium text-[#132639]">Wednesday, October 14</h2>
+              <span class="text-xs text-[#3B6E5C] bg-[#E3EFEA] px-2.5 py-1 rounded">Auto-saved locally</span>
+            </div>
+
+            <div class="font-book text-base text-[#1E3347] space-y-5">
+              <p>
+                Spoke with <button onclick="triggerRiverRecall('elena')" class="px-1.5 py-0.5 rounded bg-[#E3EFEA] text-[#285243] font-medium hover:bg-[#cde3da]">@Elena Rostova</button> this morning about the acoustic panels for the studio renovation. She suggested using untreated wool felt instead of synthetic foam.
+              </p>
+              <p>
+                Finished reading chapters four and five of <button onclick="triggerRiverRecall('alexander')" class="px-1.5 py-0.5 rounded bg-[#E3EFEA] text-[#285243] font-medium hover:bg-[#cde3da]">#Christopher Alexander</button>. His point about incremental repair matches how we should refactor the sync engine.
+              </p>
+            </div>
+
+            <!-- Interactive Live Journal Input -->
+            <div class="mt-6 pt-5 border-t border-[#DCE4EC]">
+              <label for="river-input" class="block text-xs text-[#4A6075] mb-2">
+                Try typing a note below (or click a topic tag below to test margin recall):
+              </label>
+              <textarea
+                id="river-input"
+                rows="2"
+                oninput="handleRiverInput(this.value)"
+                placeholder="Write a quick thought for Oct 14... mention @Elena or #battery to test recall"
+                class="w-full font-book text-base bg-[#F8FAFC] border border-[#DCE4EC] rounded p-3 text-[#132639] focus:bg-white focus:border-[#3B6E5C]"
+              ></textarea>
+              <div class="flex flex-wrap items-center gap-2 mt-2.5 text-xs">
+                <span class="text-[#5C7287]">Test recall triggers:</span>
+                <button onclick="insertRiverTrigger('@Elena Rostova')" class="px-2 py-1 rounded bg-[#F3F6F8] hover:bg-[#E3EFEA] text-[#132639] border border-[#DCE4EC]">
+                  @Elena Rostova
+                </button>
+                <button onclick="insertRiverTrigger('#Christopher Alexander')" class="px-2 py-1 rounded bg-[#F3F6F8] hover:bg-[#E3EFEA] text-[#132639] border border-[#DCE4EC]">
+                  #Christopher Alexander
+                </button>
+                <button onclick="insertRiverTrigger('#solid-state battery')" class="px-2 py-1 rounded bg-[#F3F6F8] hover:bg-[#E3EFEA] text-[#132639] border border-[#DCE4EC]">
+                  #solid-state battery
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Margin: Quiet Contextual Recall -->
+          <div class="lg:col-span-4 space-y-4">
+            <div class="text-xs font-medium text-[#4A6075]">
+              Surfaced from earlier days in your river
+            </div>
+            <div id="river-recall-card" class="bg-[#E3EFEA]/70 border border-[#BDD4C9] rounded-lg p-5 transition-colors">
+              <div class="flex items-center justify-between text-xs text-[#285243] mb-2">
+                <span id="recall-source-tag" class="font-semibold">@Elena Rostova</span>
+                <span id="recall-source-date">From June 19, 2026</span>
+              </div>
+              <p id="recall-source-body" class="font-book text-sm text-[#132639] leading-relaxed">
+                "Elena mentioned a supplier in Gothenburg who mills 18mm wool acoustic baffles at half the lead time of our current vendor. Ask her for the sample book in October."
+              </p>
+              <p class="text-xs text-[#3B6E5C] mt-3">
+                3 earlier mentions across 2025–2026
+              </p>
+            </div>
+
+            <div class="bg-white/70 border border-[#DCE4EC] rounded-lg p-5">
+              <h3 class="text-sm font-semibold text-[#132639] mb-1">Zero maintenance</h3>
+              <p class="text-sm text-[#4A6075] leading-relaxed">
+                You never spend Sunday afternoon cleaning up broken folder trees. If a topic matters, it reappears in your daily writing; if it doesn't, it rests quietly in the archive.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+
+    <!-- ========================================================================
+         ITERATION /4: BOTANICAL HERBARIUM & SPECIMEN PRESS (Naturalist Journal)
+         ======================================================================== -->
+    <main id="page-4" class="theme-4 min-h-screen hidden" aria-label="Iteration 4: Herbarium Specimen Press">
+      <header class="border-b border-[#C5D1C8] px-5 sm:px-10 py-6">
+        <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="font-specimen text-2xl font-semibold text-[#142E24]">Herbarium</span>
+            <span class="text-xs px-2.5 py-0.5 rounded bg-[#142E24] text-[#FAFDFB]">Field Press &amp; Commonplace</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <button onclick="openDownloadModal('Herbarium (/4)')" class="bg-[#142E24] text-[#FAFDFB] px-4 py-2 rounded text-sm font-medium hover:bg-[#1e4234] transition-colors">
+              Collect your first specimen
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Hero: Primary Source Clipping to Permanent Specimen Sheet -->
+      <section class="max-w-6xl mx-auto px-5 sm:px-10 py-12 lg:py-16">
+        <div class="max-w-3xl mb-10">
+          <h1 class="font-specimen text-3xl sm:text-5xl font-medium text-[#142E24] leading-[1.14] mb-4">
+            Press what you read into permanent specimens with full provenance.
+          </h1>
+          <p class="text-lg text-[#243B31] leading-relaxed measure-prose">
+            Naturalists never threw loose leaves into a bag without recording the altitude, date, and soil. Click any passage in the field reading on the left to press it onto your permanent specimen sheet on the right.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          
+          <!-- Left: Raw Field Source (Interactive Reader) -->
+          <div class="lg:col-span-6 bg-[#FAFDFB] border border-[#B8C7BC] rounded-md p-6 sm:p-8 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs text-[#4A6358] border-b border-[#DCE5DF] pb-3 mb-5">
+                <span>Source essay: Alexander von Humboldt's Notebooks (1802)</span>
+                <span>Click a sentence to press</span>
+              </div>
+
+              <div class="space-y-4 text-base leading-relaxed text-[#243B31]">
+                <p>
+                  During the Chimborazo ascent, Humboldt kept three separate ledgers: one for barometric instruments, one for plant taxonomy, and a commonplace book for unexpected comparisons across continents.
+                </p>
+                <button
+                  type="button"
+                  onclick="pressSpecimenQuote(0)"
+                  id="specimen-quote-0"
+                  class="w-full text-left p-3 -mx-3 rounded bg-[#C87D20]/15 border-l-4 border-[#C87D20] hover:bg-[#C87D20]/25 transition-colors font-medium text-[#142E24]"
+                >
+                  "The alpine lichens gathered at 14,000 feet in the Andes mirror the exact crustose forms I cataloged inside the basalt mines of Freiberg six years prior."
+                </button>
+                <button
+                  type="button"
+                  onclick="pressSpecimenQuote(1)"
+                  id="specimen-quote-1"
+                  class="w-full text-left p-3 -mx-3 rounded hover:bg-[#E4EBE5] border-l-4 border-transparent hover:border-[#142E24] transition-colors"
+                >
+                  "Without an index that links observations by structural likeness rather than geography, a traveler returns home with crates of dead facts."
+                </button>
+                <button
+                  type="button"
+                  onclick="pressSpecimenQuote(2)"
+                  id="specimen-quote-2"
+                  class="w-full text-left p-3 -mx-3 rounded hover:bg-[#E4EBE5] border-l-4 border-transparent hover:border-[#142E24] transition-colors"
+                >
+                  "Every clipping in the notebook carries its exact latitude, page number, and the name of the local guide who pointed it out."
+                </button>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-[#DCE5DF] text-xs text-[#4A6358] flex items-center justify-between">
+              <span>Provenance URL &amp; page citation locked automatically</span>
+              <span class="text-[#C87D20] font-semibold">Interactive reader</span>
+            </div>
+          </div>
+
+          <!-- Right: Mounted Herbarium Specimen Sheet -->
+          <div class="lg:col-span-6 bg-[#F4F7F4] border-2 border-[#142E24] rounded-md p-6 sm:p-8 relative flex flex-col justify-between">
+            <div>
+              <!-- Herbarium Mounting Strips -->
+              <div class="flex items-center justify-between mb-6">
+                <span class="herbarium-tape text-xs px-3 py-1 font-medium text-[#142E24]">
+                  Specimen No. HB-2026-089
+                </span>
+                <span id="specimen-taxonomy" class="text-xs font-medium text-[#C87D20]">
+                  Genus: Cross-disciplinary synthesis
+                </span>
+              </div>
+
+              <!-- Pressed Excerpt Mount -->
+              <blockquote id="pressed-quote-display" class="font-specimen text-xl sm:text-2xl text-[#142E24] leading-snug bg-[#FAFDFB] border border-[#C5D1C8] p-5 rounded mb-6">
+                "The alpine lichens gathered at 14,000 feet in the Andes mirror the exact crustose forms I cataloged inside the basalt mines of Freiberg six years prior."
+              </blockquote>
+
+              <!-- Naturalist's Own Synthesis Annotation -->
+              <div class="space-y-2">
+                <div class="text-xs font-semibold text-[#142E24]">Your permanent synthesis note:</div>
+                <p id="pressed-synthesis-display" class="text-base text-[#243B31] leading-relaxed">
+                  Breakthroughs happen when an observation from one domain (subterranean mineralogy) is mounted beside a specimen from an unrelated expedition (high-altitude botany).
+                </p>
+              </div>
+            </div>
+
+            <!-- Official Herbarium Stamp Block -->
+            <div class="mt-8 pt-4 border-t-2 border-[#142E24] grid grid-cols-3 gap-2 text-xs">
+              <div>
+                <div class="text-[#526B5F]">Collected from</div>
+                <div class="font-semibold text-[#142E24]">Humboldt (1802), p. 114</div>
+              </div>
+              <div>
+                <div class="text-[#526B5F]">Verified date</div>
+                <div class="font-semibold text-[#142E24]">14 Oct 2026</div>
+              </div>
+              <div>
+                <div class="text-[#526B5F]">Linked specimens</div>
+                <div class="font-semibold text-[#C87D20]">HB-012, HB-044</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+
+    <!-- ========================================================================
+         ITERATION /5: INDUSTRIAL KEYBOARD COMMAND PALETTE (Putty & Signal Yellow)
+         ======================================================================== -->
+    <main id="page-5" class="theme-5 min-h-screen hidden" aria-label="Iteration 5: High-Velocity Command Palette">
+      <header class="border-b-2 border-[#18181A] px-5 sm:px-10 py-4 bg-[#D1D0CA]">
+        <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="bg-[#18181A] text-[#F5C518] text-xs font-bold px-2.5 py-1">SYS.05</span>
+            <span class="font-industrial text-xl font-extrabold tracking-tight">REFLEX</span>
+          </div>
+          <div class="flex items-center gap-4 text-xs">
+            <span class="hidden sm:inline bg-[#E6E5E0] border border-[#18181A] px-2.5 py-1">
+              Latency: 0.4ms local SQLite
+            </span>
+            <button onclick="openDownloadModal('Reflex (/5)')" class="hardware-key bg-[#F5C518] text-[#18181A] font-bold px-4 py-2 text-xs">
+              Install CLI + Desktop App
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Hero: Live Sub-Millisecond Capture & Recall Bar -->
+      <section class="max-w-6xl mx-auto px-5 sm:px-10 py-10 lg:py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          
+          <div class="lg:col-span-5 space-y-6">
+            <h1 class="font-industrial text-3xl sm:text-5xl font-extrabold leading-[1.08] text-[#18181A]">
+              Capture a thought in 400 milliseconds before your short-term memory drops it.
+            </h1>
+            <p class="text-sm sm:text-base leading-relaxed text-[#2C2C30]">
+              If your note app takes four seconds to load a cloud spinner, you have already forgotten why you opened it. Reflex lives in RAM and indexes 10,000 plain-text notes on every keystroke.
+            </p>
+
+            <!-- Interactive Hardware Key Filters -->
+            <div class="space-y-2 pt-2">
+              <div class="text-xs font-semibold text-[#18181A]">Trigger a preset query in the live command bar:</div>
+              <div class="flex flex-wrap gap-2">
+                <button onclick="setReflexQuery('postgres')" class="hardware-key px-3 py-1.5 text-xs font-medium">
+                  postgres
+                </button>
+                <button onclick="setReflexQuery('book')" class="hardware-key px-3 py-1.5 text-xs font-medium">
+                  book
+                </button>
+                <button onclick="setReflexQuery('148 * 12')" class="hardware-key px-3 py-1.5 text-xs font-medium bg-[#F5C518]">
+                  148 * 12 (inline math)
+                </button>
+                <button onclick="setReflexQuery('')" class="hardware-key px-3 py-1.5 text-xs font-medium">
+                  Show all (6)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Live Interactive Command Launcher -->
+          <div class="lg:col-span-7">
+            <div class="border-2 border-[#18181A] bg-[#F4F3EF] shadow-[6px_6px_0_#18181A]">
+              <!-- Command Input Bar -->
+              <div class="flex items-center border-b-2 border-[#18181A] bg-[#F5C518] px-4 py-3 gap-3">
+                <span class="bg-[#18181A] text-[#F5C518] text-xs font-bold px-2 py-1">CMD+K</span>
+                <input
+                  id="reflex-search-input"
+                  type="text"
+                  oninput="filterReflexNotes(this.value)"
+                  placeholder="Filter notes, run math (e.g. 42 * 19), or type +note to capture..."
+                  class="w-full bg-transparent text-[#18181A] placeholder-[#18181A]/60 font-semibold text-sm sm:text-base focus:outline-none"
+                />
+                <span id="reflex-timing-badge" class="text-xs font-bold text-[#18181A] shrink-0">0.2ms</span>
+              </div>
+
+              <!-- Math / Quick Capture Banner (Conditional) -->
+              <div id="reflex-calc-banner" class="hidden border-b border-[#18181A] bg-[#1E40AF] text-white px-4 py-2.5 text-sm flex items-center justify-between">
+                <span id="reflex-calc-output" class="font-bold"></span>
+                <button onclick="captureReflexNoteFromInput()" class="bg-[#F5C518] text-[#18181A] text-xs font-bold px-2.5 py-1">
+                  Save to inbox
+                </button>
+              </div>
+
+              <!-- Filtered Results List -->
+              <div id="reflex-results-list" class="divide-y divide-[#18181A]/20 max-h-80 overflow-y-auto" role="region" aria-label="Filtered notes">
+                <!-- Populated by JS -->
+              </div>
+
+              <!-- Bottom Status Bar -->
+              <div class="border-t-2 border-[#18181A] bg-[#D1D0CA] px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <span id="reflex-count-status">Showing 6 of 1,420 local notes</span>
+                <button onclick="captureReflexNoteFromInput()" class="underline font-bold hover:text-[#1E40AF]">
+                  Save current query as new note
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+
+  <!-- ==========================================================================
+       STUDIO DESIGN PLAN & SELF-CRITIQUE DRAWER (Inspectable 2-Pass Process)
+       ========================================================================== -->
+  <aside
+    id="studio-critique-drawer"
+    class="fixed inset-x-0 bottom-16 z-40 hidden max-w-4xl mx-auto px-4"
+    aria-label="Studio Design Plan and Two-Pass Critique"
+  >
+    <div class="bg-[#16181D] text-[#F4F5F7] border border-white/20 rounded-xl shadow-2xl p-5 sm:p-6 max-h-[75vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-white/15 pb-3 mb-4">
+        <div>
+          <h2 id="critique-title" class="text-base sm:text-lg font-semibold text-white">
+            Studio Design Brief &amp; Pass-2 Self-Critique
+          </h2>
+          <p class="text-xs text-gray-400">
+            Two-pass tokens, ASCII wireframe, and revision rationale for the active route
+          </p>
+        </div>
+        <button
+          onclick="toggleCritiqueDrawer()"
+          class="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-md"
+        >
+          Close notes
+        </button>
+      </div>
+
+      <div id="critique-content" class="grid grid-cols-1 md:grid-cols-12 gap-6 text-xs sm:text-sm">
+        <!-- Populated dynamically per route /1 to /5 -->
+      </div>
+    </div>
+  </aside>
+
+
+  <!-- ==========================================================================
+       MODAL FOR CALLS TO ACTION (Zero alert() usage, plain active-voice copy)
+       ========================================================================== -->
+  <div
+    id="action-modal"
+    class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-heading"
+  >
+    <div class="bg-[#16181D] text-white border border-white/20 rounded-xl max-w-md w-full p-6 shadow-2xl">
+      <h2 id="modal-heading" class="text-xl font-semibold mb-2">Start your local notebook</h2>
+      <p id="modal-description" class="text-sm text-gray-300 leading-relaxed mb-5">
+        Your notes stay on your computer as plain text files. Choose your operating system or switch to another design iteration below.
+      </p>
+      <div class="flex flex-wrap gap-2.5 mb-5">
+        <button onclick="closeDownloadModal('Downloaded macOS build')" class="bg-white text-black font-medium text-sm px-4 py-2.5 rounded-md hover:bg-gray-200">
+          Download for macOS
+        </button>
+        <button onclick="closeDownloadModal('Downloaded Windows & Linux build')" class="bg-white/10 text-white font-medium text-sm px-4 py-2.5 rounded-md hover:bg-white/20">
+          Windows &amp; Linux
+        </button>
+      </div>
+      <div class="flex justify-end border-t border-white/10 pt-3">
+        <button onclick="closeDownloadModal()" class="text-xs text-gray-400 hover:text-white">
+          Close window
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================================================
+       FLOATING ROUTE SWITCHER (/1, /2, /3, /4, /5) + STUDIO NOTES BUTTON
+       ========================================================================== -->
+  <nav
+    aria-label="Switch between the five landing page iterations"
+    class="fixed bottom-3 inset-x-0 z-50 flex justify-center px-3 pointer-events-none"
+  >
+    <div class="pointer-events-auto bg-[#16181D]/95 backdrop-blur-md text-[#F4F5F7] border border-white/15 rounded-full px-2.5 py-1.5 shadow-2xl flex items-center gap-1.5 sm:gap-2 max-w-full overflow-x-auto">
+      
+      <!-- Current Path Indicator -->
+      <div class="hidden md:flex items-center gap-1.5 pl-2.5 pr-2 border-r border-white/15 text-xs">
+        <span class="text-gray-400 font-mono">route:</span>
+        <span id="current-route-badge" class="font-mono font-semibold text-amber-300">/1</span>
+        <span id="current-route-name" class="text-gray-300 ml-1">Slip-Box</span>
+      </div>
+
+      <!-- Direct Iteration Buttons /1 to /5 -->
+      <div class="flex items-center gap-1" role="group" aria-label="Iteration routes">
+        <button
+          onclick="navigateToIteration(1)"
+          id="nav-btn-1"
+          class="font-mono text-xs px-3 py-1.5 rounded-full transition-colors"
+          title="Iteration 1: Archival Slip-Box (/1)"
+        >
+          /1
+        </button>
+        <button
+          onclick="navigateToIteration(2)"
+          id="nav-btn-2"
+          class="font-mono text-xs px-3 py-1.5 rounded-full transition-colors"
+          title="Iteration 2: Spatial Cyanotype Workbench (/2)"
+        >
+          /2
+        </button>
+        <button
+          onclick="navigateToIteration(3)"
+          id="nav-btn-3"
+          class="font-mono text-xs px-3 py-1.5 rounded-full transition-colors"
+          title="Iteration 3: Chronological River (/3)"
+        >
+          /3
+        </button>
+        <button
+          onclick="navigateToIteration(4)"
+          id="nav-btn-4"
+          class="font-mono text-xs px-3 py-1.5 rounded-full transition-colors"
+          title="Iteration 4: Herbarium Specimen Press (/4)"
+        >
+          /4
+        </button>
+        <button
+          onclick="navigateToIteration(5)"
+          id="nav-btn-5"
+          class="font-mono text-xs px-3 py-1.5 rounded-full transition-colors"
+          title="Iteration 5: High-Velocity Command Utility (/5)"
+        >
+          /5
+        </button>
+      </div>
+
+      <!-- Quick Next Iteration Button -->
+      <button
+        onclick="cycleNextIteration()"
+        class="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-full font-medium transition-colors shrink-0"
+        title="Cycle to next iteration"
+      >
+        Switch next
+      </button>
+
+      <!-- Studio Design Plan & Self-Critique Toggle -->
+      <button
+        onclick="toggleCritiqueDrawer()"
+        id="critique-toggle-btn"
+        class="text-xs bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/30 px-3 py-1.5 rounded-full font-medium transition-colors shrink-0"
+      >
+        Design brief
+      </button>
+    </div>
+  </nav>
+
+
+  <!-- ==========================================================================
+       APPLICATION LOGIC: ROUTER (/1-/5), INTERACTIVE HERO DEMOS & DESIGN CRITIQUE
+       ========================================================================== -->
+  <script>
+    // --- 1. STUDIO TWO-PASS DESIGN PLANS & SELF-CRITIQUES FOR EACH ITERATION ---
+    const studioDesignPlans = {
+      1: {
+        name: "Folgezettel — Archival Slip-Box",
+        route: "/1",
+        palette: [
+          { name: "Manila Stock", hex: "#EFE9D6" },
+          { name: "Slip Card Ivory", hex: "#FAF6EA" },
+          { name: "Fountain Pen Cobalt", hex: "#19376D" },
+          { name: "Library Buckram", hex: "#264E36" },
+          { name: "Carbon Typewriter", hex: "#1E2022" }
+        ],
+        typography: "Newsreader (humanist book serif for synthesis) + Courier Prime (alphanumeric Folgezettel card indices).",
+        alignment: "Left-aligned asymmetric 5:7 split: index tray on the left, ruled physical index card stack on the right.",
+        wireframe:
+`+-------------------------------------------------------+
+| ZK.14a Folgezettel          [Start your slip-box]     |
++-----------------------+-------------------------------+
+| Headline & Argument   | [Card 14a2b]  (Branches 14a2) |
+|                       |-------------------------------|
+| Index Tray:           | Ruled synthesis prose...      |
+| > 14a   Compounding   | Cross-refs: [14a] [21b]       |
+| > 14a2  Bookmarks     |-------------------------------|
+| > 14a2b Collector     | [Input: File branching slip]  |
++-----------------------+-------------------------------+`,
+        critique: "Pass 1 used a warm cream (#F4F1EA) with a terracotta accent and generic 01/02/03 markers. In Pass 2, we rejected terracotta (an AI-generated tell) in favor of authentic archival Fountain Pen Cobalt (#19376D) and Buckram Green (#264E36), and replaced decorative numbering with genuine Luhmann alphanumeric branching IDs (14a -> 14a2 -> 14a2b) where the number encodes the tree structure."
+      },
+      2: {
+        name: "Cartograph — Spatial Cyanotype Workbench",
+        route: "/2",
+        palette: [
+          { name: "Drafting Mat Slate", hex: "#1B2A38" },
+          { name: "Cyanotype Grid", hex: "#294056" },
+          { name: "Chalk White", hex: "#F5F7FA" },
+          { name: "Drafting Tape Ochre", hex: "#E8B84B" },
+          { name: "Highlighter Coral", hex: "#F26B5B" }
+        ],
+        typography: "Space Grotesk (technical spatial coordinates & headlines) + Plus Jakarta Sans (high-legibility note cards).",
+        alignment: "Full-bleed interactive drafting mat hero with left-aligned asymmetric 5:7 specification grid below.",
+        wireframe:
+`+-------------------------------------------------------+
+| Cartograph Canvas v2.4        [Auto-cluster] [Open]   |
++-------------------------------------------------------+
+| Headline: Spread research across a table...           |
++-------------------------------------------------------+
+| [Interactive Drafting Mat: Drag Nodes A, B, C, D]     |
+|   [Node A] ------- (dashed thread) ------> [Node B]   |
+|      |                                        |       |
+|   [Node D: Audio]                          [Node C]   |
++-------------------------------------------------------+`,
+        critique: "Pass 1 leaned toward a near-black (#0B0B0B) background with acid-green glowing nodes (AI Tell #2). In Pass 2, we grounded the visual language in an architectural cyanotype cutting mat (#1B2A38) with ochre drafting tape (#E8B84B) and physical draggable cards."
+      },
+      3: {
+        name: "Daybook — Chronological Daily River",
+        route: "/3",
+        palette: [
+          { name: "Morning Mist", hex: "#F3F6F8" },
+          { name: "River Stone", hex: "#DCE4EC" },
+          { name: "Deep Fjord", hex: "#132639" },
+          { name: "Lichen Moss", hex: "#3B6E5C" },
+          { name: "Sea Glass", hex: "#E3EFEA" }
+        ],
+        typography: "Literata (optical-size book serif at 1.72 line-height for calm reading) + Work Sans (clean functional controls).",
+        alignment: "Left-aligned reading column (max 66ch) flanked by a quiet date spine on the left and live contextual recall on the right.",
+        wireframe:
+`+-------------------------------------------------------+
+| Daybook                       Wednesday, Oct 14       |
++----------+----------------------------+---------------+
+| Oct 14   | Wednesday, October 14      | Surfaced from |
+| Oct 11   | Spoke with @Elena Rostova  | June 19, 2026 |
+| Sep 29   | about acoustic panels...   | "Elena noted  |
+| Aug 04   | [Live journal textarea...] |  supplier..." |
++----------+----------------------------+---------------+`,
+        critique: "Pass 1 used a 3-column SaaS card grid explaining 'Daily Notes', 'Backlinks', and 'Tags' (AI Tell #4). In Pass 2, we eliminated the feature cards and made the hero itself a live daily page where clicking or typing a person/topic immediately surfaces a past memory in the margin."
+      },
+      4: {
+        name: "Herbarium — Naturalist's Specimen Press",
+        route: "/4",
+        palette: [
+          { name: "Pressed Sage Paper", hex: "#E4EBE5" },
+          { name: "Deep Chlorophyll", hex: "#142E24" },
+          { name: "Dried Marigold", hex: "#C87D20" },
+          { name: "Botanical Ink", hex: "#243B31" },
+          { name: "Specimen Mount", hex: "#FAFDFB" }
+        ],
+        typography: "Fraunces (solid weight old-style serif without single-word italic clichés) + DM Sans (taxonomy metadata).",
+        alignment: "Side-by-side 6:6 comparative press: primary source essay on the left, mounted herbarium specimen sheet on the right.",
+        wireframe:
+`+-------------------------------------------------------+
+| Herbarium  Field Press        [Collect first specimen]|
++---------------------------+---------------------------+
+| Primary Source Essay      | Specimen No. HB-2026-089  |
+| Humboldt (1802)           | [Mounted Quote Block]     |
+| > Clickable Passage 1     | Naturalist's synthesis... |
+| > Clickable Passage 2     |---------------------------|
+| > Clickable Passage 3     | Provenance | Date | Links |
++---------------------------+---------------------------+`,
+        critique: "Pass 1 looked like a generic newspaper layout with hairline rules (AI Tell #3). In Pass 2, we drew directly from Carl Linnaeus and Alexander von Humboldt's botanical specimen sheets—using gummed mounting tape headers, provenance stamps, and an interactive quote press."
+      },
+      5: {
+        name: "Reflex — High-Velocity Keyboard Utility",
+        route: "/5",
+        palette: [
+          { name: "Industrial Putty", hex: "#E6E5E0" },
+          { name: "Signal Yellow", hex: "#F5C518" },
+          { name: "Asphalt Black", hex: "#18181A" },
+          { name: "Braun Aluminium", hex: "#D1D0CA" },
+          { name: "Cobalt Indicator", hex: "#1E40AF" }
+        ],
+        typography: "Syne (bold industrial display headlines) + JetBrains Mono (zero-latency search results & keyboard triggers).",
+        alignment: "Left-aligned industrial hardware grid with an active, real-time filtering command palette in the hero.",
+        wireframe:
+`+-------------------------------------------------------+
+| SYS.05 REFLEX   Latency: 0.4ms        [Install App]   |
++-----------------------+-------------------------------+
+| Capture in 400ms...   | [CMD+K] Filter or math...0.2ms|
+|                       |-------------------------------|
+| Preset hardware keys: | > pg_stat_statements tuning   |
+| [postgres] [book]     | > Designing Data-Intensive    |
+| [148 * 12]            | > Studio monitor calibration  |
++-----------------------+-------------------------------+`,
+        critique: "Pass 1 was a dark terminal screen with neon green text (AI Tell #2). In Pass 2, we pivoted to daytime-legible 1970s Swiss Postal / Braun industrial hardware (#E6E5E0 putty with #F5C518 signal yellow and tactile keycaps)."
+      }
+    };
+
+    // --- 2. ITERATION /1 DATA & INTERACTION (ZETTELKASTEN SLIP-BOX) ---
+    const slipsData = {
+      "14a": {
+        id: "14a",
+        date: "Filed 02 Sep 2026",
+        parent: "14",
+        title: "Compounding recall requires friction at capture time",
+        body: [
+          "If capturing a note takes zero effort—like clicking a web clipper button—your future self inherits a pile of unread chores rather than a second brain.",
+          "Translating an author's claim into two plain sentences of your own before filing it into tray 14 guarantees you actually understood it."
+        ],
+        words: "52 words on card"
+      },
+      "14a2": {
+        id: "14a2",
+        date: "Filed 19 Sep 2026",
+        parent: "14a",
+        title: "Why folder hierarchies fail after fifty notes",
+        body: [
+          "When you create folders for 'Psychology', 'Architecture', and 'Software', a note about how office floorplans hurt programmer concentration belongs in all three—or none of them.",
+          "In a slip-box, you place the card wherever you are currently working and add an alphanumeric pointer from the other two chains."
+        ],
+        words: "51 words on card"
+      },
+      "14a2b": {
+        id: "14a2b",
+        date: "Filed 14 Oct 2026",
+        parent: "14a2",
+        title: "Why collector's fallacy happens when saving bookmarks",
+        body: [
+          "Saving a link or highlighting a PDF feels identical to learning, so the brain releases the tension of curiosity before any synthesis occurs.",
+          "To enter the slip-box, a passage must be rewritten in your own words on a single index card and placed next to an existing card (14a2) where it either supports, contradicts, or extends the chain."
+        ],
+        words: "64 words on card"
+      },
+      "21b": {
+        id: "21b",
+        date: "Filed 28 Sep 2026",
+        parent: "21",
+        title: "Drafting essays by pulling a sequence of slips onto the desk",
+        body: [
+          "Nobody writes well staring at a blank white cursor. When tray 14 holds twelve linked cards on a question, the first draft of your essay is already 80% written.",
+          "You simply pull the sequence onto the table and write the transitions between cards."
+        ],
+        words: "47 words on card"
+      }
+    };
+
+    let currentSlipId = "14a2b";
+
+    function renderZkTray() {
+      const trayEl = document.getElementById("zk-tray");
+      if (!trayEl) return;
+      const keys = Object.keys(slipsData);
+      trayEl.innerHTML = keys.map(key => {
+        const slip = slipsData[key];
+        const isSelected = key === currentSlipId;
+        const indentClass = key.length > 4 ? "ml-6" : key.length > 3 ? "ml-3" : "";
+        return `
+          <button
+            type="button"
+            onclick="selectSlip('${key}')"
+            class="${indentClass} w-full text-left px-3.5 py-2 rounded border transition-colors flex items-center justify-between gap-2 ${
+              isSelected
+                ? "bg-[#19376D] text-[#FAF6EA] border-[#19376D]"
+                : "bg-[#FAF6EA] text-[#1E2022] border-[#C8BFA3] hover:border-[#19376D]"
+            }"
+          >
+            <span class="truncate text-sm font-medium">${slip.title}</span>
+            <span class="font-typewriter text-xs shrink-0 ${isSelected ? "text-[#D49B35]" : "text-[#19376D]"}">${slip.id}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function selectSlip(id) {
+      if (!slipsData[id]) return;
+      currentSlipId = id;
+      const slip = slipsData[id];
+      document.getElementById("slip-id-badge").textContent = slip.id;
+      document.getElementById("slip-date-badge").textContent = slip.date;
+      document.getElementById("slip-parent-btn").textContent = slip.parent;
+      document.getElementById("slip-parent-btn").setAttribute("onclick", `selectSlip('${slip.parent in slipsData ? slip.parent : "14a"}')`);
+      document.getElementById("slip-title").textContent = slip.title;
+      document.getElementById("slip-body").innerHTML = slip.body.map(p => `<p>${p}</p>`).join("");
+      document.getElementById("slip-wordcount").textContent = slip.words;
+      document.getElementById("branch-target-id").textContent = slip.id;
+      renderZkTray();
+    }
+
+    function focusNewSlipInput() {
+      const input = document.getElementById("new-slip-input");
+      if (input) input.focus();
+    }
+
+    function addBranchingSlip() {
+      const input = document.getElementById("new-slip-input");
+      const feedback = document.getElementById("slip-feedback");
+      if (!input) return;
+      const text = input.value.trim();
+      if (!text) {
+        feedback.textContent = "Write a sentence in the field above to file a branching slip.";
+        feedback.classList.remove("hidden");
+        input.focus();
+        return;
+      }
+
+      // Compute next Luhmann branching ID
+      const nextId = currentSlipId + "1";
+      const wordCount = text.split(/\s+/).length;
+      slipsData[nextId] = {
+        id: nextId,
+        date: "Filed just now",
+        parent: currentSlipId,
+        title: text.length > 56 ? text.slice(0, 56) + "..." : text,
+        body: [
+          text,
+          `Filed directly behind card ${currentSlipId} as a permanent branching continuation.`
+        ],
+        words: `${wordCount + 11} words on card`
+      };
+
+      input.value = "";
+      selectSlip(nextId);
+      feedback.textContent = `Filed new slip ${nextId} directly behind ${slipsData[nextId].parent}.`;
+      feedback.classList.remove("hidden");
+    }
+
+
+    // --- 3. ITERATION /2 INTERACTION (SPATIAL CYANOTYPE DRAGGABLE WORKBENCH) ---
+    let activeDragNode = null;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+
+    function initSpatialCanvas() {
+      const board = document.getElementById("spatial-board");
+      if (!board) return;
+      const nodes = board.querySelectorAll(".canvas-node");
+
+      nodes.forEach(node => {
+        node.addEventListener("pointerdown", (e) => {
+          if (e.target.tagName.toLowerCase() === "button") return;
+          activeDragNode = node;
+          const currentX = parseFloat(node.getAttribute("data-x")) || 0;
+          const currentY = parseFloat(node.getAttribute("data-y")) || 0;
+          dragOffsetX = e.clientX - currentX;
+          dragOffsetY = e.clientY - currentY;
+          node.style.zIndex = 20;
+          node.setPointerCapture(e.pointerId);
+        });
+
+        node.addEventListener("pointermove", (e) => {
+          if (activeDragNode !== node) return;
+          const boardRect = board.getBoundingClientRect();
+          let nextX = e.clientX - dragOffsetX;
+          let nextY = e.clientY - dragOffsetY;
+
+          // Keep node inside drafting mat bounds
+          nextX = Math.max(8, Math.min(boardRect.width - node.offsetWidth - 8, nextX));
+          nextY = Math.max(8, Math.min(boardRect.height - node.offsetHeight - 8, nextY));
+
+          node.setAttribute("data-x", Math.round(nextX));
+          node.setAttribute("data-y", Math.round(nextY));
+          node.style.transform = `translate(${nextX}px, ${nextY}px)`;
+
+          const readout = document.getElementById("canvas-coord-readout");
+          if (readout) {
+            readout.textContent = `X: ${Math.round(nextX)}, Y: ${Math.round(nextY)}`;
+          }
+          updateSpatialLines();
+        });
+
+        node.addEventListener("pointerup", () => {
+          if (activeDragNode === node) {
+            node.style.zIndex = 10;
+            activeDragNode = null;
+          }
+        });
+      });
+
+      updateSpatialLines();
+    }
+
+    function getNodeCenter(id) {
+      const el = document.getElementById(id);
+      if (!el) return { x: 100, y: 100 };
+      const x = parseFloat(el.getAttribute("data-x")) || 0;
+      const y = parseFloat(el.getAttribute("data-y")) || 0;
+      return {
+        x: x + (el.offsetWidth || 250) / 2,
+        y: y + (el.offsetHeight || 110) / 2 + 36 // offset for toolbar height
+      };
+    }
+
+    function updateSpatialLines() {
+      const a = getNodeCenter("node-a");
+      const b = getNodeCenter("node-b");
+      const c = getNodeCenter("node-c");
+      const d = getNodeCenter("node-d");
+
+      const setLine = (lineId, p1, p2) => {
+        const ln = document.getElementById(lineId);
+        if (!ln) return;
+        ln.setAttribute("x1", p1.x);
+        ln.setAttribute("y1", p1.y);
+        ln.setAttribute("x2", p2.x);
+        ln.setAttribute("y2", p2.y);
+      };
+
+      setLine("line-ab", a, b);
+      setLine("line-bc", b, c);
+      setLine("line-ad", a, d);
+    }
+
+    function clusterSpatialNodes() {
+      const positions = {
+        "node-a": { x: 28, y: 24 },
+        "node-b": { x: 350, y: 24 },
+        "node-d": { x: 28, y: 215 },
+        "node-c": { x: 350, y: 215 }
+      };
+      applySpatialPositions(positions);
+    }
+
+    function scatterSpatialNodes() {
+      const positions = {
+        "node-a": { x: 42, y: 48 },
+        "node-b": { x: 410, y: 26 },
+        "node-d": { x: 75, y: 245 },
+        "node-c": { x: 360, y: 230 }
+      };
+      applySpatialPositions(positions);
+    }
+
+    function applySpatialPositions(posMap) {
+      Object.keys(posMap).forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const { x, y } = posMap[id];
+        el.setAttribute("data-x", x);
+        el.setAttribute("data-y", y);
+        el.style.transition = "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)";
+        el.style.transform = `translate(${x}px, ${y}px)`;
+        setTimeout(() => { el.style.transition = ""; updateSpatialLines(); }, 360);
+      });
+      setTimeout(updateSpatialLines, 50);
+    }
+
+    function toggleVoiceTranscript(e) {
+      e.stopPropagation();
+      const txt = document.getElementById("voice-transcript-text");
+      if (!txt) return;
+      if (txt.textContent.includes("curators")) {
+        txt.textContent = "\"Check how museum curators lay out photographs on light tables before writing the exhibition catalog — spatial adjacency reveals themes that alphabetical lists hide.\"";
+      } else {
+        txt.textContent = "\"Check how museum curators lay out photographs on light tables before writing the exhibition catalog...\"";
+      }
+    }
+
+
+    // --- 4. ITERATION /3 INTERACTION (THE CHRONOLOGICAL RIVER) ---
+    const riverMemories = {
+      elena: {
+        tag: "@Elena Rostova",
+        date: "From June 19, 2026",
+        body: "\"Elena mentioned a supplier in Gothenburg who mills 18mm wool acoustic baffles at half the lead time of our current vendor. Ask her for the sample book in October.\""
+      },
+      alexander: {
+        tag: "#Christopher Alexander",
+        date: "From August 04, 2026",
+        body: "\"In Notes on the Synthesis of Form, Alexander argues that good systems allow local misfits to be repaired independently without destabilizing the whole structure.\""
+      },
+      battery: {
+        tag: "#solid-state battery",
+        date: "From May 12, 2026",
+        body: "\"Lab test notes: ceramic separator thickness below 24 microns showed zero dendrite formation across 400 charge cycles at 25°C.\""
+      }
+    };
+
+    function triggerRiverRecall(key) {
+      const mem = riverMemories[key];
+      if (!mem) return;
+      document.getElementById("recall-source-tag").textContent = mem.tag;
+      document.getElementById("recall-source-date").textContent = mem.date;
+      document.getElementById("recall-source-body").textContent = mem.body;
+    }
+
+    function insertRiverTrigger(phrase) {
+      const input = document.getElementById("river-input");
+      if (!input) return;
+      input.value = `Following up on ${phrase} for Friday's review.`;
+      handleRiverInput(input.value);
+      input.focus();
+    }
+
+    function handleRiverInput(val) {
+      const lower = val.toLowerCase();
+      if (lower.includes("elena")) {
+        triggerRiverRecall("elena");
+      } else if (lower.includes("alexander")) {
+        triggerRiverRecall("alexander");
+      } else if (lower.includes("battery")) {
+        triggerRiverRecall("battery");
+      }
+    }
+
+
+    // --- 5. ITERATION /4 INTERACTION (HERBARIUM SPECIMEN PRESS) ---
+    const specimenQuotes = [
+      {
+        quote: "\"The alpine lichens gathered at 14,000 feet in the Andes mirror the exact crustose forms I cataloged inside the basalt mines of Freiberg six years prior.\"",
+        synthesis: "Breakthroughs happen when an observation from one domain (subterranean mineralogy) is mounted beside a specimen from an unrelated expedition (high-altitude botany).",
+        taxonomy: "Genus: Cross-disciplinary synthesis"
+      },
+      {
+        quote: "\"Without an index that links observations by structural likeness rather than geography, a traveler returns home with crates of dead facts.\"",
+        synthesis: "Collecting raw highlights without adding your own structural commentary creates an unusable archive. Every specimen needs a reason for being kept.",
+        taxonomy: "Genus: Archival methodology"
+      },
+      {
+        quote: "\"Every clipping in the notebook carries its exact latitude, page number, and the name of the local guide who pointed it out.\"",
+        synthesis: "Never strip a quote from its source context. Herbarium permanently embeds the author, URL, and timestamp into the specimen mount.",
+        taxonomy: "Genus: Source provenance"
+      }
+    ];
+
+    function pressSpecimenQuote(idx) {
+      const item = specimenQuotes[idx];
+      if (!item) return;
+      document.getElementById("pressed-quote-display").textContent = item.quote;
+      document.getElementById("pressed-synthesis-display").textContent = item.synthesis;
+      document.getElementById("specimen-taxonomy").textContent = item.taxonomy;
+
+      [0, 1, 2].forEach(i => {
+        const btn = document.getElementById(`specimen-quote-${i}`);
+        if (!btn) return;
+        if (i === idx) {
+          btn.className = "w-full text-left p-3 -mx-3 rounded bg-[#C87D20]/15 border-l-4 border-[#C87D20] font-medium text-[#142E24] transition-colors";
+        } else {
+          btn.className = "w-full text-left p-3 -mx-3 rounded hover:bg-[#E4EBE5] border-l-4 border-transparent hover:border-[#142E24] transition-colors";
+        }
+      });
+    }
+
+
+    // --- 6. ITERATION /5 INTERACTION (REFLEX KEYBOARD COMMAND PALETTE) ---
+    const reflexNotes = [
+      { id: "N-904", tag: "postgres", title: "Tuning pg_stat_statements for slow join diagnostics", updated: "2h ago" },
+      { id: "N-881", tag: "book", title: "Designing Data-Intensive Applications — Ch. 7 Transactions summary", updated: "Yesterday" },
+      { id: "N-842", tag: "hardware", title: "Braun Dieter Rams TP1 radio hinge tolerances and aluminium finish", updated: "Oct 09" },
+      { id: "N-799", tag: "postgres", title: "Partial B-tree indexes on soft-deleted timestamp columns", updated: "Oct 02" },
+      { id: "N-750", tag: "book", title: "The Elements of Typographic Style — Robert Bringhurst measure rules", updated: "Sep 24" },
+      { id: "N-712", tag: "audio", title: "Studio monitor placement distances from untreated rear walls", updated: "Sep 15" }
+    ];
+
+    function setReflexQuery(q) {
+      const input = document.getElementById("reflex-search-input");
+      if (!input) return;
+      input.value = q;
+      filterReflexNotes(q);
+      input.focus();
+    }
+
+    function filterReflexNotes(query) {
+      const listEl = document.getElementById("reflex-results-list");
+      const countEl = document.getElementById("reflex-count-status");
+      const calcBanner = document.getElementById("reflex-calc-banner");
+      const calcOutput = document.getElementById("reflex-calc-output");
+      if (!listEl) return;
+
+      const trimmed = query.trim();
+
+      // Check for simple inline arithmetic expression
+      if (/^[\d\s\+\-\*\/\(\)\.]+$/.test(trimmed) && /\d/.test(trimmed) && /[\+\-\*\/]/.test(trimmed)) {
+        try {
+          const sanitized = trimmed.replace(/[^0-9\+\-\*\/\(\)\.]/g, "");
+          const val = Function(`"use strict"; return (${sanitized})`)();
+          if (typeof val === "number" && isFinite(val)) {
+            calcBanner.classList.remove("hidden");
+            calcOutput.textContent = `= ${val.toLocaleString()} (Press button to save calculation to inbox)`;
+          } else {
+            calcBanner.classList.add("hidden");
+          }
+        } catch (_) {
+          calcBanner.classList.add("hidden");
+        }
+      } else {
+        calcBanner.classList.add("hidden");
+      }
+
+      const lower = trimmed.toLowerCase();
+      const matched = reflexNotes.filter(n =>
+        !lower ||
+        n.title.toLowerCase().includes(lower) ||
+        n.tag.toLowerCase().includes(lower) ||
+        n.id.toLowerCase().includes(lower)
+      );
+
+      if (matched.length === 0) {
+        listEl.innerHTML = `
+          <div class="p-6 text-sm text-[#18181A]">
+            No existing note matches "<strong>${trimmed.replace(/</g, "&lt;")}</strong>".
+            <button onclick="captureReflexNoteFromInput()" class="ml-2 bg-[#F5C518] border border-[#18181A] px-3 py-1 text-xs font-bold">
+              Create note from query
+            </button>
+          </div>
+        `;
+      } else {
+        listEl.innerHTML = matched.map(n => `
+          <div class="px-4 py-3 hover:bg-[#E6E5E0] flex items-center justify-between gap-4 transition-colors">
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="text-xs font-bold bg-[#18181A] text-[#F4F3EF] px-2 py-0.5 shrink-0">${n.id}</span>
+              <span class="text-xs border border-[#18181A] px-1.5 py-0.5 shrink-0">${n.tag}</span>
+              <span class="text-sm font-medium truncate text-[#18181A]">${n.title}</span>
+            </div>
+            <span class="text-xs text-[#55555A] shrink-0">${n.updated}</span>
+          </div>
+        `).join("");
+      }
+
+      if (countEl) {
+        countEl.textContent = `Showing ${matched.length} of 1,420 local notes`;
+      }
+    }
+
+    function captureReflexNoteFromInput() {
+      const input = document.getElementById("reflex-search-input");
+      const text = input && input.value.trim() ? input.value.trim() : "Quick thought captured from keyboard bar";
+      const nextNum = 905 + reflexNotes.length;
+      reflexNotes.unshift({
+        id: `N-${nextNum}`,
+        tag: "inbox",
+        title: text,
+        updated: "Just now"
+      });
+      if (input) input.value = "";
+      filterReflexNotes("");
+    }
+
+
+    // --- 7. ROUTING ENGINE (/1, /2, /3, /4, /5) & STUDIO CRITIQUE SHEET ---
+    let currentIteration = 1;
+
+    function navigateToIteration(num, updateHistory = true) {
+      const target = Math.max(1, Math.min(5, parseInt(num, 10) || 1));
+      currentIteration = target;
+
+      // Toggle visibility of the 5 pages
+      for (let i = 1; i <= 5; i++) {
+        const pageEl = document.getElementById(`page-${i}`);
+        const btnEl = document.getElementById(`nav-btn-${i}`);
+        if (pageEl) {
+          if (i === target) {
+            pageEl.classList.remove("hidden");
+          } else {
+            pageEl.classList.add("hidden");
+          }
+        }
+        if (btnEl) {
+          if (i === target) {
+            btnEl.className = "font-mono text-xs px-3 py-1.5 rounded-full bg-white text-[#16181D] font-bold shadow-xs transition-colors";
+            btnEl.setAttribute("aria-current", "page");
+          } else {
+            btnEl.className = "font-mono text-xs px-3 py-1.5 rounded-full text-gray-300 hover:text-white hover:bg-white/10 transition-colors";
+            btnEl.removeAttribute("aria-current");
+          }
+        }
+      }
+
+      // Update floating switcher route label
+      const plan = studioDesignPlans[target];
+      const badgeEl = document.getElementById("current-route-badge");
+      const nameEl = document.getElementById("current-route-name");
+      if (badgeEl) badgeEl.textContent = `/${target}`;
+      if (nameEl && plan) nameEl.textContent = plan.name.split("—")[0].trim();
+
+      // Update URL path (/1, /2, /3, /4, /5) with graceful fallback in sandboxed iframes
+      if (updateHistory) {
+        try {
+          window.history.pushState({ iteration: target }, "", `/${target}`);
+        } catch (_) {
+          window.location.hash = `/${target}`;
+        }
+      }
+
+      // Refresh SVG connection lines if entering /2
+      if (target === 2) {
+        setTimeout(updateSpatialLines, 30);
+      }
+
+      // Render Studio Critique Drawer content for active iteration
+      renderCritiqueContent(target);
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+
+    function cycleNextIteration() {
+      const next = currentIteration >= 5 ? 1 : currentIteration + 1;
+      navigateToIteration(next);
+    }
+
+    function renderCritiqueContent(num) {
+      const plan = studioDesignPlans[num];
+      const container = document.getElementById("critique-content");
+      const titleEl = document.getElementById("critique-title");
+      if (!plan || !container) return;
+
+      if (titleEl) {
+        titleEl.textContent = `Route ${plan.route}: ${plan.name}`;
+      }
+
+      const swatchesHtml = plan.palette.map(sw => `
+        <div class="flex items-center gap-2 bg-white/5 px-2.5 py-1.5 rounded border border-white/10">
+          <span class="w-4 h-4 rounded-sm shrink-0 border border-white/20" style="background:${sw.hex}"></span>
+          <span class="text-gray-200 font-medium">${sw.name}</span>
+          <span class="font-mono text-gray-400 ml-auto">${sw.hex}</span>
+        </div>
+      `).join("");
+
+      container.innerHTML = `
+        <div class="md:col-span-5 space-y-4">
+          <div>
+            <div class="text-xs font-semibold text-amber-300 mb-2">Color Tokens (4–5 named hexes)</div>
+            <div class="space-y-1.5">${swatchesHtml}</div>
+          </div>
+          <div>
+            <div class="text-xs font-semibold text-amber-300 mb-1">Typography &amp; Hierarchy</div>
+            <p class="text-gray-300 leading-relaxed">${plan.typography}</p>
+          </div>
+          <div>
+            <div class="text-xs font-semibold text-amber-300 mb-1">Alignment &amp; Layout Principle</div>
+            <p class="text-gray-300 leading-relaxed">${plan.alignment}</p>
+          </div>
+        </div>
+        <div class="md:col-span-7 space-y-4">
+          <div>
+            <div class="text-xs font-semibold text-amber-300 mb-1.5">ASCII Layout Wireframe</div>
+            <pre class="font-mono text-[11px] leading-tight bg-black/50 border border-white/10 p-3 rounded overflow-x-auto text-gray-300">${plan.wireframe}</pre>
+          </div>
+          <div class="bg-amber-400/10 border border-amber-400/30 rounded-lg p-3.5">
+            <div class="text-xs font-semibold text-amber-300 mb-1">Pass 1 vs. Pass 2 Self-Critique Revision</div>
+            <p class="text-gray-200 leading-relaxed">${plan.critique}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleCritiqueDrawer() {
+      const drawer = document.getElementById("studio-critique-drawer");
+      if (!drawer) return;
+      drawer.classList.toggle("hidden");
+    }
+
+    function openDownloadModal(editionName) {
+      const modal = document.getElementById("action-modal");
+      const heading = document.getElementById("modal-heading");
+      if (heading && editionName) {
+        heading.textContent = `Start your notebook with ${editionName}`;
+      }
+      if (modal) modal.classList.remove("hidden");
+    }
+
+    function closeDownloadModal(statusMessage) {
+      const modal = document.getElementById("action-modal");
+      if (modal) modal.classList.add("hidden");
+      if (statusMessage) {
+        const badge = document.getElementById("current-route-name");
+        if (badge) badge.textContent = statusMessage;
+      }
+    }
+
+    // Handle initial URL pathname (/1, /2, /3, /4, /5) or hash (#/1) on boot
+    function resolveInitialIteration() {
+      const pathMatch = window.location.pathname.match(/\/([1-5])\/?$/);
+      if (pathMatch) return parseInt(pathMatch[1], 10);
+      const hashMatch = window.location.hash.match(/\/?([1-5])$/);
+      if (hashMatch) return parseInt(hashMatch[1], 10);
+      return 1;
+    }
+
+    window.addEventListener("popstate", (e) => {
+      if (e.state && e.state.iteration) {
+        navigateToIteration(e.state.iteration, false);
+      } else {
+        navigateToIteration(resolveInitialIteration(), false);
+      }
+    });
+
+    // Keyboard shortcuts 1-5 when not focused inside an input/textarea
+    window.addEventListener("keydown", (e) => {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
+      if (tag === "input" || tag === "textarea") return;
+      if (["1", "2", "3", "4", "5"].includes(e.key) && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        navigateToIteration(parseInt(e.key, 10));
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (currentIteration === 2) updateSpatialLines();
+    });
+
+    window.onload = function () {
+      renderZkTray();
+      initSpatialCanvas();
+      filterReflexNotes("");
+      navigateToIteration(resolveInitialIteration(), false);
+    };
+  </script>
+</body>
+</html>

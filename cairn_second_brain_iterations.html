@@ -1,0 +1,2709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cairn — Second Brain Note-Taking (5 Design Iterations)</title>
+  <style>
+    /* ==========================================================================
+       GLOBAL RESET, ACCESSIBILITY & REDUCED MOTION
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 4.5rem;
+    }
+
+    :focus-visible {
+      outline: 3px solid currentColor;
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    .iteration-view {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .iteration-view.is-active {
+      display: block;
+    }
+
+    /* ==========================================================================
+       COMPACT SINGLE-LINE FLOATING ITERATION SWITCHER & DESIGN PLAN DRAWER
+       ========================================================================== */
+    .iteration-switcher {
+      position: fixed;
+      bottom: 1rem;
+      right: 1.25rem;
+      z-index: 9999;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: #182026;
+      color: #F0F4F8;
+      padding: 0.35rem 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #394B59;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+      font-family: 'Inter', 'DejaVu Sans', system-ui, sans-serif;
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .switcher-route-badge {
+      background: #25323D;
+      color: #A7B6C2;
+      padding: 0.26rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      border: 1px solid #334452;
+    }
+
+    .switcher-route-badge strong {
+      color: #F5F8FA;
+      font-weight: 600;
+    }
+
+    .switcher-tabs {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .switcher-tab {
+      appearance: none;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #CBD6E0;
+      padding: 0.26rem 0.5rem;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.76rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .switcher-tab:hover {
+      background: #263440;
+      color: #FFFFFF;
+    }
+
+    .switcher-tab.is-current {
+      background: #E8B84B;
+      color: #131B24;
+      font-weight: 600;
+      border-color: #F3C969;
+    }
+
+    .switcher-divider {
+      width: 1px;
+      height: 1.1rem;
+      background: #394B59;
+      margin: 0 0.1rem;
+    }
+
+    .switcher-step-btn,
+    .switcher-spec-btn {
+      appearance: none;
+      border: 1px solid #394B59;
+      background: #212C35;
+      color: #E1E8EE;
+      padding: 0.26rem 0.5rem;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .switcher-step-btn:hover,
+    .switcher-spec-btn:hover {
+      background: #2E3D49;
+      color: #FFFFFF;
+    }
+
+    .switcher-spec-btn[aria-expanded="true"] {
+      background: #D8E1E8;
+      color: #131B24;
+      border-color: #D8E1E8;
+    }
+
+    /* Studio Design Notes Drawer */
+    .studio-drawer {
+      position: fixed;
+      bottom: 3.75rem;
+      right: 1.25rem;
+      width: min(780px, calc(100vw - 2.5rem));
+      max-height: 70vh;
+      overflow-y: auto;
+      background: #161F27;
+      color: #E6EDF3;
+      border: 1px solid #394B59;
+      border-radius: 6px;
+      padding: 1.2rem 1.4rem;
+      z-index: 9998;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
+      font-family: 'Inter', 'DejaVu Sans', sans-serif;
+      display: none;
+    }
+
+    .studio-drawer.is-open {
+      display: block;
+    }
+
+    .studio-drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid #2D3C48;
+      padding-bottom: 0.65rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .studio-drawer-title {
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+
+    .studio-drawer-close {
+      background: transparent;
+      border: 1px solid #394B59;
+      color: #C5D1DB;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      font-size: 0.76rem;
+      cursor: pointer;
+    }
+
+    .studio-drawer-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 1.2rem;
+      font-size: 0.84rem;
+      line-height: 1.55;
+    }
+
+    .studio-swatches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.45rem;
+    }
+
+    .studio-swatch {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: #212D38;
+      padding: 0.22rem 0.48rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      border: 1px solid #324352;
+    }
+
+    .studio-swatch-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 2px;
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .studio-critique-box {
+      background: #1E2933;
+      border-left: 3px solid #E8B84B;
+      padding: 0.6rem 0.8rem;
+      margin-top: 0.65rem;
+      font-size: 0.8rem;
+      color: #D0DBE5;
+    }
+
+    /* ==========================================================================
+       ITERATION /1 : THE ARCHIVAL SLIP-BOX (LUHMANN'S ZETTELKASTEN)
+       Palette:
+         Manila Card Stock:    #E6DEC8
+         Beechwood Drawer:     #D5CBB0
+         Unsized Index Slip:   #F3EFE2
+         Iron-Gall Ink:        #19222B
+         Prussian Fountain:    #1B4D7E
+         Red Pencil Margin:    #9B3428
+       Type:
+         Primary: 'Bitstream Charter', 'Charter', Georgia, serif
+         Folgezettel Address: 'Latin Modern Mono Prop', 'Liberation Mono', monospace
+       ========================================================================== */
+    .iter-1 {
+      background-color: #E6DEC8;
+      color: #19222B;
+      font-family: 'Bitstream Charter', 'Charter', 'Caladea', Georgia, serif;
+      line-height: 1.64;
+    }
+
+    .iter-1-shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.75rem 2rem 3.5rem;
+    }
+
+    .iter-1-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #19222B;
+      margin-bottom: 2rem;
+    }
+
+    .iter-1-brand {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+    }
+
+    .iter-1-brand-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #19222B;
+    }
+
+    .iter-1-brand-note {
+      font-size: 0.95rem;
+      color: #46505A;
+      font-style: italic;
+    }
+
+    .iter-1-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+      font-size: 0.94rem;
+    }
+
+    .iter-1-nav-link {
+      color: #19222B;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      background: none;
+      border: none;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .iter-1-cta-primary {
+      background-color: #1B4D7E;
+      color: #F3EFE2;
+      border: 1px solid #123659;
+      padding: 0.6rem 1.15rem;
+      font-family: inherit;
+      font-size: 0.94rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .iter-1-cta-primary:hover {
+      background-color: #143B61;
+    }
+
+    .iter-1-cta-secondary {
+      background-color: #F3EFE2;
+      color: #19222B;
+      border: 1px solid #19222B;
+      padding: 0.6rem 1.1rem;
+      font-family: inherit;
+      font-size: 0.94rem;
+      cursor: pointer;
+    }
+
+    .iter-1-cta-secondary:hover {
+      background-color: #D5CBB0;
+    }
+
+    .iter-1-hero-intro {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 2.5rem;
+      align-items: start;
+      margin-bottom: 1.75rem;
+    }
+
+    .iter-1-headline {
+      font-size: clamp(2.1rem, 3.4vw, 2.95rem);
+      line-height: 1.12;
+      letter-spacing: -0.025em;
+      font-weight: 700;
+      color: #19222B;
+      max-width: 24ch;
+    }
+
+    .iter-1-lead {
+      font-size: 1.04rem;
+      color: #2B3642;
+      max-width: 56ch;
+    }
+
+    .iter-1-hero-actions {
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .iter-1-status-toast {
+      font-size: 0.88rem;
+      color: #1B4D7E;
+      font-style: italic;
+      min-height: 1.25rem;
+      margin-top: 0.35rem;
+    }
+
+    /* Interactive Beechwood Slip-Box Tray */
+    .iter-1-workbench {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 1.5rem;
+      background-color: #D5CBB0;
+      border: 2px solid #19222B;
+      padding: 1.35rem;
+      margin-bottom: 2.25rem;
+    }
+
+    .iter-1-tray-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.45rem;
+      border-bottom: 1px solid #9E947A;
+    }
+
+    .iter-1-tray-title {
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+
+    .iter-1-tray-hint {
+      font-size: 0.86rem;
+      color: #3D4650;
+      font-style: italic;
+    }
+
+    .iter-1-slips-deck {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.65rem;
+    }
+
+    .iter-1-slip {
+      background-color: #ECE5D3;
+      border: 1px solid #78705C;
+      border-top: 4px solid #78705C;
+      padding: 0.85rem;
+      text-align: left;
+      font-family: inherit;
+      color: #19222B;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 230px;
+      transition: background-color 140ms ease, border-color 140ms ease;
+    }
+
+    .iter-1-slip:hover {
+      background-color: #F3EFE2;
+    }
+
+    .iter-1-slip.is-selected {
+      background-color: #F3EFE2;
+      border-color: #19222B;
+      border-top: 4px solid #1B4D7E;
+    }
+
+    .iter-1-slip-id {
+      font-family: 'Latin Modern Mono Prop', 'Liberation Mono', monospace;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #1B4D7E;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+      background: #E2DAC4;
+      padding: 0.1rem 0.4rem;
+    }
+
+    .iter-1-slip.is-selected .iter-1-slip-id {
+      background: #1B4D7E;
+      color: #F3EFE2;
+    }
+
+    .iter-1-slip-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      line-height: 1.28;
+      margin-bottom: 0.45rem;
+    }
+
+    .iter-1-slip-body {
+      font-size: 0.86rem;
+      line-height: 1.48;
+      color: #2C3742;
+      margin-bottom: 0.7rem;
+    }
+
+    .iter-1-slip-branch {
+      font-size: 0.76rem;
+      color: #9B3428;
+      border-top: 1px dashed #B5AC94;
+      padding-top: 0.4rem;
+      margin-top: auto;
+    }
+
+    /* Right side: Assembled Manuscript Pane */
+    .iter-1-manuscript {
+      background-color: #F3EFE2;
+      border: 1px solid #19222B;
+      padding: 1.2rem 1.35rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .iter-1-manuscript-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid #C9C0A8;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .iter-1-manuscript-title {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .iter-1-manuscript-file {
+      font-family: 'Latin Modern Mono Prop', 'Liberation Mono', monospace;
+      font-size: 0.78rem;
+      color: #46505A;
+    }
+
+    .iter-1-manuscript-prose {
+      font-size: 0.92rem;
+      line-height: 1.62;
+      color: #19222B;
+      max-width: 60ch;
+    }
+
+    .iter-1-transclusion {
+      background-color: #E4DEC9;
+      border-left: 3px solid #1B4D7E;
+      padding: 0.65rem 0.85rem;
+      margin: 0.7rem 0;
+    }
+
+    .iter-1-transclusion-cite {
+      font-family: 'Latin Modern Mono Prop', 'Liberation Mono', monospace;
+      font-size: 0.76rem;
+      color: #1B4D7E;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .iter-1-manuscript-footer {
+      margin-top: 0.85rem;
+      padding-top: 0.65rem;
+      border-top: 1px solid #C9C0A8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.84rem;
+    }
+
+    /* Genuine 3-step sequential workflow (numbered ONLY because it is a true sequence) */
+    .iter-1-sequence-section {
+      border-top: 2px solid #19222B;
+      padding-top: 1.75rem;
+      display: grid;
+      grid-template-columns: 0.85fr 2.15fr;
+      gap: 2.25rem;
+    }
+
+    .iter-1-sequence-heading {
+      font-size: 1.38rem;
+      line-height: 1.22;
+      font-weight: 700;
+      margin-bottom: 0.55rem;
+    }
+
+    .iter-1-sequence-desc {
+      font-size: 0.94rem;
+      color: #2E3944;
+      max-width: 42ch;
+    }
+
+    .iter-1-steps-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.35rem;
+    }
+
+    .iter-1-step-item {
+      border-left: 2px solid #19222B;
+      padding-left: 0.95rem;
+    }
+
+    .iter-1-step-num {
+      font-weight: 700;
+      color: #9B3428;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+      display: block;
+    }
+
+    .iter-1-step-title {
+      font-size: 1.02rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    .iter-1-step-copy {
+      font-size: 0.9rem;
+      color: #2B3642;
+      max-width: 38ch;
+    }
+
+    /* ==========================================================================
+       ITERATION /2 : THE RENAISSANCE GLOSSATOR (CONCENTRIC MARGIN COMMENTARY)
+       Palette:
+         Limestone Vellum:     #EAEBF0
+         Pressed Rag Folio:    #F5F6F8
+         Walnut Gall Ink:      #231F20
+         Ultramarine Lapis:    #1D2D5E
+         Venetian Rubric Red:  #9E2A2B
+         Silverpoint Rule:     #C8CEDD
+       Type:
+         Single Family: 'TeX Gyre Pagella', 'P052', 'Palatino Linotype', serif
+       ========================================================================== */
+    .iter-2 {
+      background-color: #EAEBF0;
+      color: #231F20;
+      font-family: 'TeX Gyre Pagella', 'P052', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+      line-height: 1.7;
+    }
+
+    .iter-2-shell {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 1.85rem 2rem 4rem;
+    }
+
+    .iter-2-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid #B8C0D4;
+      padding-bottom: 0.9rem;
+      margin-bottom: 1.85rem;
+    }
+
+    .iter-2-titlemark {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #1D2D5E;
+    }
+
+    .iter-2-subtitlemark {
+      font-style: italic;
+      font-size: 0.98rem;
+      color: #4A4849;
+      margin-left: 0.75rem;
+    }
+
+    .iter-2-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.15rem;
+    }
+
+    .iter-2-btn {
+      background-color: #1D2D5E;
+      color: #F5F6F8;
+      border: 1px solid #142044;
+      padding: 0.5rem 1.1rem;
+      font-family: inherit;
+      font-size: 0.94rem;
+      cursor: pointer;
+    }
+
+    .iter-2-btn:hover {
+      background-color: #142044;
+    }
+
+    .iter-2-hero-header {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 2rem;
+    }
+
+    .iter-2-display {
+      font-size: clamp(2.1rem, 3.6vw, 3.05rem);
+      line-height: 1.13;
+      font-weight: 700;
+      color: #1D2D5E;
+      margin-bottom: 0.7rem;
+    }
+
+    .iter-2-deck {
+      font-size: 1.1rem;
+      color: #363234;
+      max-width: 58ch;
+      margin: 0 auto 0.85rem;
+    }
+
+    .iter-2-rubric-instruction {
+      font-size: 0.94rem;
+      font-style: italic;
+      color: #9E2A2B;
+    }
+
+    /* Concentric Three-Zone Scholarly Folio */
+    .iter-2-folio {
+      background-color: #F5F6F8;
+      border: 1px solid #B8C0D4;
+      outline: 4px solid #F5F6F8;
+      padding: 2rem 1.85rem;
+      display: grid;
+      grid-template-columns: 0.75fr 1.5fr 0.75fr;
+      gap: 1.75rem;
+      align-items: start;
+      margin-bottom: 2.25rem;
+    }
+
+    .iter-2-margin-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .iter-2-margin-heading {
+      font-size: 0.9rem;
+      font-style: italic;
+      color: #1D2D5E;
+      border-bottom: 1px solid #C8CEDD;
+      padding-bottom: 0.3rem;
+    }
+
+    .iter-2-gloss-note {
+      padding: 0.7rem 0.8rem;
+      border-left: 2px solid #C8CEDD;
+      font-size: 0.86rem;
+      line-height: 1.52;
+      color: #464244;
+      background-color: #EAEBF0;
+      cursor: pointer;
+    }
+
+    .iter-2-gloss-note.is-active {
+      border-left: 3px solid #9E2A2B;
+      background-color: #FFFFFF;
+      color: #231F20;
+    }
+
+    .iter-2-gloss-date {
+      display: block;
+      font-style: italic;
+      color: #9E2A2B;
+      font-size: 0.8rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .iter-2-center-well {
+      border-left: 1px solid #C8CEDD;
+      border-right: 1px solid #C8CEDD;
+      padding: 0 1.75rem;
+    }
+
+    .iter-2-well-source {
+      font-size: 0.9rem;
+      font-style: italic;
+      color: #545052;
+      margin-bottom: 0.5rem;
+    }
+
+    .iter-2-well-title {
+      font-size: 1.48rem;
+      line-height: 1.24;
+      color: #1D2D5E;
+      margin-bottom: 0.95rem;
+      font-weight: 700;
+    }
+
+    .iter-2-well-paragraph {
+      font-size: 1.04rem;
+      line-height: 1.72;
+      text-align: justify;
+      hyphens: auto;
+      margin-bottom: 1rem;
+      max-width: 58ch;
+    }
+
+    .iter-2-annotated-span {
+      background-color: #E4E7F1;
+      border-bottom: 2px solid #1D2D5E;
+      padding: 0.05rem 0.25rem;
+      cursor: pointer;
+    }
+
+    .iter-2-annotated-span.is-active {
+      background-color: #F6E3E3;
+      border-bottom-color: #9E2A2B;
+      color: #231F20;
+    }
+
+    .iter-2-rubric-mark {
+      color: #9E2A2B;
+      font-weight: 700;
+      font-size: 0.8rem;
+      vertical-align: super;
+      margin-left: 0.15rem;
+    }
+
+    .iter-2-synthesis-box {
+      margin-top: 1.25rem;
+      padding: 0.85rem 1.1rem;
+      background-color: #EAEBF0;
+      border-top: 2px solid #1D2D5E;
+    }
+
+    .iter-2-synthesis-label {
+      font-style: italic;
+      color: #1D2D5E;
+      font-size: 0.88rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .iter-2-synthesis-text {
+      font-size: 0.93rem;
+      line-height: 1.56;
+    }
+
+    .iter-2-colophon {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      border-top: 1px solid #B8C0D4;
+      padding-top: 1.5rem;
+    }
+
+    .iter-2-colophon-item h3 {
+      font-size: 1.08rem;
+      color: #1D2D5E;
+      margin-bottom: 0.35rem;
+    }
+
+    .iter-2-colophon-item p {
+      font-size: 0.92rem;
+      color: #383436;
+      max-width: 44ch;
+    }
+
+    /* ==========================================================================
+       ITERATION /3 : THE DARKROOM LIGHT TABLE (SPATIAL MICROFICHE WORKBENCH)
+       Palette:
+         Prussian Darkroom Slate: #131B24
+         Backlit Acetate Bay:     #1C2733
+         Silver Halide Crisp:     #DCE4EC
+         Muted Emulsion:          #8E9FAE
+         Tungsten Loupe Amber:    #E8B84B
+         Cyanotype Blueprint:     #63A4C4
+       Type:
+         UI & Display: 'Inter Display', 'Inter', sans-serif
+         Inspector Prose: 'Latin Modern Roman', Georgia, serif
+       ========================================================================== */
+    .iter-3 {
+      background-color: #131B24;
+      color: #DCE4EC;
+      font-family: 'Inter', 'DejaVu Sans', system-ui, sans-serif;
+      line-height: 1.6;
+    }
+
+    .iter-3-shell {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 1.85rem 2rem 4rem;
+    }
+
+    .iter-3-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1.1rem;
+      border-bottom: 1px solid #2A3948;
+      margin-bottom: 1.9rem;
+    }
+
+    .iter-3-brand {
+      display: flex;
+      align-items: baseline;
+      gap: 0.85rem;
+    }
+
+    .iter-3-brand-title {
+      font-family: 'Inter Display', 'Inter', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #DCE4EC;
+    }
+
+    .iter-3-brand-sub {
+      font-size: 0.9rem;
+      color: #8E9FAE;
+    }
+
+    .iter-3-cta {
+      background-color: #E8B84B;
+      color: #131B24;
+      border: 1px solid #F2C96B;
+      padding: 0.55rem 1.1rem;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .iter-3-cta:hover {
+      background-color: #F2C96B;
+    }
+
+    .iter-3-hero-bar {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 2rem;
+      align-items: start;
+      margin-bottom: 1.65rem;
+    }
+
+    .iter-3-headline {
+      font-family: 'Inter Display', 'Inter', sans-serif;
+      font-size: clamp(2rem, 3.3vw, 2.75rem);
+      line-height: 1.14;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #DCE4EC;
+      max-width: 24ch;
+    }
+
+    .iter-3-lead {
+      font-size: 0.98rem;
+      color: #A9B8C6;
+      max-width: 54ch;
+    }
+
+    .iter-3-lighttable {
+      display: grid;
+      grid-template-columns: 1.35fr 0.85fr;
+      background-color: #1C2733;
+      border: 1px solid #324558;
+      min-height: 430px;
+      margin-bottom: 2.25rem;
+    }
+
+    .iter-3-canvas-pane {
+      padding: 1.2rem;
+      border-right: 1px solid #324558;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .iter-3-canvas-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #2A3948;
+    }
+
+    .iter-3-cluster-btns {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+
+    .iter-3-cluster-btn {
+      background-color: #131B24;
+      color: #A9B8C6;
+      border: 1px solid #324558;
+      padding: 0.32rem 0.65rem;
+      font-family: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .iter-3-cluster-btn.is-active {
+      background-color: #263849;
+      color: #E8B84B;
+      border-color: #E8B84B;
+    }
+
+    .iter-3-svg-stage {
+      width: 100%;
+      height: 300px;
+      background: radial-gradient(circle at var(--loupe-x, 52%) var(--loupe-y, 48%), rgba(232, 184, 75, 0.14) 0%, rgba(28, 39, 51, 0) 58%);
+      cursor: pointer;
+    }
+
+    .iter-3-node-group {
+      cursor: pointer;
+    }
+
+    .iter-3-canvas-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.7rem;
+      border-top: 1px solid #2A3948;
+      font-size: 0.8rem;
+      color: #8E9FAE;
+    }
+
+    .iter-3-inspector-pane {
+      padding: 1.35rem;
+      background-color: #16202B;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .iter-3-inspector-header {
+      border-bottom: 1px solid #2A3948;
+      padding-bottom: 0.75rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .iter-3-inspector-cluster {
+      font-size: 0.8rem;
+      color: #63A4C4;
+      margin-bottom: 0.25rem;
+    }
+
+    .iter-3-inspector-title {
+      font-size: 1.24rem;
+      font-weight: 600;
+      color: #DCE4EC;
+      line-height: 1.28;
+    }
+
+    .iter-3-inspector-body {
+      font-family: 'Latin Modern Roman', Georgia, serif;
+      font-size: 1.02rem;
+      line-height: 1.65;
+      color: #CFD9E3;
+      margin-bottom: 1.1rem;
+      max-width: 54ch;
+    }
+
+    .iter-3-backlinks-box {
+      background-color: #1C2733;
+      border-left: 3px solid #63A4C4;
+      padding: 0.75rem 0.95rem;
+    }
+
+    .iter-3-backlinks-heading {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #DCE4EC;
+      margin-bottom: 0.45rem;
+    }
+
+    .iter-3-backlink-item {
+      font-size: 0.82rem;
+      color: #A9B8C6;
+      padding: 0.28rem 0;
+      border-bottom: 1px solid #263545;
+    }
+
+    .iter-3-backlink-item:last-child {
+      border-bottom: none;
+    }
+
+    .iter-3-specs-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      border-top: 1px solid #2A3948;
+      padding-top: 1.5rem;
+    }
+
+    .iter-3-spec-col h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #E8B84B;
+      margin-bottom: 0.35rem;
+    }
+
+    .iter-3-spec-col p {
+      font-size: 0.88rem;
+      color: #9FB0C0;
+      max-width: 44ch;
+    }
+
+    /* ==========================================================================
+       ITERATION /4 : THE BOTANICAL HERBARIUM (FIELD NATURALIST LEDGER)
+       Palette:
+         Celadon Blotter Paper:   #DCE3D8
+         Herbarium Mount Sheet:   #EEF2EB
+         Chlorophyll Deep Forest: #1B3828
+         Pressed Lichen Ochre:    #B37D28
+         Herbarium Stamp Rust:    #7D382B
+       Type:
+         Primary: 'TeX Gyre Schola', 'C059', 'Century Schoolbook', Georgia, serif
+         Tabular Ledger: 'TeX Gyre Heros Cn', 'Liberation Sans Narrow', sans-serif
+       ========================================================================== */
+    .iter-4 {
+      background-color: #DCE3D8;
+      color: #1B3828;
+      font-family: 'TeX Gyre Schola', 'C059', 'Century Schoolbook', Georgia, serif;
+      line-height: 1.64;
+    }
+
+    .iter-4-shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 1.85rem 2rem 4rem;
+    }
+
+    .iter-4-sheet {
+      background-color: #EEF2EB;
+      border: 2px solid #1B3828;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .iter-4-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 2px solid #1B3828;
+      padding-bottom: 0.9rem;
+      margin-bottom: 1.85rem;
+    }
+
+    .iter-4-brand {
+      font-size: 1.42rem;
+      font-weight: 700;
+    }
+
+    .iter-4-stamp {
+      border: 1px solid #7D382B;
+      color: #7D382B;
+      padding: 0.2rem 0.6rem;
+      font-family: 'TeX Gyre Heros Cn', 'Liberation Sans Narrow', sans-serif;
+      font-size: 0.84rem;
+    }
+
+    .iter-4-hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 2.25rem;
+      align-items: start;
+      margin-bottom: 2.1rem;
+    }
+
+    .iter-4-headline {
+      font-size: clamp(2rem, 3.3vw, 2.75rem);
+      line-height: 1.14;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      max-width: 22ch;
+    }
+
+    .iter-4-lead {
+      font-size: 1.02rem;
+      color: #264734;
+      max-width: 54ch;
+      margin-bottom: 1.2rem;
+    }
+
+    .iter-4-cta {
+      background-color: #1B3828;
+      color: #EEF2EB;
+      border: 1px solid #1B3828;
+      padding: 0.6rem 1.2rem;
+      font-family: inherit;
+      font-size: 0.94rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .iter-4-cta:hover {
+      background-color: #2B543D;
+    }
+
+    /* Mounted Specimen Box with Gummed Tape Strips */
+    .iter-4-specimen-mount {
+      background-color: #E3E9DF;
+      border: 1px solid #8FA189;
+      padding: 1.25rem;
+      position: relative;
+    }
+
+    .iter-4-gummed-tape-left,
+    .iter-4-gummed-tape-right {
+      position: absolute;
+      width: 54px;
+      height: 14px;
+      background-color: #C99B49;
+      opacity: 0.85;
+      border: 1px solid #9E7325;
+    }
+
+    .iter-4-gummed-tape-left {
+      top: -7px;
+      left: 24px;
+    }
+
+    .iter-4-gummed-tape-right {
+      bottom: -7px;
+      right: 24px;
+    }
+
+    .iter-4-specimen-grid {
+      display: grid;
+      grid-template-columns: 145px 1fr;
+      gap: 1.1rem;
+      align-items: center;
+    }
+
+    .iter-4-specimen-meta {
+      font-size: 0.88rem;
+      line-height: 1.52;
+    }
+
+    .iter-4-specimen-binomial {
+      font-style: italic;
+      font-size: 1.06rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    /* Interactive Field Ledger Table */
+    .iter-4-ledger-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-top: 2px solid #1B3828;
+      padding-top: 1.35rem;
+      margin-bottom: 0.95rem;
+    }
+
+    .iter-4-ledger-title {
+      font-size: 1.18rem;
+      font-weight: 700;
+    }
+
+    .iter-4-filter-group {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .iter-4-filter-btn {
+      background-color: #DCE3D8;
+      color: #1B3828;
+      border: 1px solid #1B3828;
+      padding: 0.32rem 0.75rem;
+      font-family: 'TeX Gyre Heros Cn', 'Liberation Sans Narrow', sans-serif;
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+
+    .iter-4-filter-btn.is-active {
+      background-color: #B37D28;
+      color: #EEF2EB;
+      border-color: #8C5E14;
+      font-weight: 700;
+    }
+
+    .iter-4-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    .iter-4-table th {
+      background-color: #1B3828;
+      color: #EEF2EB;
+      font-family: 'TeX Gyre Heros Cn', 'Liberation Sans Narrow', sans-serif;
+      font-weight: 700;
+      text-align: left;
+      padding: 0.6rem 0.85rem;
+      border: 1px solid #1B3828;
+    }
+
+    .iter-4-table th.num-col,
+    .iter-4-table td.num-col {
+      text-align: right;
+    }
+
+    .iter-4-table td {
+      padding: 0.68rem 0.85rem;
+      border: 1px solid #99AA94;
+      vertical-align: top;
+    }
+
+    .iter-4-row-clickable {
+      cursor: pointer;
+      background-color: #EEF2EB;
+    }
+
+    .iter-4-row-clickable:hover {
+      background-color: #E2E9DF;
+    }
+
+    .iter-4-row-clickable.is-expanded {
+      background-color: #DFE8DA;
+      font-weight: 700;
+    }
+
+    .iter-4-detail-row {
+      display: none;
+      background-color: #E5ECE1;
+    }
+
+    .iter-4-detail-row.is-open {
+      display: table-row;
+    }
+
+    /* ==========================================================================
+       ITERATION /5 : THE CHRONOLOGICAL EPHEMERIS (1974 WHOLE EARTH STREAM)
+       Palette:
+         Sunlit Newsprint:    #F2E9CE
+         Cadmium Highlighter: #F4B924
+         Cobalt Stencil Ink:  #14367A
+         Offset Printer Black:#161513
+         Kraft Divider:       #D9CCA7
+       Type:
+         Display & Body: 'URW Bookman', 'TeX Gyre Bonum', 'Bookman Old Style', Georgia, serif
+         UI Controls:    'TeX Gyre Adventor', 'URW Gothic', sans-serif
+       ========================================================================== */
+    .iter-5 {
+      background-color: #F2E9CE;
+      color: #161513;
+      font-family: 'URW Bookman', 'TeX Gyre Bonum', 'Bookman Old Style', Georgia, serif;
+      line-height: 1.66;
+    }
+
+    .iter-5-shell {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 1.85rem 2rem 4rem;
+    }
+
+    .iter-5-masthead {
+      border-top: 4px solid #161513;
+      border-bottom: 2px solid #161513;
+      padding: 0.8rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 1.9rem;
+    }
+
+    .iter-5-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .iter-5-edition {
+      font-family: 'TeX Gyre Adventor', 'URW Gothic', sans-serif;
+      font-size: 0.86rem;
+      color: #14367A;
+      font-weight: 700;
+    }
+
+    .iter-5-hero {
+      margin-bottom: 2rem;
+    }
+
+    .iter-5-headline {
+      font-size: clamp(2.1rem, 3.8vw, 3rem);
+      line-height: 1.12;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      max-width: 24ch;
+    }
+
+    .iter-5-sub {
+      font-size: 1.06rem;
+      max-width: 60ch;
+      margin-bottom: 1.35rem;
+      color: #2E2B26;
+    }
+
+    /* Live Working Append-Only Composer */
+    .iter-5-composer {
+      background-color: #E5D9B6;
+      border: 2px solid #161513;
+      padding: 1.15rem;
+      margin-bottom: 2rem;
+    }
+
+    .iter-5-composer-label {
+      display: block;
+      font-family: 'TeX Gyre Adventor', 'URW Gothic', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 0.45rem;
+      color: #161513;
+    }
+
+    .iter-5-textarea {
+      width: 100%;
+      min-height: 70px;
+      padding: 0.7rem;
+      font-family: inherit;
+      font-size: 1rem;
+      background-color: #FAF5E6;
+      color: #161513;
+      border: 1px solid #161513;
+      margin-bottom: 0.65rem;
+      resize: vertical;
+    }
+
+    .iter-5-composer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .iter-5-presets {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      font-family: 'TeX Gyre Adventor', 'URW Gothic', sans-serif;
+      font-size: 0.78rem;
+    }
+
+    .iter-5-preset-btn {
+      background-color: #FAF5E6;
+      color: #14367A;
+      border: 1px solid #14367A;
+      padding: 0.26rem 0.55rem;
+      font-family: inherit;
+      font-size: 0.76rem;
+      cursor: pointer;
+    }
+
+    .iter-5-preset-btn:hover {
+      background-color: #14367A;
+      color: #FAF5E6;
+    }
+
+    .iter-5-submit-btn {
+      background-color: #F4B924;
+      color: #161513;
+      border: 2px solid #161513;
+      padding: 0.5rem 1.15rem;
+      font-family: 'TeX Gyre Adventor', 'URW Gothic', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .iter-5-submit-btn:hover {
+      background-color: #E2A612;
+    }
+
+    .iter-5-feedback {
+      margin-top: 0.45rem;
+      font-family: 'TeX Gyre Adventor', 'URW Gothic', sans-serif;
+      font-size: 0.82rem;
+      color: #14367A;
+      font-weight: 700;
+      min-height: 1.1rem;
+    }
+
+    /* Chronological River */
+    .iter-5-river-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 2px solid #161513;
+      padding-bottom: 0.45rem;
+      margin-bottom: 1rem;
+    }
+
+    .iter-5-river-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .iter-5-entry {
+      display: grid;
+      grid-template-columns: 165px 1fr;
+      gap: 1.4rem;
+      padding: 1.1rem 0;
+      border-bottom: 1px solid #C8BA94;
+    }
+
+    .iter-5-entry-time {
+      font-family: 'TeX Gyre Adventor', 'URW Gothic', sans-serif;
+      font-size: 0.84rem;
+      color: #4A443B;
+    }
+
+    .iter-5-entry-body {
+      font-size: 1.02rem;
+      max-width: 64ch;
+    }
+
+    .iter-5-wikilink {
+      background-color: #F4B924;
+      color: #161513;
+      padding: 0.05rem 0.32rem;
+      border-bottom: 2px solid #14367A;
+      font-weight: 700;
+    }
+
+    .iter-5-backlink-match {
+      margin-top: 0.45rem;
+      font-family: 'TeX Gyre Adventor', 'URW Gothic', sans-serif;
+      font-size: 0.8rem;
+      color: #14367A;
+    }
+
+    @media (max-width: 900px) {
+      .iter-1-hero-intro,
+      .iter-1-workbench,
+      .iter-1-slips-deck,
+      .iter-1-sequence-section,
+      .iter-1-steps-list,
+      .iter-2-folio,
+      .iter-2-colophon,
+      .iter-3-hero-bar,
+      .iter-3-lighttable,
+      .iter-3-specs-row,
+      .iter-4-hero-grid,
+      .iter-4-specimen-grid,
+      .iter-5-entry,
+      .studio-drawer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .iter-2-center-well {
+        border-left: none;
+        border-right: none;
+        padding: 0;
+      }
+
+      .iteration-switcher {
+        right: 0.5rem;
+        left: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       ITERATION /1 : LUHMANN'S WOODEN SLIP-BOX (ARCHIVAL INDEX & MANILA LEDGER)
+       ======================================================================== -->
+  <main id="view-1" class="iteration-view iter-1 is-active" data-iteration="1" aria-label="Iteration 1: Archival Slip-Box">
+    <div class="iter-1-shell">
+      <header class="iter-1-nav">
+        <div class="iter-1-brand">
+          <span class="iter-1-brand-name">Cairn</span>
+          <span class="iter-1-brand-note">Local-first slip-box in plain Markdown</span>
+        </div>
+        <nav class="iter-1-nav-links" aria-label="Iteration 1 navigation">
+          <button type="button" class="iter-1-nav-link" onclick="selectSlip(2)">Branching addresses</button>
+          <button type="button" class="iter-1-nav-link" onclick="selectSlip(3)">Transclusion</button>
+          <button type="button" class="iter-1-cta-primary" onclick="triggerDownloadToast('iter1-toast', 'Saved Cairn-2.4-Archive.dmg to your downloads')">Save local installer</button>
+        </nav>
+      </header>
+
+      <section class="iter-1-hero-intro">
+        <div>
+          <h1 class="iter-1-headline">Your notes are only useful if they surprise you six months later.</h1>
+        </div>
+        <div>
+          <p class="iter-1-lead">
+            Folders force you to decide where an idea belongs before you know what it means. Cairn files every thought behind an existing slip so chains of argument grow organically on your disk.
+          </p>
+          <div class="iter-1-hero-actions">
+            <button type="button" class="iter-1-cta-primary" onclick="fileNewSlipInTray()">File sample slip in drawer</button>
+            <button type="button" class="iter-1-cta-secondary" onclick="selectSlip(1)">Inspect branching sequence</button>
+          </div>
+          <p id="iter1-toast" class="iter-1-status-toast" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="iter-1-workbench" aria-label="Interactive slip-box drawer and manuscript">
+        <div>
+          <div class="iter-1-tray-header">
+            <span class="iter-1-tray-title">Drawer II : Urban Infrastructure &amp; Memory</span>
+            <span class="iter-1-tray-hint">Select any index slip to trace its branch in the draft</span>
+          </div>
+          <div class="iter-1-slips-deck" id="iter1-slips-deck">
+            <button type="button" class="iter-1-slip" data-slip="0" onclick="selectSlip(0)">
+              <div>
+                <span class="iter-1-slip-id">21/3d</span>
+                <h2 class="iter-1-slip-title">Maintenance outlasts monumentality</h2>
+                <p class="iter-1-slip-body">Roman aqueducts survived only where parish guilds cleared calcium sinter every spring.</p>
+              </div>
+              <div class="iter-1-slip-branch">Branches to 21/3d1</div>
+            </button>
+
+            <button type="button" class="iter-1-slip" data-slip="1" onclick="selectSlip(1)">
+              <div>
+                <span class="iter-1-slip-id">21/3d1</span>
+                <h2 class="iter-1-slip-title">Invisible repair schedules</h2>
+                <p class="iter-1-slip-body">Municipal budgets reward ribbon-cuttings, starving culvert inspections until a flood forces emergency bonds.</p>
+              </div>
+              <div class="iter-1-slip-branch">Branches to 21/3d1a</div>
+            </button>
+
+            <button type="button" class="iter-1-slip is-selected" data-slip="2" onclick="selectSlip(2)">
+              <div>
+                <span class="iter-1-slip-id">21/3d1a</span>
+                <h2 class="iter-1-slip-title">Software rots by the same civic math</h2>
+                <p class="iter-1-slip-body">Proprietary cloud databases vanish when startups fold; plain UTF-8 files on disk require zero server upkeep.</p>
+              </div>
+              <div class="iter-1-slip-branch">Transcluded in active draft</div>
+            </button>
+
+            <button type="button" class="iter-1-slip" data-slip="3" onclick="selectSlip(3)">
+              <div>
+                <span class="iter-1-slip-id">21/4</span>
+                <h2 class="iter-1-slip-title">Counter-example: Venice tide pilings</h2>
+                <p class="iter-1-slip-body">Alder trunks driven into anoxic lagoon silt petrified instead of decaying because oxygen never reached them.</p>
+              </div>
+              <div class="iter-1-slip-branch">Contradicts 21/3d</div>
+            </button>
+          </div>
+        </div>
+
+        <aside class="iter-1-manuscript" aria-live="polite">
+          <div>
+            <div class="iter-1-manuscript-top">
+              <span class="iter-1-manuscript-title">Active Manuscript Draft</span>
+              <span class="iter-1-manuscript-file">~/cairn/essays/civic-durability.md</span>
+            </div>
+            <div class="iter-1-manuscript-prose">
+              <p>
+                Historians of technology routinely mistake durability for hardness. We assume stone and enterprise cloud servers endure because they look imposing at launch.
+              </p>
+              <blockquote class="iter-1-transclusion" id="iter1-transclusion-box">
+                <span class="iter-1-transclusion-cite" id="iter1-transclusion-cite">Transcluded from slip 21/3d1a (recorded 18 Feb 2026)</span>
+                <p id="iter1-transclusion-text">
+                  Proprietary cloud databases vanish when startups fold; plain UTF-8 files on disk require zero server upkeep.
+                </p>
+              </blockquote>
+              <p id="iter1-manuscript-followup">
+                Because slip 21/3d1a sits directly behind our civic culvert notes, Cairn surfaces both when drafting this section—without sharing a single folder or tag.
+              </p>
+            </div>
+          </div>
+          <div class="iter-1-manuscript-footer">
+            <span id="iter1-link-stat">Linked across 4 neighboring slips</span>
+            <button type="button" class="iter-1-nav-link" onclick="cycleSlip()">Next slip in chain</button>
+          </div>
+        </aside>
+      </section>
+
+      <section class="iter-1-sequence-section">
+        <div>
+          <h2 class="iter-1-sequence-heading">How a slip-box compounds over ten years</h2>
+          <p class="iter-1-sequence-desc">
+            Every note follows a strict three-stage path from rough capture to published paragraph.
+          </p>
+        </div>
+        <ol class="iter-1-steps-list">
+          <li class="iter-1-step-item">
+            <span class="iter-1-step-num">Step 1</span>
+            <h3 class="iter-1-step-title">Write one self-contained slip</h3>
+            <p class="iter-1-step-copy">
+              State a single observation in your own words so the card makes sense when pulled out of context years later.
+            </p>
+          </li>
+          <li class="iter-1-step-item">
+            <span class="iter-1-step-num">Step 2</span>
+            <h3 class="iter-1-step-title">Place it behind a neighbor</h3>
+            <p class="iter-1-step-copy">
+              Assign an alphanumeric branch address like 21/3d1a to continue an argument or 21/4 to challenge it.
+            </p>
+          </li>
+          <li class="iter-1-step-item">
+            <span class="iter-1-step-num">Step 3</span>
+            <h3 class="iter-1-step-title">Pull slips into your draft</h3>
+            <p class="iter-1-step-copy">
+              Drag any sequence of slips onto the manuscript desk; Cairn weaves the excerpts and preserves every source citation.
+            </p>
+          </li>
+        </ol>
+      </section>
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       ITERATION /2 : THE RENAISSANCE GLOSSATOR (CONCENTRIC MARGIN COMMENTARY)
+       ======================================================================== -->
+  <main id="view-2" class="iteration-view iter-2" data-iteration="2" aria-label="Iteration 2: Scholarly Margin Glossator">
+    <div class="iter-2-shell">
+      <header class="iter-2-topbar">
+        <div>
+          <span class="iter-2-titlemark">Cairn Folio</span>
+          <span class="iter-2-subtitlemark">Concentric reading &amp; marginalia notebook</span>
+        </div>
+        <div class="iter-2-actions">
+          <span id="iter2-toast" style="font-style:italic; font-size:0.9rem; color:#9E2A2B;" aria-live="polite"></span>
+          <button type="button" class="iter-2-btn" onclick="triggerDownloadToast('iter2-toast', 'Downloaded Cairn Folio reader for desktop')">Download desktop reader</button>
+        </div>
+      </header>
+
+      <section class="iter-2-hero-header">
+        <h1 class="iter-2-display">Read with a sharp pencil in the margin across every book you own.</h1>
+        <p class="iter-2-deck">
+          Most note apps exile your highlights into an isolated database. Cairn keeps your primary reading in the center well and surrounds it with layers of dated commentary from months apart.
+        </p>
+        <p class="iter-2-rubric-instruction">
+          Select any underlined passage in the folio below to trace how earlier sources and later doubts converge.
+        </p>
+      </section>
+
+      <section class="iter-2-folio" aria-label="Interactive concentric gloss folio">
+        <!-- Left Margin: Earlier Provenance & Parallels -->
+        <aside class="iter-2-margin-col" aria-label="Earlier source parallels">
+          <h2 class="iter-2-margin-heading">Left Margin : Earlier Parallels</h2>
+
+          <div class="iter-2-gloss-note is-active" data-gloss="1" onclick="selectGloss(1)">
+            <span class="iter-2-gloss-date">Gloss I, recorded 14 May 2024</span>
+            <p>
+              <strong>Jane Jacobs, 1961:</strong> New ideas typically require old buildings with low overhead; shiny master-planned districts price out experimental workshops.
+            </p>
+          </div>
+
+          <div class="iter-2-gloss-note" data-gloss="2" onclick="selectGloss(2)">
+            <span class="iter-2-gloss-date">Gloss II, recorded 09 Nov 2024</span>
+            <p>
+              <strong>Vannevar Bush, 1945:</strong> The human mind operates by association, leaping from one item to the next along trails that fade unless reinforced by use.
+            </p>
+          </div>
+
+          <div class="iter-2-gloss-note" data-gloss="3" onclick="selectGloss(3)">
+            <span class="iter-2-gloss-date">Gloss III, recorded 22 Jan 2025</span>
+            <p>
+              <strong>Personal field log:</strong> Interviewed three maritime archivists in Rotterdam; all three trusted handwritten ledger indices over search bars when names changed spelling.
+            </p>
+          </div>
+        </aside>
+
+        <!-- Center Reading Well -->
+        <article class="iter-2-center-well">
+          <p class="iter-2-well-source">Chapter 4 of Primary Essay in Progress: The Architecture of Recall</p>
+          <h2 class="iter-2-well-title">Why rigid hierarchies fail the working scholar</h2>
+          <p class="iter-2-well-paragraph">
+            When a personal archive grows past a few hundred entries, pre-defined folders begin to conceal the very passages you need most. Filing a note under a single category forces a premature verdict on its meaning, whereas
+            <span class="iter-2-annotated-span is-active" data-gloss-span="1" tabindex="0" role="button" onclick="selectGloss(1)" onkeydown="if(event.key==='Enter')selectGloss(1)">unplanned neighborhoods of rough notes invite unexpected cross-pollination<sup class="iter-2-rubric-mark">I</sup></span>
+            long after the initial reading is finished.
+          </p>
+          <p class="iter-2-well-paragraph">
+            Full-text keyword search only finds notes when your past self used the exact vocabulary you are typing today. By contrast,
+            <span class="iter-2-annotated-span" data-gloss-span="2" tabindex="0" role="button" onclick="selectGloss(2)" onkeydown="if(event.key==='Enter')selectGloss(2)">associative margin trails preserve the context of why two distant passages struck you as related<sup class="iter-2-rubric-mark">II</sup></span>
+            at the moment of discovery.
+          </p>
+          <p class="iter-2-well-paragraph">
+            Over decades of fieldwork, vocabulary shifts and theories mature. Keeping
+            <span class="iter-2-annotated-span" data-gloss-span="3" tabindex="0" role="button" onclick="selectGloss(3)" onkeydown="if(event.key==='Enter')selectGloss(3)">dated marginalia directly alongside the original excerpt lets you audit how your own thinking evolved<sup class="iter-2-rubric-mark">III</sup></span>
+            without overwriting the historical record of your first impression.
+          </p>
+
+          <div class="iter-2-synthesis-box" aria-live="polite">
+            <p class="iter-2-synthesis-label" id="iter2-synthesis-label">Active Gloss Thread I (May 2024 to October 2026)</p>
+            <p class="iter-2-synthesis-text" id="iter2-synthesis-text">
+              Bridges Jane Jacobs on low-overhead urban workshops (Left Margin) with James C. Scott on high-modernist legibility (Right Margin) to argue for un-foldered note neighborhoods.
+            </p>
+          </div>
+        </article>
+
+        <!-- Right Margin: Later Rebuttals & Revisions -->
+        <aside class="iter-2-margin-col" aria-label="Later revisions and counter-arguments">
+          <h2 class="iter-2-margin-heading">Right Margin : Later Doubts &amp; Revisions</h2>
+
+          <div class="iter-2-gloss-note is-active" data-gloss="1" onclick="selectGloss(1)">
+            <span class="iter-2-gloss-date">Rebuttal I, added 03 Oct 2026</span>
+            <p>
+              <strong>Compare with Scott (1998):</strong> Total absence of structure also paralyzes recall; you still need light, local index maps at entry points.
+            </p>
+          </div>
+
+          <div class="iter-2-gloss-note" data-gloss="2" onclick="selectGloss(2)">
+            <span class="iter-2-gloss-date">Rebuttal II, added 08 Oct 2026</span>
+            <p>
+              <strong>Practical refinement:</strong> Every link in Cairn requires a one-line reason ("why this connects") so trails never degenerate into mystery clicks.
+            </p>
+          </div>
+
+          <div class="iter-2-gloss-note" data-gloss="3" onclick="selectGloss(3)">
+            <span class="iter-2-gloss-date">Rebuttal III, added 12 Oct 2026</span>
+            <p>
+              <strong>Citation check:</strong> Verify Rotterdam port ledger dates before sending draft to press; see audio transcript folder 2025-01.
+            </p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="iter-2-colophon">
+        <div class="iter-2-colophon-item">
+          <h3>PDF &amp; EPUB side-by-side</h3>
+          <p>Drop any academic paper or book into Cairn; highlights stay anchored to exact page coordinates while sharing margins with your wider notebook.</p>
+        </div>
+        <div class="iter-2-colophon-item">
+          <h3>Chronological margin layers</h3>
+          <p>Toggle margin layers by year to see what you believed when you first read a source versus what you added after three more books.</p>
+        </div>
+        <div class="iter-2-colophon-item">
+          <h3>Export clean citations</h3>
+          <p>Compile any central essay well with its chosen marginalia converted automatically into footnotes, endnotes, or BibTeX references.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       ITERATION /3 : THE DARKROOM LIGHT TABLE (SPATIAL MICROFICHE WORKBENCH)
+       ======================================================================== -->
+  <main id="view-3" class="iteration-view iter-3" data-iteration="3" aria-label="Iteration 3: Darkroom Spatial Light Table">
+    <div class="iter-3-shell">
+      <header class="iter-3-header">
+        <div class="iter-3-brand">
+          <span class="iter-3-brand-title">Cairn Workbench</span>
+          <span class="iter-3-brand-sub">Spatial light table for investigative research</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:1rem;">
+          <span id="iter3-toast" style="font-size:0.85rem; color:#E8B84B;" aria-live="polite"></span>
+          <button type="button" class="iter-3-cta" onclick="triggerDownloadToast('iter3-toast', 'Downloaded Cairn Workbench for macOS & Linux')">Download local workbench</button>
+        </div>
+      </header>
+
+      <section class="iter-3-hero-bar">
+        <div>
+          <h1 class="iter-3-headline">See the shape of what you know before you write the first line.</h1>
+        </div>
+        <div>
+          <p class="iter-3-lead">
+            When you have four hundred notes on a complex investigation, a vertical file list hides the clusters. Cairn illuminates related notes on an optical light table so unspoken connections stand out.
+          </p>
+        </div>
+      </section>
+
+      <section class="iter-3-lighttable" aria-label="Interactive spatial light table">
+        <div class="iter-3-canvas-pane">
+          <div class="iter-3-canvas-toolbar">
+            <div class="iter-3-cluster-btns" role="group" aria-label="Filter note clusters">
+              <button type="button" class="iter-3-cluster-btn is-active" data-node="0" onclick="focusLightNode(0)">Coral Calcification (4)</button>
+              <button type="button" class="iter-3-cluster-btn" data-node="1" onclick="focusLightNode(1)">Pacific Trade Winds (3)</button>
+              <button type="button" class="iter-3-cluster-btn" data-node="2" onclick="focusLightNode(2)">Port Tide Gauges (3)</button>
+              <button type="button" class="iter-3-cluster-btn" data-node="3" onclick="focusLightNode(3)">Isotope Proxy Data (5)</button>
+            </div>
+            <span style="font-size:0.78rem; color:#8E9FAE;">Select a node to focus tungsten loupe</span>
+          </div>
+
+          <svg id="iter3-svg" class="iter-3-svg-stage" viewBox="0 0 680 300" aria-label="Constellation of linked research notes">
+            <!-- Connection arcs -->
+            <line x1="160" y1="110" x2="340" y2="145" stroke="#63A4C4" stroke-width="1.5" stroke-opacity="0.55" />
+            <line x1="340" y1="145" x2="510" y2="95" stroke="#63A4C4" stroke-width="1.5" stroke-opacity="0.55" />
+            <line x1="340" y1="145" x2="460" y2="225" stroke="#63A4C4" stroke-width="1.5" stroke-opacity="0.55" />
+            <line x1="160" y1="110" x2="230" y2="230" stroke="#3E5870" stroke-width="1" stroke-dasharray="4 4" />
+            <line x1="510" y1="95" x2="460" y2="225" stroke="#3E5870" stroke-width="1" stroke-dasharray="4 4" />
+
+            <!-- Secondary satellite points -->
+            <circle cx="105" cy="75" r="4" fill="#63A4C4" opacity="0.5" />
+            <line x1="105" y1="75" x2="160" y2="110" stroke="#3E5870" stroke-width="1" />
+            <circle cx="575" cy="130" r="4" fill="#63A4C4" opacity="0.5" />
+            <line x1="575" y1="130" x2="510" y2="95" stroke="#3E5870" stroke-width="1" />
+            <circle cx="230" cy="230" r="5" fill="#63A4C4" opacity="0.6" />
+
+            <!-- Interactive Primary Nodes -->
+            <g class="iter-3-node-group" onclick="focusLightNode(0)">
+              <circle id="node-ring-0" cx="340" cy="145" r="24" fill="rgba(232,184,75,0.18)" stroke="#E8B84B" stroke-width="2" />
+              <circle cx="340" cy="145" r="7" fill="#E8B84B" />
+              <text x="340" y="184" text-anchor="middle" fill="#DCE4EC" font-size="12" font-weight="600">Coral Calcification</text>
+            </g>
+
+            <g class="iter-3-node-group" onclick="focusLightNode(1)">
+              <circle id="node-ring-1" cx="160" cy="110" r="18" fill="transparent" stroke="#63A4C4" stroke-width="1.5" />
+              <circle cx="160" cy="110" r="6" fill="#63A4C4" />
+              <text x="160" y="142" text-anchor="middle" fill="#A9B8C6" font-size="12">Pacific Trade Winds</text>
+            </g>
+
+            <g class="iter-3-node-group" onclick="focusLightNode(2)">
+              <circle id="node-ring-2" cx="510" cy="95" r="18" fill="transparent" stroke="#63A4C4" stroke-width="1.5" />
+              <circle cx="510" cy="95" r="6" fill="#63A4C4" />
+              <text x="510" y="127" text-anchor="middle" fill="#A9B8C6" font-size="12">Port Tide Gauges</text>
+            </g>
+
+            <g class="iter-3-node-group" onclick="focusLightNode(3)">
+              <circle id="node-ring-3" cx="460" cy="225" r="18" fill="transparent" stroke="#63A4C4" stroke-width="1.5" />
+              <circle cx="460" cy="225" r="6" fill="#63A4C4" />
+              <text x="460" y="257" text-anchor="middle" fill="#A9B8C6" font-size="12">Isotope Proxy Data</text>
+            </g>
+          </svg>
+
+          <div class="iter-3-canvas-footer">
+            <span id="iter3-coords">Focused coordinates: Cluster 01 (4 linked notes, 2 shared citations)</span>
+            <span>Local index: 1,420 Markdown files</span>
+          </div>
+        </div>
+
+        <aside class="iter-3-inspector-pane" aria-live="polite">
+          <div>
+            <div class="iter-3-inspector-header">
+              <p class="iter-3-inspector-cluster" id="iter3-insp-cluster">Marine Climatology Archive</p>
+              <h2 class="iter-3-inspector-title" id="iter3-insp-title">Reef calcification rates under thermal anomalies</h2>
+            </div>
+            <p class="iter-3-inspector-body" id="iter3-insp-body">
+              Skeletal density bands in Porites lutea cores from Makassar Strait show a 14% drop in aragonite accretion during the 2016 El Niño peak, yet recovery accelerated where deep-channel upwelling buffered afternoon surface temperatures.
+            </p>
+          </div>
+
+          <div class="iter-3-backlinks-box">
+            <p class="iter-3-backlinks-heading">Incoming citations in your vault</p>
+            <div id="iter3-backlinks-list">
+              <div class="iter-3-backlink-item">Core sample log: Spermonde Archipelago (Aug 2025)</div>
+              <div class="iter-3-backlink-item">Upwelling thermal refugia hypothesis (Jan 2026)</div>
+              <div class="iter-3-backlink-item">Draft paper: Indo-Pacific carbonate budgets (Sep 2026)</div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="iter-3-specs-row">
+        <div class="iter-3-spec-col">
+          <h3>Zero cloud latency</h3>
+          <p>Cairn parses ten thousand local Markdown files in under forty milliseconds using an embedded memory-mapped graph index.</p>
+        </div>
+        <div class="iter-3-spec-col">
+          <h3>Unlinked mention radar</h3>
+          <p>Spot phrases that recur across separate notebooks even before you manually wrap them in double brackets.</p>
+        </div>
+        <div class="iter-3-spec-col">
+          <h3>Split-beam comparison</h3>
+          <p>Pin any two distant notes on the light table to inspect shared sources, conflicting dates, and intermediate bridge notes.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       ITERATION /4 : THE BOTANICAL HERBARIUM (FIELD NATURALIST LEDGER)
+       ======================================================================== -->
+  <main id="view-4" class="iteration-view iter-4" data-iteration="4" aria-label="Iteration 4: Botanical Herbarium and Field Ledger">
+    <div class="iter-4-shell">
+      <div class="iter-4-sheet">
+        <header class="iter-4-topbar">
+          <span class="iter-4-brand">Cairn Field Herbarium</span>
+          <span class="iter-4-stamp">Verified Local Archive in Plain-Text Specimen Format</span>
+        </header>
+
+        <section class="iter-4-hero-grid">
+          <div>
+            <h1 class="iter-4-headline">Collect raw observations in the wild. Classify them when they take root.</h1>
+            <p class="iter-4-lead">
+              Field naturalists never wait for a finished theory to press a leaf. Cairn lets you pin voice transcripts, sketches, and book excerpts onto durable specimen sheets that cross-pollinate across projects.
+            </p>
+            <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+              <button type="button" class="iter-4-cta" onclick="triggerDownloadToast('iter4-toast', 'Prepared Cairn Field Ledger archive (.tar.gz)')">Download field ledger</button>
+              <span id="iter4-toast" style="font-style:italic; color:#7D382B; font-size:0.9rem;" aria-live="polite"></span>
+            </div>
+          </div>
+
+          <aside class="iter-4-specimen-mount" aria-label="Mounted specimen card">
+            <div class="iter-4-gummed-tape-left"></div>
+            <div class="iter-4-gummed-tape-right"></div>
+            <div class="iter-4-specimen-grid">
+              <svg width="140" height="165" viewBox="0 0 140 165" aria-label="Botanical sketch of estuarine cordgrass" style="background:#EEF2EB; border:1px solid #99AA94;">
+                <!-- Pressed botanical stem & blades -->
+                <path d="M70 155 C70 115, 65 75, 72 20" stroke="#1B3828" stroke-width="2.2" fill="none" />
+                <path d="M69 125 C45 105, 30 85, 22 55" stroke="#1B3828" stroke-width="1.6" fill="none" />
+                <path d="M70 105 C95 85, 112 65, 118 38" stroke="#1B3828" stroke-width="1.6" fill="none" />
+                <path d="M71 75 C48 60, 38 42, 34 24" stroke="#1B3828" stroke-width="1.3" fill="none" />
+                <ellipse cx="72" cy="24" rx="4" ry="11" fill="#B37D28" stroke="#1B3828" stroke-width="1" />
+                <ellipse cx="66" cy="36" rx="3.5" ry="9" fill="#B37D28" stroke="#1B3828" stroke-width="1" />
+                <ellipse cx="77" cy="39" rx="3.5" ry="9" fill="#B37D28" stroke="#1B3828" stroke-width="1" />
+                <rect x="8" y="136" width="52" height="20" fill="#DCE3D8" stroke="#1B3828" stroke-width="0.8" />
+                <text x="14" y="149" fill="#1B3828" font-size="8" font-family="sans-serif">Coll. #408</text>
+              </svg>
+              <div class="iter-4-specimen-meta">
+                <p class="iter-4-specimen-binomial">Spartina alterniflora (Saltmarsh Cordgrass)</p>
+                <p style="margin-bottom:0.45rem;">
+                  <strong>Field observation:</strong> Rhizome mats trapped 4.2 cm of estuarine silt after king tide, stabilizing the eastern levee wall without concrete riprap.
+                </p>
+                <p style="color:#7D382B; font-size:0.84rem;">
+                  Cross-indexed with: Coastal flood defense, Living shorelines, Oyster reef breakwater
+                </p>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section aria-label="Interactive Specimen Taxonomy Ledger">
+          <div class="iter-4-ledger-controls">
+            <h2 class="iter-4-ledger-title">Specimen &amp; Reading Index</h2>
+            <div class="iter-4-filter-group" role="group" aria-label="Filter specimen habitat">
+              <button type="button" class="iter-4-filter-btn is-active" onclick="filterSpecimens('all', this)">All Specimens (4)</button>
+              <button type="button" class="iter-4-filter-btn" onclick="filterSpecimens('Ecology', this)">Ecology (2)</button>
+              <button type="button" class="iter-4-filter-btn" onclick="filterSpecimens('Urbanism', this)">Urbanism (1)</button>
+              <button type="button" class="iter-4-filter-btn" onclick="filterSpecimens('Hydrology', this)">Hydrology (1)</button>
+            </div>
+          </div>
+
+          <table class="iter-4-table">
+            <thead>
+              <tr>
+                <th>Catalog ID</th>
+                <th>Note Title &amp; Vernacular Domain</th>
+                <th>Habitat / Collection</th>
+                <th class="num-col">Backlinks</th>
+                <th class="num-col">Last Tended</th>
+              </tr>
+            </thead>
+            <tbody id="iter4-tbody">
+              <tr class="iter-4-row-clickable is-expanded" data-domain="Ecology" onclick="toggleSpecimenRow(0)">
+                <td>HERB-104</td>
+                <td>Mycorrhizal phosphorus exchange under drought stress</td>
+                <td>Ecology</td>
+                <td class="num-col">14</td>
+                <td class="num-col">12 Oct 2026</td>
+              </tr>
+              <tr class="iter-4-detail-row is-open" id="iter4-detail-0" data-domain-detail="Ecology">
+                <td colspan="5">
+                  <strong>Linked Observation Synthesis:</strong> Fungal hyphae networks transferred carbon between shaded Douglas fir seedlings and sunlit birch canopies (see Simard 1997 excerpt + Cascade transect soil core #19).
+                </td>
+              </tr>
+
+              <tr class="iter-4-row-clickable" data-domain="Hydrology" onclick="toggleSpecimenRow(1)">
+                <td>HYDR-219</td>
+                <td>Subsurface volcanic tuff aquifers in East Java</td>
+                <td>Hydrology</td>
+                <td class="num-col">9</td>
+                <td class="num-col">04 Oct 2026</td>
+              </tr>
+              <tr class="iter-4-detail-row" id="iter4-detail-1" data-domain-detail="Hydrology">
+                <td colspan="5">
+                  <strong>Linked Observation Synthesis:</strong> Spring discharge rates on Mount Arjuno lag monsoon rainfall by eleven weeks, buffering dry-season irrigation channels in lowland rice terraces.
+                </td>
+              </tr>
+
+              <tr class="iter-4-row-clickable" data-domain="Urbanism" onclick="toggleSpecimenRow(2)">
+                <td>URBN-088</td>
+                <td>Nighttime radiative cooling in narrow courtyard alleys</td>
+                <td>Urbanism</td>
+                <td class="num-col">19</td>
+                <td class="num-col">28 Sep 2026</td>
+              </tr>
+              <tr class="iter-4-detail-row" id="iter4-detail-2" data-domain-detail="Urbanism">
+                <td colspan="5">
+                  <strong>Linked Observation Synthesis:</strong> High thermal mass lime plaster releases stored heat after 22:00 while overhanging eaves shade walls from midday solar gain.
+                </td>
+              </tr>
+
+              <tr class="iter-4-row-clickable" data-domain="Ecology" onclick="toggleSpecimenRow(3)">
+                <td>HERB-312</td>
+                <td>Mangrove pneumatophore sediment trapping velocity</td>
+                <td>Ecology</td>
+                <td class="num-col">11</td>
+                <td class="num-col">15 Sep 2026</td>
+              </tr>
+              <tr class="iter-4-detail-row" id="iter4-detail-3" data-domain-detail="Ecology">
+                <td colspan="5">
+                  <strong>Linked Observation Synthesis:</strong> Dense aerial root arrays slow incoming tidal currents by 68%, allowing fine organic flocculants to settle before ebb tide.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       ITERATION /5 : THE CHRONOLOGICAL EPHEMERIS (1974 WHOLE EARTH STREAM)
+       ======================================================================== -->
+  <main id="view-5" class="iteration-view iter-5" data-iteration="5" aria-label="Iteration 5: Chronological Ephemeris Stream">
+    <div class="iter-5-shell">
+      <header class="iter-5-masthead">
+        <span class="iter-5-title">Cairn Ephemeris</span>
+        <span class="iter-5-edition">Whole-Archive Chronological Stream in Local Plain Text</span>
+      </header>
+
+      <section class="iter-5-hero">
+        <h1 class="iter-5-headline">Stop organizing folders. Just write the next line.</h1>
+        <p class="iter-5-sub">
+          Every minute you spend designing a folder hierarchy is a minute stolen from thinking. Type a raw note into the stream below using <strong>[[double brackets]]</strong> around any concept—Cairn links it automatically to everything you have written before.
+        </p>
+
+        <!-- Working Interactive Composer -->
+        <div class="iter-5-composer">
+          <label class="iter-5-composer-label" for="iter5-input">Append a live note to your chronological stream</label>
+          <textarea id="iter5-input" class="iter-5-textarea" placeholder="Write an observation using [[brackets]] around key concepts...">Street trees with continuous [[urban canopy]] reduce asphalt surface temperatures by 11°C during peak afternoon heatwaves, lowering neighborhood [[grid demand]] without mechanical chillers.</textarea>
+          <div class="iter-5-composer-bar">
+            <div class="iter-5-presets">
+              <span>Fill sample prompt:</span>
+              <button type="button" class="iter-5-preset-btn" onclick="fillStreamPreset(0)">[[urban canopy]] cooling</button>
+              <button type="button" class="iter-5-preset-btn" onclick="fillStreamPreset(1)">[[vernacular brick]] thermal lag</button>
+              <button type="button" class="iter-5-preset-btn" onclick="fillStreamPreset(2)">[[local-first]] file longevity</button>
+            </div>
+            <button type="button" class="iter-5-submit-btn" onclick="appendNoteToStream()">Append to stream</button>
+          </div>
+          <p id="iter5-feedback" class="iter-5-feedback" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section aria-label="Chronological Note Stream">
+        <div class="iter-5-river-header">
+          <h2 class="iter-5-river-title">Chronological Log &amp; Automatic Backlinks</h2>
+          <span id="iter5-count" style="font-family:'TeX Gyre Adventor',sans-serif; font-size:0.85rem;">Showing 4 entries in local stream</span>
+        </div>
+
+        <div id="iter5-stream-list">
+          <article class="iter-5-entry">
+            <div class="iter-5-entry-time">
+              <strong>14 Oct 2026</strong><br />14:15 Local
+            </div>
+            <div class="iter-5-entry-body">
+              <p>
+                Measured courtyard air temperature in old Pabean shophouses: aerated <span class="iter-5-wikilink">[[vernacular brick]]</span> walls coupled with shaded ventilation shafts kept indoor readings 6.4°C cooler than adjacent glass towers, cutting afternoon <span class="iter-5-wikilink">[[grid demand]]</span> in half.
+              </p>
+              <p class="iter-5-backlink-match">
+                Connected via [[vernacular brick]] and [[grid demand]] to 2 earlier entries (Aug 2025, Mar 2026)
+              </p>
+            </div>
+          </article>
+
+          <article class="iter-5-entry">
+            <div class="iter-5-entry-time">
+              <strong>02 Oct 2026</strong><br />09:30 Local
+            </div>
+            <div class="iter-5-entry-body">
+              <p>
+                A <span class="iter-5-wikilink">[[local-first]]</span> archive stored as plain UTF-8 Markdown files survives every operating system upgrade. Even if Cairn disappears in twenty years, `grep` and any text editor can still read every word and citation.
+              </p>
+              <p class="iter-5-backlink-match">
+                Connected via [[local-first]] to 5 earlier entries (2023–2026)
+              </p>
+            </div>
+          </article>
+
+          <article class="iter-5-entry">
+            <div class="iter-5-entry-time">
+              <strong>19 Sep 2026</strong><br />18:05 Local
+            </div>
+            <div class="iter-5-entry-body">
+              <p>
+                Corridors of mature tamarind and rain trees create a continuous <span class="iter-5-wikilink">[[urban canopy]]</span> that shields pedestrians from direct shortwave radiation while preserving street-level breeze channels.
+              </p>
+              <p class="iter-5-backlink-match">
+                Connected via [[urban canopy]] to municipal forestry survey (Jul 2025)
+              </p>
+            </div>
+          </article>
+
+          <article class="iter-5-entry">
+            <div class="iter-5-entry-time">
+              <strong>04 Aug 2026</strong><br />11:20 Local
+            </div>
+            <div class="iter-5-entry-body">
+              <p>
+                When reviewing a year of daily notes, the most valuable breakthroughs happen where two unrelated tags—like <span class="iter-5-wikilink">[[urban canopy]]</span> and <span class="iter-5-wikilink">[[grid demand]]</span>—suddenly appear in the same paragraph for the first time.
+              </p>
+              <p class="iter-5-backlink-match">
+                Co-occurrence bridge note cited in 3 essay drafts
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       STUDIO DESIGN NOTES & TOKEN INSPECTOR DRAWER
+       ======================================================================== -->
+  <aside id="studio-drawer" class="studio-drawer" aria-label="Studio Design Plan and Self-Critique Inspector">
+    <div class="studio-drawer-header">
+      <span class="studio-drawer-title" id="drawer-title">Iteration /1 Design Plan &amp; Pass-2 Critique</span>
+      <button type="button" class="studio-drawer-close" onclick="toggleStudioDrawer()">Close inspector</button>
+    </div>
+    <div class="studio-drawer-grid">
+      <div>
+        <p style="font-weight:600; color:#F5F8FA; margin-bottom:0.25rem;">Aesthetic Direction &amp; Subject Vernacular</p>
+        <p id="drawer-vernacular" style="color:#C5D1DB; margin-bottom:0.75rem;"></p>
+        <p style="font-weight:600; color:#F5F8FA; margin-bottom:0.25rem;">Typography &amp; Alignment</p>
+        <p id="drawer-typography" style="color:#C5D1DB;"></p>
+      </div>
+      <div>
+        <p style="font-weight:600; color:#F5F8FA; margin-bottom:0.25rem;">Color Token System</p>
+        <div id="drawer-swatches" class="studio-swatches"></div>
+        <div class="studio-critique-box" id="drawer-critique"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       FLOATING ITERATION SWITCHER BAR (/1, /2, /3, /4, /5)
+       ======================================================================== -->
+  <nav class="iteration-switcher" aria-label="Switch landing page iteration">
+    <span class="switcher-route-badge" id="route-indicator" title="Current page route">
+      <strong id="route-path">/pages/1</strong>
+    </span>
+
+    <div class="switcher-tabs" role="tablist" aria-label="5 landing page iterations">
+      <button type="button" role="tab" class="switcher-tab is-current" data-target="1" aria-selected="true" onclick="switchIteration(1)">/1 Slip-Box</button>
+      <button type="button" role="tab" class="switcher-tab" data-target="2" aria-selected="false" onclick="switchIteration(2)">/2 Glossator</button>
+      <button type="button" role="tab" class="switcher-tab" data-target="3" aria-selected="false" onclick="switchIteration(3)">/3 Light Table</button>
+      <button type="button" role="tab" class="switcher-tab" data-target="4" aria-selected="false" onclick="switchIteration(4)">/4 Herbarium</button>
+      <button type="button" role="tab" class="switcher-tab" data-target="5" aria-selected="false" onclick="switchIteration(5)">/5 Ephemeris</button>
+    </div>
+
+    <div class="switcher-divider" role="presentation"></div>
+
+    <button type="button" class="switcher-step-btn" onclick="stepIteration(-1)" title="Previous iteration (Shortcut: [)">Prev</button>
+    <button type="button" class="switcher-step-btn" onclick="stepIteration(1)" title="Next iteration (Shortcut: ])">Next</button>
+    <button type="button" id="studio-spec-btn" class="switcher-spec-btn" aria-expanded="false" onclick="toggleStudioDrawer()">Design tokens</button>
+  </nav>
+
+  <script>
+    /* ==========================================================================
+       ITERATION ROUTER (/1 .. /5 and /pages/1 .. /pages/5) + DESIGN SPEC DATA
+       ========================================================================== */
+    const DESIGN_SPECS = {
+      1: {
+        title: "Iteration /1 (/pages/1) : Luhmann's Archival Slip-Box",
+        vernacular: "Modeled after Niklas Luhmann's beechwood Zettelkasten drawers and unbleached manila index cards. The hero is an interactive slip-box tray where clicking any branching Folgezettel card updates the transcluded block in the live essay draft.",
+        typography: "Bitstream Charter (serif headline & body, 60ch max line width) paired with Latin Modern Mono Prop strictly for genuine alphanumeric Folgezettel addresses (21/3d1a). Left-aligned throughout.",
+        swatches: [
+          { name: "Manila Stock", hex: "#E6DEC8" },
+          { name: "Beechwood Tray", hex: "#D5CBB0" },
+          { name: "Index Slip", hex: "#F3EFE2" },
+          { name: "Iron-Gall Ink", hex: "#19222B" },
+          { name: "Prussian Ink", hex: "#1B4D7E" },
+          { name: "Pencil Margin", hex: "#9B3428" }
+        ],
+        critique: "Pass-2 Revision: Rejected warm cream (#F4F1EA) + terracotta (#D97757) and generic 3-card SaaS grids. Used authentic manila/Prussian-blue stationery tones and restricted numbered markers exclusively to the genuine 3-step sequential workflow at the bottom."
+      },
+      2: {
+        title: "Iteration /2 (/pages/2) : The Renaissance Glossator",
+        vernacular: "Inspired by 15th-century scholarly folios and Talmudic margin commentary. A primary essay sits in the center reading well, surrounded by earlier source parallels on the left and later rebuttals on the right.",
+        typography: "Single-family discipline using TeX Gyre Pagella (Palatino humanist serif) across Roman, Italic, and small-scale marginalia weights. Center reading well is justified (58ch); outer marginalia are left-aligned.",
+        swatches: [
+          { name: "Limestone Vellum", hex: "#EAEBF0" },
+          { name: "Rag Folio", hex: "#F5F6F8" },
+          { name: "Walnut Gall", hex: "#231F20" },
+          { name: "Ultramarine Lapis", hex: "#1D2D5E" },
+          { name: "Rubric Red", hex: "#9E2A2B" },
+          { name: "Silverpoint", hex: "#C8CEDD" }
+        ],
+        critique: "Pass-2 Revision: Replaced dense newspaper broadsheet columns (AI Tell #3) with a true three-zone concentric gloss where clicking underlined passages highlights temporal commentary threads across months."
+      },
+      3: {
+        title: "Iteration /3 (/pages/3) : The Darkroom Light Table",
+        vernacular: "Grounded in an archival microfiche reader and optical light table. Notes sit on a backlit slate glass plane illuminated by a warm tungsten loupe cone when selected.",
+        typography: "Inter Display & Inter for crisp darkroom UI legibility, paired with Latin Modern Roman inside the long-form note inspector.",
+        swatches: [
+          { name: "Prussian Slate", hex: "#131B24" },
+          { name: "Acetate Bay", hex: "#1C2733" },
+          { name: "Silver Halide", hex: "#DCE4EC" },
+          { name: "Muted Emulsion", hex: "#8E9FAE" },
+          { name: "Tungsten Amber", hex: "#E8B84B" },
+          { name: "Cyanotype", hex: "#63A4C4" }
+        ],
+        critique: "Pass-2 Revision: Banned #0B0B0B/#111 near-black and acid-green/vermilion accents (AI Tell #2). Replaced with optical Prussian slate (#131B24) and warm tungsten halation (#E8B84B) triggered only by user selection."
+      },
+      4: {
+        title: "Iteration /4 (/pages/4) : The Botanical Herbarium",
+        vernacular: "Inspired by Kew Gardens herbarium sheets and Alexander von Humboldt's field ledgers. Combines a pressed specimen mount with gummed paper tape strips and an expandable taxonomic ledger.",
+        typography: "TeX Gyre Schola (Century Schoolbook) for encyclopedic readability, paired with condensed TeX Gyre Heros Cn for tabular ledger headers and right-aligned numeric columns.",
+        swatches: [
+          { name: "Celadon Blotter", hex: "#DCE3D8" },
+          { name: "Mount Sheet", hex: "#EEF2EB" },
+          { name: "Chlorophyll Ink", hex: "#1B3828" },
+          { name: "Lichen Ochre", hex: "#B37D28" },
+          { name: "Stamp Rust", hex: "#7D382B" }
+        ],
+        critique: "Pass-2 Revision: Eliminated rounded SaaS feature cards and drop shadows (AI Tell #4). Used gummed-tape specimen mounting and a real filterable data table with right-aligned counts."
+      },
+      5: {
+        title: "Iteration /5 (/pages/5) : The 1974 Whole Earth Ephemeris",
+        vernacular: "Channeling Stewart Brand's Whole Earth Catalog and Douglas Engelbart's NLS. Opens immediately with a live append-only note composer that parses [[wiki-links]] and inserts entries into the chronological river.",
+        typography: "URW Bookman / TeX Gyre Bonum for bold, tactile 1970s print warmth, paired with geometric TeX Gyre Adventor for timestamps and controls.",
+        swatches: [
+          { name: "Sunlit Newsprint", hex: "#F2E9CE" },
+          { name: "Cadmium Highlight", hex: "#F4B924" },
+          { name: "Cobalt Stencil", hex: "#14367A" },
+          { name: "Offset Black", hex: "#161513" },
+          { name: "Kraft Divider", hex: "#D9CCA7" }
+        ],
+        critique: "Pass-2 Revision: Replaced static hero copy with a live working composer. Enforced strict active-voice consistency where 'Append to stream' produces the matching 'Appended to stream' confirmation."
+      }
+    };
+
+    let currentIteration = 1;
+
+    function switchIteration(num, updateHistory = true) {
+      const target = Math.max(1, Math.min(5, parseInt(num, 10) || 1));
+      currentIteration = target;
+
+      document.querySelectorAll('.iteration-view').forEach((el) => {
+        const isMatch = parseInt(el.getAttribute('data-iteration'), 10) === target;
+        el.classList.toggle('is-active', isMatch);
+      });
+
+      document.querySelectorAll('.switcher-tab').forEach((btn) => {
+        const isMatch = parseInt(btn.getAttribute('data-target'), 10) === target;
+        btn.classList.toggle('is-current', isMatch);
+        btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+      });
+
+      const routePathEl = document.getElementById('route-path');
+      if (routePathEl) {
+        routePathEl.textContent = '/pages/' + target;
+      }
+
+      updateStudioDrawer(target);
+
+      if (updateHistory) {
+        try {
+          const url = new URL(window.location.href);
+          url.hash = '#/pages/' + target;
+          window.history.replaceState({ iteration: target }, '', url.toString());
+        } catch (e) {
+          window.location.hash = '/pages/' + target;
+        }
+      }
+
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+
+    function stepIteration(delta) {
+      let next = currentIteration + delta;
+      if (next < 1) next = 5;
+      if (next > 5) next = 1;
+      switchIteration(next);
+    }
+
+    function toggleStudioDrawer() {
+      const drawer = document.getElementById('studio-drawer');
+      const btn = document.getElementById('studio-spec-btn');
+      const isOpen = drawer.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    function updateStudioDrawer(num) {
+      const spec = DESIGN_SPECS[num];
+      if (!spec) return;
+      document.getElementById('drawer-title').textContent = spec.title;
+      document.getElementById('drawer-vernacular').textContent = spec.vernacular;
+      document.getElementById('drawer-typography').textContent = spec.typography;
+      document.getElementById('drawer-critique').textContent = spec.critique;
+
+      const swatchContainer = document.getElementById('drawer-swatches');
+      swatchContainer.innerHTML = spec.swatches.map(s => `
+        <span class="studio-swatch">
+          <span class="studio-swatch-dot" style="background:${s.hex};"></span>
+          <span>${s.name} (${s.hex})</span>
+        </span>
+      `).join('');
+    }
+
+    function triggerDownloadToast(elId, message) {
+      const el = document.getElementById(elId);
+      if (el) {
+        el.textContent = message;
+      }
+    }
+
+    /* ==========================================================================
+       ITERATION /1 INTERACTIVITY: SLIP-BOX TRAY & TRANSCLUSION
+       ========================================================================== */
+    const SLIP_DATA = [
+      {
+        id: "21/3d",
+        date: "04 Nov 2025",
+        quote: "Roman aqueducts survived only where parish guilds cleared calcium sinter every spring.",
+        followup: "Slip 21/3d anchors the historical claim: physical longevity is a byproduct of recurring civic maintenance rituals, not stone thickness.",
+        links: "Linked across 6 neighboring slips in Drawer II"
+      },
+      {
+        id: "21/3d1",
+        date: "19 Dec 2025",
+        quote: "Municipal budgets reward ribbon-cuttings, starving culvert inspections until a flood forces emergency bonds.",
+        followup: "Branching directly from 21/3d, slip 21/3d1 explains the political incentive structure that causes maintenance deferred in modern cities.",
+        links: "Linked across 5 neighboring slips in Drawer II"
+      },
+      {
+        id: "21/3d1a",
+        date: "18 Feb 2026",
+        quote: "Proprietary cloud databases vanish when startups fold; plain UTF-8 files on disk require zero server upkeep.",
+        followup: "Because slip 21/3d1a sits directly behind our civic culvert notes, Cairn surfaces both when drafting this section—without sharing a single folder or tag.",
+        links: "Linked across 4 neighboring slips in Drawer II"
+      },
+      {
+        id: "21/4",
+        date: "09 Apr 2026",
+        quote: "Alder trunks driven into anoxic lagoon silt petrified instead of decaying because oxygen never reached them.",
+        followup: "Slip 21/4 introduces a productive counter-example: when environmental conditions prevent oxidation, material stability can occur without human upkeep.",
+        links: "Contradiction branch linked to 21/3d and Venice archive"
+      }
+    ];
+
+    let activeSlipIndex = 2;
+
+    function selectSlip(idx) {
+      activeSlipIndex = idx;
+      const slips = document.querySelectorAll('#iter1-slips-deck .iter-1-slip');
+      slips.forEach((btn, i) => {
+        btn.classList.toggle('is-selected', i === idx);
+      });
+      const item = SLIP_DATA[idx];
+      if (!item) return;
+      document.getElementById('iter1-transclusion-cite').textContent =
+        `Transcluded from slip ${item.id} (recorded ${item.date})`;
+      document.getElementById('iter1-transclusion-text').textContent = item.quote;
+      document.getElementById('iter1-manuscript-followup').textContent = item.followup;
+      document.getElementById('iter1-link-stat').textContent = item.links;
+    }
+
+    function cycleSlip() {
+      selectSlip((activeSlipIndex + 1) % SLIP_DATA.length);
+    }
+
+    let customSlipFiled = false;
+    function fileNewSlipInTray() {
+      const toast = document.getElementById('iter1-toast');
+      if (!customSlipFiled) {
+        customSlipFiled = true;
+        SLIP_DATA.push({
+          id: "21/3d1b",
+          date: "14 Oct 2026",
+          quote: "Monastic scriptoria copied decaying vellum codices every century; plain text replicates that ritual at zero marginal cost.",
+          followup: "Newly filed slip 21/3d1b extends the software longevity branch with a media-history parallel.",
+          links: "Newly filed behind 21/3d1a with 1 automatic backlink"
+        });
+        const deck = document.getElementById('iter1-slips-deck');
+        const newBtn = document.createElement('button');
+        newBtn.type = 'button';
+        newBtn.className = 'iter-1-slip';
+        newBtn.setAttribute('onclick', 'selectSlip(4)');
+        newBtn.innerHTML = `
+          <div>
+            <span class="iter-1-slip-id">21/3d1b</span>
+            <h2 class="iter-1-slip-title">Scriptoria copying intervals</h2>
+            <p class="iter-1-slip-body">Monastic scriptoria copied decaying vellum codices every century; plain text replicates that ritual.</p>
+          </div>
+          <div class="iter-1-slip-branch">Filed just now behind 21/3d1a</div>
+        `;
+        deck.appendChild(newBtn);
+        deck.style.gridTemplateColumns = 'repeat(5, 1fr)';
+        selectSlip(4);
+        toast.textContent = "Filed slip 21/3d1b in Drawer II and updated manuscript transclusion.";
+      } else {
+        selectSlip(4);
+        toast.textContent = "Focused slip 21/3d1b in Drawer II.";
+      }
+    }
+
+    /* ==========================================================================
+       ITERATION /2 INTERACTIVITY: CONCENTRIC GLOSS SELECTION
+       ========================================================================== */
+    const GLOSS_THREADS = {
+      1: {
+        label: "Active Gloss Thread I (May 2024 to October 2026)",
+        text: "Bridges Jane Jacobs on low-overhead urban workshops (Left Margin) with James C. Scott on high-modernist legibility (Right Margin) to argue for un-foldered note neighborhoods."
+      },
+      2: {
+        label: "Active Gloss Thread II (November 2024 to October 2026)",
+        text: "Connects Vannevar Bush's 1945 associative trails (Left Margin) with Cairn's requirement that every link include a one-sentence rationale (Right Margin)."
+      },
+      3: {
+        label: "Active Gloss Thread III (January 2025 to October 2026)",
+        text: "Pairs Rotterdam maritime archive fieldwork (Left Margin) with final editorial verification tasks before publication (Right Margin)."
+      }
+    };
+
+    function selectGloss(num) {
+      document.querySelectorAll('.iter-2-gloss-note').forEach(el => {
+        el.classList.toggle('is-active', parseInt(el.getAttribute('data-gloss'), 10) === num);
+      });
+      document.querySelectorAll('.iter-2-annotated-span').forEach(el => {
+        el.classList.toggle('is-active', parseInt(el.getAttribute('data-gloss-span'), 10) === num);
+      });
+      const thread = GLOSS_THREADS[num];
+      if (thread) {
+        document.getElementById('iter2-synthesis-label').textContent = thread.label;
+        document.getElementById('iter2-synthesis-text').textContent = thread.text;
+      }
+    }
+
+    /* ==========================================================================
+       ITERATION /3 INTERACTIVITY: LIGHT TABLE LOUPE FOCUS
+       ========================================================================== */
+    const LIGHT_NODES = [
+      {
+        x: "50%", y: "48%",
+        cx: 340, cy: 145,
+        cluster: "Marine Climatology Archive",
+        title: "Reef calcification rates under thermal anomalies",
+        body: "Skeletal density bands in Porites lutea cores from Makassar Strait show a 14% drop in aragonite accretion during the 2016 El Niño peak, yet recovery accelerated where deep-channel upwelling buffered afternoon surface temperatures.",
+        coords: "Focused coordinates: Cluster 01 (4 linked notes, 2 shared citations)",
+        backlinks: [
+          "Core sample log: Spermonde Archipelago (Aug 2025)",
+          "Upwelling thermal refugia hypothesis (Jan 2026)",
+          "Draft paper: Indo-Pacific carbonate budgets (Sep 2026)"
+        ]
+      },
+      {
+        x: "24%", y: "37%",
+        cx: 160, cy: 110,
+        cluster: "Atmospheric Circulation",
+        title: "Walker circulation slackening prior to monsoon onset",
+        body: "Shipboard barometric logs from 1924–1988 confirm that easterly trade wind deceleration precedes eastern archipelago surface warming by nineteen days on average.",
+        coords: "Focused coordinates: Cluster 02 (3 linked notes, 4 historical logs)",
+        backlinks: [
+          "Dutch colonial lighthouse barograph transcriptions (Nov 2024)",
+          "Thermocline tilt measurements in Banda Sea (Mar 2025)",
+          "Reef calcification rates under thermal anomalies (Jun 2026)"
+        ]
+      },
+      {
+        x: "75%", y: "32%",
+        cx: 510, cy: 95,
+        cluster: "Coastal Geodesy & Ports",
+        title: "Tanjung Perak harmonic tide gauge residuals",
+        body: "Removing lunar nodal cycles from eighty years of harbor gauge strips reveals how delta subsidence compounds regional steric sea-level rise along the northern quay.",
+        coords: "Focused coordinates: Cluster 03 (3 linked notes, 1 harbour dataset)",
+        backlinks: [
+          "Surabaya port dredging benchmark survey (Feb 2025)",
+          "Estuarine mangrove sediment trapping velocity (Sep 2026)"
+        ]
+      },
+      {
+        x: "68%", y: "75%",
+        cx: 460, cy: 225,
+        cluster: "Geochemical Proxies",
+        title: "Strontium-calcium ratios in fossil microatolls",
+        body: "Paired Sr/Ca and oxygen-18 profiles calibrate pre-instrumental sea surface salinity swings across three centuries of intertropical convergence shifts.",
+        coords: "Focused coordinates: Cluster 04 (5 linked notes, mass-spec calibration)",
+        backlinks: [
+          "Mass spectrometer run #44 calibration notes (Apr 2025)",
+          "Reef calcification rates under thermal anomalies (Jun 2026)",
+          "Monsoon rainfall lag in volcanic aquifers (Oct 2026)"
+        ]
+      }
+    ];
+
+    function focusLightNode(idx) {
+      const node = LIGHT_NODES[idx];
+      if (!node) return;
+
+      document.querySelectorAll('.iter-3-cluster-btn').forEach((btn, i) => {
+        btn.classList.toggle('is-active', i === idx);
+      });
+
+      const svg = document.getElementById('iter3-svg');
+      svg.style.setProperty('--loupe-x', node.x);
+      svg.style.setProperty('--loupe-y', node.y);
+
+      for (let i = 0; i < 4; i++) {
+        const ring = document.getElementById('node-ring-' + i);
+        if (ring) {
+          if (i === idx) {
+            ring.setAttribute('r', '24');
+            ring.setAttribute('fill', 'rgba(232,184,75,0.18)');
+            ring.setAttribute('stroke', '#E8B84B');
+            ring.setAttribute('stroke-width', '2');
+          } else {
+            ring.setAttribute('r', '18');
+            ring.setAttribute('fill', 'transparent');
+            ring.setAttribute('stroke', '#63A4C4');
+            ring.setAttribute('stroke-width', '1.5');
+          }
+        }
+      }
+
+      document.getElementById('iter3-insp-cluster').textContent = node.cluster;
+      document.getElementById('iter3-insp-title').textContent = node.title;
+      document.getElementById('iter3-insp-body').textContent = node.body;
+      document.getElementById('iter3-coords').textContent = node.coords;
+      document.getElementById('iter3-backlinks-list').innerHTML = node.backlinks
+        .map(b => `<div class="iter-3-backlink-item">${b}</div>`)
+        .join('');
+    }
+
+    /* ==========================================================================
+       ITERATION /4 INTERACTIVITY: HERBARIUM LEDGER FILTER & ROW EXPANSION
+       ========================================================================== */
+    function toggleSpecimenRow(idx) {
+      const detail = document.getElementById('iter4-detail-' + idx);
+      const rows = document.querySelectorAll('.iter-4-row-clickable');
+      if (detail) {
+        const isOpen = detail.classList.toggle('is-open');
+        if (rows[idx]) {
+          rows[idx].classList.toggle('is-expanded', isOpen);
+        }
+      }
+    }
+
+    function filterSpecimens(domain, btnEl) {
+      document.querySelectorAll('.iter-4-filter-btn').forEach(b => b.classList.remove('is-active'));
+      if (btnEl) btnEl.classList.add('is-active');
+
+      document.querySelectorAll('#iter4-tbody .iter-4-row-clickable').forEach((row, idx) => {
+        const rowDomain = row.getAttribute('data-domain');
+        const detail = document.getElementById('iter4-detail-' + idx);
+        const show = (domain === 'all' || rowDomain === domain);
+        row.style.display = show ? 'table-row' : 'none';
+        if (detail && !show) {
+          detail.classList.remove('is-open');
+          row.classList.remove('is-expanded');
+        }
+      });
+    }
+
+    /* ==========================================================================
+       ITERATION /5 INTERACTIVITY: LIVE CHRONOLOGICAL STREAM COMPOSER
+       ========================================================================== */
+    const STREAM_PRESETS = [
+      "Street trees with continuous [[urban canopy]] reduce asphalt surface temperatures by 11°C during peak afternoon heatwaves, lowering neighborhood [[grid demand]] without mechanical chillers.",
+      "Lime-mortared [[vernacular brick]] courtyards delay peak thermal transfer by six hours, keeping workshops cool until evening breezes arrive.",
+      "Storing research in [[local-first]] plain Markdown guarantees that backlinks remain readable decades after proprietary cloud schemas expire."
+    ];
+
+    function fillStreamPreset(idx) {
+      const input = document.getElementById('iter5-input');
+      if (input && STREAM_PRESETS[idx]) {
+        input.value = STREAM_PRESETS[idx];
+        document.getElementById('iter5-feedback').textContent = "Loaded sample note into composer. Select 'Append to stream' to publish.";
+      }
+    }
+
+    function appendNoteToStream() {
+      const input = document.getElementById('iter5-input');
+      const feedback = document.getElementById('iter5-feedback');
+      const list = document.getElementById('iter5-stream-list');
+      const raw = (input.value || '').trim();
+
+      if (!raw) {
+        feedback.textContent = "Write at least one phrase or [[concept]] before appending to the stream.";
+        return;
+      }
+
+      // Extract [[wiki-links]]
+      const matches = [...raw.matchAll(/\[\[([^\]]+)\]\]/g)].map(m => m[1]);
+      const escaped = raw
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\[\[([^\]]+)\]\]/g, '<span class="iter-5-wikilink">[[$1]]</span>');
+
+      const article = document.createElement('article');
+      article.className = 'iter-5-entry';
+      const linkSummary = matches.length > 0
+        ? `Connected via ${matches.map(m => '[[' + m + ']]').join(', ')} to existing archive notes`
+        : `Appended to chronological stream (add [[brackets]] to link concepts automatically)`;
+
+      article.innerHTML = `
+        <div class="iter-5-entry-time">
+          <strong>14 Oct 2026</strong><br />Just now
+        </div>
+        <div class="iter-5-entry-body">
+          <p>${escaped}</p>
+          <p class="iter-5-backlink-match">${linkSummary}</p>
+        </div>
+      `;
+
+      list.prepend(article);
+      const count = list.querySelectorAll('.iter-5-entry').length;
+      document.getElementById('iter5-count').textContent = `Showing ${count} entries in local stream`;
+      feedback.textContent = `Appended to stream (${matches.length} linked concept${matches.length === 1 ? '' : 's'} indexed).`;
+      input.value = '';
+    }
+
+    /* ==========================================================================
+       INITIALIZE ROUTING FROM URL PATH, QUERY, OR HASH + KEYBOARD SHORTCUTS
+       ========================================================================== */
+    function detectInitialIteration() {
+      const hash = window.location.hash || '';
+      const path = window.location.pathname || '';
+      const search = window.location.search || '';
+
+      const hashMatch = hash.match(/([1-5])/);
+      if (hashMatch) return parseInt(hashMatch[1], 10);
+
+      const queryMatch = search.match(/(?:page|iter|v)=([1-5])/i);
+      if (queryMatch) return parseInt(queryMatch[1], 10);
+
+      const pathMatch = path.match(/\/(?:pages\/)?([1-5])(?:\/|\.html)?$/);
+      if (pathMatch) return parseInt(pathMatch[1], 10);
+
+      return 1;
+    }
+
+    window.addEventListener('hashchange', () => {
+      const target = detectInitialIteration();
+      if (target !== currentIteration) {
+        switchIteration(target, false);
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA'].includes((e.target && e.target.tagName) || '')) return;
+      if (e.key >= '1' && e.key <= '5') {
+        switchIteration(parseInt(e.key, 10));
+      } else if (e.key === '[') {
+        stepIteration(-1);
+      } else if (e.key === ']') {
+        stepIteration(1);
+      }
+    });
+
+    switchIteration(detectInitialIteration(), false);
+  </script>
+</body>
+</html>
