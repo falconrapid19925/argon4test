@@ -33,6 +33,11 @@ jobs:
         with:
           name: site-dist
           path: dist
+      - name: Use Actions as the Pages build source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh api --method PUT "repos/$GH_REPO/pages" -f build_type=workflow
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
