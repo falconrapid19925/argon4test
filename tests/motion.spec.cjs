@@ -89,6 +89,7 @@ test('showcase iframe controls stay synchronized through collection navigation a
   await frame.locator('[data-collection="commonplace"]').click();
   await expect(page.locator('button.active')).toHaveAttribute('data-page', demos.commonplace);
   await expect(page.locator('#openCurrent')).toHaveAttribute('href', demos.commonplace);
-  await page.goBack();
+  // History traverses the child frame; the top document does not fire load.
+  await page.evaluate(() => history.back());
   await expect(page.locator('button.active')).toHaveAttribute('data-page', demos.noema);
 });

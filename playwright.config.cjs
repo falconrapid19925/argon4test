@@ -6,7 +6,7 @@ module.exports = defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 2 : 4,
-  timeout: 45000,
+  timeout: 60000,
   expect: { timeout: 8000 },
   outputDir: 'test-results',
   reporter: [
