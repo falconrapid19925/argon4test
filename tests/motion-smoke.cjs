@@ -239,6 +239,20 @@ async function main() {
         await link.click(); await state(page, demo, n);
       }
     });
+    await check('GitHub Pages iframe keeps collection controls synchronized', async () => {
+      await page.goto(`${base}/index.html`);
+      const frame = page.frameLocator('#pageFrame');
+      await frame.locator('[data-collection="noema"]').click();
+      await page.waitForFunction(() => document.querySelector('button[data-page].active')?.dataset.page === 'second_brain_landing_pages.html');
+      assert.equal(new URL(await page.locator('#openCurrent').getAttribute('href'), base).pathname.split('/').pop(), demos.noema);
+      await frame.locator(iteration('noema', 4)).click();
+      await frame.locator('[data-collection="cairn"]').click();
+      await page.waitForFunction(() => document.querySelector('button[data-page].active')?.dataset.page === 'cairn_second_brain_iterations.html');
+      assert.equal(new URL(await page.locator('#openCurrent').getAttribute('href'), base).pathname.split('/').pop(), demos.cairn);
+      await frame.locator('[data-collection="noema"]').click();
+      await frame.locator(iteration('noema', 4)).waitFor();
+      await page.waitForFunction(() => document.querySelector('#pageFrame').contentWindow.location.hash === '#/pages/4');
+    });
     const mobilePage = await context.newPage(); watch(mobilePage);
     await mobilePage.setViewportSize({width: 390, height: 844});
     for (const demo of Object.keys(demos)) await check(`${demo}: 390px navigation`, () => mobile(mobilePage, base, demo));
