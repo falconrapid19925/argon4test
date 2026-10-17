@@ -52,6 +52,7 @@ function watch(page) {
 
 async function settle(page) { await page.waitForTimeout(780); }
 async function state(page, demo, n) {
+  assert.equal(await page.evaluate(() => window.DemoMotion.ready), true, 'Local text-motion module must load');
   await page.waitForFunction(n => {
     const active = [...document.querySelectorAll('[data-demo-page]')].filter(el => !el.inert);
     return active.length === 1 && active[0].dataset.demoPage === String(n);
@@ -142,7 +143,7 @@ async function interaction(page, demo, n) {
 }
 
 async function navigation(page, base, demo) {
-  await page.goto(`${base}/${demos[demo]}#/pages/1`);
+  await page.goto(`${base}/${demos[demo]}#/pages/1`, {waitUntil: 'networkidle'});
   await page.locator(iteration(demo, 2)).click();
   await state(page, demo, 2);
   const animated = await page.evaluate(() => document.getAnimations().some(animation => {
@@ -155,7 +156,7 @@ async function navigation(page, base, demo) {
   await page.goBack(); await state(page, demo, 2);
   await page.goForward(); await state(page, demo, 4);
   await page.keyboard.press('3'); await state(page, demo, 3);
-  await page.reload(); await state(page, demo, 3);
+  await page.reload({waitUntil: 'networkidle'}); await state(page, demo, 3);
   await page.locator('[data-demo-page="3"] button').first().focus();
   await page.keyboard.press('4'); await state(page, demo, 4);
   assert.equal(await page.evaluate(() => document.activeElement.closest('[data-demo-page]')?.dataset.demoPage), '4',
@@ -176,7 +177,7 @@ async function navigation(page, base, demo) {
 }
 
 async function mobile(page, base, demo) {
-  await page.goto(`${base}/${demos[demo]}#/pages/1`); await settle(page);
+  await page.goto(`${base}/${demos[demo]}#/pages/1`, {waitUntil: 'networkidle'}); await settle(page);
   const selectors = ['.motion-navigation', ...Object.keys(demos).map(key => `[data-collection="${key}"]`),
     ...[1, 2, 3, 4, 5].map(n => iteration(demo, n))];
   for (let n = 1; n <= 5; n++) {
@@ -217,10 +218,10 @@ async function main() {
     for (const [demo, file] of Object.entries(demos)) {
       for (let n = 1; n <= 5; n++) {
         await check(`${demo} ${n}: route, content, reload, interaction`, async () => {
-          await page.goto(`${base}/${file}#/pages/${n}`);
+          await page.goto(`${base}/${file}#/pages/${n}`, {waitUntil: 'networkidle'});
           await state(page, demo, n); await settle(page); await visibleMotion(page, n);
           await page.screenshot({path: path.join(screenshots, `${demo}-${n}.png`), fullPage: true});
-          await page.reload(); await state(page, demo, n); await settle(page);
+          await page.reload({waitUntil: 'networkidle'}); await state(page, demo, n); await settle(page);
           await page.evaluate(() => window.DemoMotion.ready);
           await interaction(page, demo, n);
         });
@@ -228,7 +229,7 @@ async function main() {
       await check(`${demo}: history, keyboard, rapid switching, real slot-text`, () => navigation(page, base, demo));
     }
     await check('Collection links retain destination iteration', async () => {
-      await page.goto(`${base}/${demos.noema}#/pages/4`);
+      await page.goto(`${base}/${demos.noema}#/pages/4`, {waitUntil: 'networkidle'});
       await page.locator('[data-collection="cairn"]').click();
       await page.locator(iteration('cairn', 3)).click();
       await page.locator('[data-collection="commonplace"]').click();
@@ -240,15 +241,18 @@ async function main() {
       }
     });
     await check('GitHub Pages iframe keeps collection controls synchronized', async () => {
-      await page.goto(`${base}/index.html`);
+      await page.goto(`${base}/index.html`, {waitUntil: 'networkidle'});
       const frame = page.frameLocator('#pageFrame');
+      assert.equal(await frame.locator('body').evaluate(() => window.DemoMotion.ready), true);
       await frame.locator('[data-collection="noema"]').click();
       await page.waitForFunction(() => document.querySelector('button[data-page].active')?.dataset.page === 'second_brain_landing_pages.html');
       assert.equal(new URL(await page.locator('#openCurrent').getAttribute('href'), base).pathname.split('/').pop(), demos.noema);
       await frame.locator(iteration('noema', 4)).click();
+      assert.equal(await frame.locator('body').evaluate(() => window.DemoMotion.ready), true);
       await frame.locator('[data-collection="cairn"]').click();
       await page.waitForFunction(() => document.querySelector('button[data-page].active')?.dataset.page === 'cairn_second_brain_iterations.html');
       assert.equal(new URL(await page.locator('#openCurrent').getAttribute('href'), base).pathname.split('/').pop(), demos.cairn);
+      assert.equal(await frame.locator('body').evaluate(() => window.DemoMotion.ready), true);
       await frame.locator('[data-collection="noema"]').click();
       await frame.locator(iteration('noema', 4)).waitFor();
       await page.waitForFunction(() => document.querySelector('#pageFrame').contentWindow.location.hash === '#/pages/4');
@@ -262,7 +266,7 @@ async function main() {
     });
     const reducedPage = await reducedContext.newPage(); watch(reducedPage);
     for (const [demo, file] of Object.entries(demos)) await check(`${demo}: reduced motion, no ViewTransition API`, async () => {
-      await reducedPage.goto(`${base}/${file}#/pages/1`);
+      await reducedPage.goto(`${base}/${file}#/pages/1`, {waitUntil: 'networkidle'});
       assert.equal(await reducedPage.evaluate(() => typeof document.startViewTransition), 'undefined');
       for (let n = 1; n <= 5; n++) {
         await reducedPage.locator(iteration(demo, n)).click();
