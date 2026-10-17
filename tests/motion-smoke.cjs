@@ -304,6 +304,31 @@ async function main() {
       assert.equal(new URL(page.url()).hash, '#slip-permanence');
       assert.ok(await page.locator('#slip-permanence').isVisible());
     });
+    await check('Modal close preserves interactive pages after Back and Forward', async () => {
+      await page.goto(`${base}/${demos.commonplace}#/pages/1`, {waitUntil: 'networkidle'});
+      await page.locator(iteration('commonplace', 2)).click();
+      const open = () => page.locator('#page-2 [onclick*="openDownloadModal"]').first().click();
+      await open();
+      assert.ok(await page.locator('#action-modal').isVisible());
+      await page.goBack();
+      await page.keyboard.press('Escape');
+      await page.locator('#action-modal').waitFor({state: 'hidden'});
+      await state(page, 'commonplace', 1);
+      await page.locator('#zk-tray [onclick="selectSlip(\'21b\')"]').click();
+      assert.match(await page.locator('#slip-id-badge').textContent(), /21b/);
+      await page.goForward();
+      await state(page, 'commonplace', 2);
+      await open();
+      await page.goBack();
+      await page.waitForFunction(() => location.hash === '#/pages/1');
+      await page.goForward();
+      await page.keyboard.press('Escape');
+      await page.locator('#action-modal').waitFor({state: 'hidden'});
+      await state(page, 'commonplace', 2);
+      await open();
+      assert.ok(await page.locator('#action-modal').isVisible(), 'Visible page remains clickable');
+      await page.keyboard.press('Escape');
+    });
     await check('Missing Chromium exits with failure instead of hanging server', async () => {
       const {execFile} = require('node:child_process');
       const {promisify} = require('node:util');
