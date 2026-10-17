@@ -46,6 +46,26 @@ async function state(page, demo, n) {
 }
 
 async function visibleMotion(page, n) {
+  // Slow browser frames can outlast the minimum settling delay. Observe the
+  // resulting reveal state instead of assuming a wall-clock animation duration.
+  await page.waitForFunction(
+    (n) => {
+      const elements = [...document.querySelectorAll(`[data-demo-page="${n}"] [data-motion]`)];
+      return (
+        elements.length >= 2 &&
+        elements.every((el) => {
+          const style = getComputedStyle(el);
+          return (
+            el.getClientRects().length &&
+            style.visibility !== 'hidden' &&
+            Number(style.opacity) > 0.95
+          );
+        })
+      );
+    },
+    n,
+    { timeout: 8000 },
+  );
   const hooks = await page
     .locator(`[data-demo-page="${n}"] [data-motion]`)
     .evaluateAll((elements) =>
